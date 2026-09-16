@@ -72,13 +72,15 @@
       color: #FFFFFF;
       font-weight: 700;
       border: 1px solid #0B1F3E;
-      padding: 8px 12px;
+      padding: 8px 10px;
       text-align: center;
+      white-space: nowrap;
     }
     .excel-table td {
       border: 1px solid #CBD5E1;
-      padding: 7px 12px;
+      padding: 7px 10px;
       background-color: #FFFFFF;
+      white-space: nowrap;
     }
     .excel-table tr:hover td {
       background-color: #F8FAFC;
@@ -216,11 +218,12 @@
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">0</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">$0</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight border-r border-slate-200">-$78</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#059669] tracking-tight">$167</td>
+                <!-- Run Rate recalculado a 16 días ($77.75 / 16 * 30 = $146) -->
+                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#059669] tracking-tight">$146</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">6</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">0</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">$0</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">-$167</td>
+                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">-$146</td>
                 <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">1:0.0</td>
               </tr>
             </tbody>
@@ -245,7 +248,7 @@
         <div class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight" id="kpiBudget">$78</div>
         <div class="flex items-center gap-1.5 flex-wrap mt-2">
           <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: $1,100</span>
-          <span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: $167</span>
+          <span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: $146</span>
         </div>
       </div>
 
@@ -305,16 +308,18 @@
         <div class="text-2xl sm:text-3xl font-extrabold font-display text-rose-600 tracking-tight" id="kpiProfit">-$78</div>
         <div class="flex items-center gap-1.5 flex-wrap mt-2">
           <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: $2,200</span>
-          <span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: -$167</span>
+          <span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: -$146</span>
         </div>
       </div>
 
     </div>
 
-    <!-- PLATFORM TABLES SECTION (META, X, TIKTOK) -->
+    <!-- ========================================================================= -->
+    <!-- TABLAS DE PLATAFORMAS (FORMATO 10 COLUMNAS: SIGN UPS REEMPLAZA REGISTRATIONS) -->
+    <!-- ========================================================================= -->
     <div class="space-y-8">
       
-      <!-- ================= TABLE 1: META ================= -->
+      <!-- ================= TABLA 1: META ================= -->
       <div id="sectionMeta">
         <div class="flex items-center gap-2.5 mb-3">
           <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
@@ -324,39 +329,48 @@
         </div>
 
         <div class="glass-card rounded-xl overflow-hidden border border-slate-300 shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="excel-table">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="excel-table min-w-[760px]">
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 28%;">Campaign</th>
-                  <th style="width: 12%;">Budget</th>
-                  <th style="width: 12%;">Signups</th>
-                  <th style="width: 12%;">Users</th>
-                  <th style="width: 12%;">Revenue</th>
-                  <th style="width: 12%;">Profit</th>
-                  <th style="width: 12%;">ROI</th>
+                  <th class="text-left" style="width: 25%;">Campaign</th>
+                  <th>Budget</th>
+                  <th>Spent</th>
+                  <th>Impressions</th>
+                  <th>LP Views</th>
+                  <th>Clicks</th>
+                  <th>Sign Ups</th>
+                  <th>FTDs</th>
+                  <th>Revenue</th>
+                  <th>ROI</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
+              <tbody>
                 <tr>
-                  <td class="font-medium text-slate-800">MetaWannaSee_Sep</td>
-                  <td class="text-right font-mono text-slate-700 font-semibold">$38.26</td>
-                  <td class="text-center font-mono text-slate-700 font-semibold">3</td>
-                  <td class="text-center font-mono text-slate-700 font-semibold">0</td>
-                  <td class="text-right font-mono text-slate-700 font-semibold">$0.00</td>
-                  <td class="text-right font-mono text-rose-600 font-semibold">-$38.26</td>
-                  <td class="roi-negative font-mono">-100.00%</td>
+                  <td class="font-medium text-slate-800 text-left">MetaWannnaSee_Sep</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$40</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$38.26</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">1,526</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">117</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">142</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">3</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$0</td>
+                  <td class="roi-negative font-mono">-100%</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <td class="text-left font-bold">Total</td>
+                  <td class="text-right font-mono font-bold">$40</td>
                   <td class="text-right font-mono font-bold">$38.26</td>
+                  <td class="text-right font-mono font-bold">1,526</td>
+                  <td class="text-center font-mono font-bold">117</td>
+                  <td class="text-center font-mono font-bold">142</td>
                   <td class="text-center font-mono font-bold">3</td>
                   <td class="text-center font-mono font-bold">0</td>
-                  <td class="text-right font-mono font-bold">$0.00</td>
-                  <td class="text-right font-mono font-bold text-rose-700">-$38.26</td>
-                  <td class="roi-negative font-mono">-100.00%</td>
+                  <td class="text-right font-mono font-bold">$0</td>
+                  <td class="roi-negative font-mono font-bold">-100%</td>
                 </tr>
               </tfoot>
             </table>
@@ -364,7 +378,7 @@
         </div>
       </div>
 
-      <!-- ================= TABLE 2: X ================= -->
+      <!-- ================= TABLA 2: X ================= -->
       <div id="sectionX">
         <div class="flex items-center gap-2.5 mb-3">
           <div class="w-7 h-7 rounded-lg bg-black flex items-center justify-center text-white shadow-sm">
@@ -374,39 +388,48 @@
         </div>
 
         <div class="glass-card rounded-xl overflow-hidden border border-slate-300 shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="excel-table">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="excel-table min-w-[760px]">
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 28%;">Campaign</th>
-                  <th style="width: 12%;">Budget</th>
-                  <th style="width: 12%;">Signups</th>
-                  <th style="width: 12%;">Users</th>
-                  <th style="width: 12%;">Revenue</th>
-                  <th style="width: 12%;">Profit</th>
-                  <th style="width: 12%;">ROI</th>
+                  <th class="text-left" style="width: 25%;">Campaign</th>
+                  <th>Budget</th>
+                  <th>Spent</th>
+                  <th>Impressions</th>
+                  <th>LP Views</th>
+                  <th>Clicks</th>
+                  <th>Sign Ups</th>
+                  <th>FTDs</th>
+                  <th>Revenue</th>
+                  <th>ROI</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
+              <tbody>
                 <tr>
-                  <td class="font-medium text-slate-800">XWannaSee_Sep</td>
-                  <td class="text-right font-mono text-slate-700 font-semibold">$39.49</td>
-                  <td class="text-center font-mono text-slate-700 font-semibold">0</td>
-                  <td class="text-center font-mono text-slate-700 font-semibold">0</td>
-                  <td class="text-right font-mono text-slate-700 font-semibold">$0.00</td>
-                  <td class="text-right font-mono text-rose-600 font-semibold">-$39.49</td>
-                  <td class="roi-negative font-mono">-100.00%</td>
+                  <td class="font-medium text-slate-800 text-left">XWannnaSee_Sep</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$40</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$39.49</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">8,882</td>
+                  <td class="text-center font-mono font-semibold text-slate-400">—</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">18</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
+                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
+                  <td class="text-right font-mono font-semibold text-slate-700">$0</td>
+                  <td class="roi-negative font-mono">-100%</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <td class="text-left font-bold">Total</td>
+                  <td class="text-right font-mono font-bold">$40</td>
                   <td class="text-right font-mono font-bold">$39.49</td>
+                  <td class="text-right font-mono font-bold">8,882</td>
+                  <td class="text-center font-mono font-bold text-slate-400">—</td>
+                  <td class="text-center font-mono font-bold">18</td>
                   <td class="text-center font-mono font-bold">0</td>
                   <td class="text-center font-mono font-bold">0</td>
-                  <td class="text-right font-mono font-bold">$0.00</td>
-                  <td class="text-right font-mono font-bold text-rose-700">-$39.49</td>
-                  <td class="roi-negative font-mono">-100.00%</td>
+                  <td class="text-right font-mono font-bold">$0</td>
+                  <td class="roi-negative font-mono font-bold">-100%</td>
                 </tr>
               </tfoot>
             </table>
@@ -414,7 +437,7 @@
         </div>
       </div>
 
-      <!-- ================= TABLE 3: TIKTOK ================= -->
+      <!-- ================= TABLA 3: TIKTOK ================= -->
       <div id="sectionTikTok">
         <div class="flex items-center gap-2.5 mb-3">
           <div class="w-7 h-7 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-sm">
@@ -424,38 +447,47 @@
         </div>
 
         <div class="glass-card rounded-xl overflow-hidden border border-slate-300 shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="excel-table">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="excel-table min-w-[760px]">
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 28%;">Campaign</th>
-                  <th style="width: 12%;">Budget</th>
-                  <th style="width: 12%;">Signups</th>
-                  <th style="width: 12%;">Users</th>
-                  <th style="width: 12%;">Revenue</th>
-                  <th style="width: 12%;">Profit</th>
-                  <th style="width: 12%;">ROI</th>
+                  <th class="text-left" style="width: 25%;">Campaign</th>
+                  <th>Budget</th>
+                  <th>Spent</th>
+                  <th>Impressions</th>
+                  <th>LP Views</th>
+                  <th>Clicks</th>
+                  <th>Sign Ups</th>
+                  <th>FTDs</th>
+                  <th>Revenue</th>
+                  <th>ROI</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
+              <tbody>
                 <tr>
-                  <td class="font-medium text-slate-400">—</td>
+                  <td class="font-medium text-slate-400 text-left">—</td>
+                  <td class="text-right font-mono text-slate-400">$0</td>
                   <td class="text-right font-mono text-slate-400">$0.00</td>
+                  <td class="text-right font-mono text-slate-400">0</td>
+                  <td class="text-center font-mono text-slate-400">—</td>
                   <td class="text-center font-mono text-slate-400">0</td>
                   <td class="text-center font-mono text-slate-400">0</td>
-                  <td class="text-right font-mono text-slate-400">$0.00</td>
-                  <td class="text-right font-mono text-slate-400">$0.00</td>
+                  <td class="text-center font-mono text-slate-400">0</td>
+                  <td class="text-right font-mono text-slate-400">$0</td>
                   <td class="text-center font-mono text-slate-400">0.00%</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <td class="text-left font-bold">Total</td>
+                  <td class="text-right font-mono font-bold">$0</td>
                   <td class="text-right font-mono font-bold">$0.00</td>
+                  <td class="text-right font-mono font-bold">0</td>
+                  <td class="text-center font-mono font-bold text-slate-400">—</td>
                   <td class="text-center font-mono font-bold">0</td>
                   <td class="text-center font-mono font-bold">0</td>
-                  <td class="text-right font-mono font-bold">$0.00</td>
-                  <td class="text-right font-mono font-bold">$0.00</td>
+                  <td class="text-center font-mono font-bold">0</td>
+                  <td class="text-right font-mono font-bold">$0</td>
                   <td class="text-center font-mono font-bold text-slate-500">0.00%</td>
                 </tr>
               </tfoot>
@@ -468,7 +500,7 @@
 
     <!-- ========================================================================= -->
     <!-- SECTION 1: SOCIAL MEDIA BUDGET MANAGEMENT                                 -->
-    <!-- CHART 1: BARS IN USD ($) | CHART 2: PROFIT ($) BY PLATFORM (TOTAL EL DOBLE)-->
+    <!-- CHART 1: BARS IN USD ($) | CHART 2: PROFIT ($) BY PLATFORM                -->
     <!-- ========================================================================= -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
       
@@ -501,7 +533,7 @@
       <!-- ROW 1 CHARTS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- GRÁFICA 1: BARRAS PURAS EN DÓLARES -->
+        <!-- GRÁFICA 1: BARRAS PURAS EN DÓLARES (RECALCULADO A 16 DÍAS) -->
         <div class="glass-card rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -517,7 +549,7 @@
           </div>
         </div>
 
-        <!-- GRÁFICA 2: PROFIT ($) BY PLATFORM (TOTAL AHORA ES EL DOBLE DE LARGA) -->
+        <!-- GRÁFICA 2: PROFIT ($) BY PLATFORM -->
         <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
@@ -738,8 +770,8 @@
       users: 20
     };
 
-    // PERIOD: SEPTEMBER 01 TO 14 (14 DAYS ELAPSED OUT OF 30 DAYS IN SEPTEMBER)
-    const DAYS_ELAPSED = 14;
+    // PERIOD: SEPTEMBER 01 TO 16 (16 DAYS ELAPSED OUT OF 30 DAYS IN SEPTEMBER)
+    const DAYS_ELAPSED = 16;
     const TOTAL_DAYS_IN_MONTH = 30;
 
     const fmtMoney = (n) => "$" + Math.round(Number(n)).toLocaleString('en-US');
@@ -764,7 +796,8 @@
       const platforms = ['Meta', 'X', 'TikTok', 'Total'];
 
       // =========================================================================
-      // 1. GRÁFICA: BUDGET VS REVENUE VS RUN RATE (BARRAS EN USD $)
+      // 1. GRÁFICA: BUDGET VS REVENUE VS RUN RATE (RECALCULADO A 16 DÍAS)
+      // Meta RR: ($38.26/16)*30 = $72 | X RR: ($39.49/16)*30 = $74 | Total RR: $146
       // =========================================================================
       const ctxBudget = document.getElementById('budgetCleanBarChart').getContext('2d');
       new Chart(ctxBudget, {
@@ -790,7 +823,7 @@
             },
             {
               label: 'Run Rate ($)',
-              data: [82, 85, 0, 167],
+              data: [72, 74, 0, 146], // Run Rate proporcional a 16 días
               backgroundColor: 'rgba(245, 158, 11, 0.85)',
               borderRadius: 6,
               barPercentage: 0.7,
@@ -832,8 +865,7 @@
       });
 
       // =========================================================================
-      // 2. NUEVA GRÁFICA DE PROFIT ($) DONDE TOTAL ES EL DOBLE DE LARGA
-      // Meta: -$38.26 | X: -$39.49 | TikTok: $0 | Total: -$77.75
+      // 2. PROFIT ($) BY PLATFORM
       // =========================================================================
       const ctxProfit = document.getElementById('profitPlatformChart').getContext('2d');
       new Chart(ctxProfit, {
@@ -842,12 +874,12 @@
           labels: platforms,
           datasets: [{
             label: 'Profit ($)',
-            data: [-38.26, -39.49, 0, -77.75], // Total suma visualmente ambas pérdidas
+            data: [-38.26, -39.49, 0, -77.75],
             backgroundColor: [
-              'rgba(239, 68, 68, 0.85)', // Meta
-              'rgba(239, 68, 68, 0.85)', // X
-              'rgba(148, 163, 184, 0.4)', // TikTok
-              'rgba(239, 68, 68, 0.85)'  // Total (el doble de larga hacia abajo)
+              'rgba(239, 68, 68, 0.85)',
+              'rgba(239, 68, 68, 0.85)',
+              'rgba(148, 163, 184, 0.4)',
+              'rgba(239, 68, 68, 0.85)'
             ],
             borderRadius: 6,
             barPercentage: 0.6
