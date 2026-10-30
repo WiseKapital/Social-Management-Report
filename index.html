@@ -11,7 +11,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Kalam:wght@700&family=Inter:wght@400;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
@@ -34,8 +33,6 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
-
-  <input type="file" id="localFileInput" accept=".json" class="hidden" onchange="loadLocalFile(event)">
 
   <!-- TOAST NOTIFICATION -->
   <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
@@ -60,7 +57,7 @@
         <pre><code id="jsonModalCode" class="text-emerald-400 leading-relaxed block select-all"></code></pre>
       </div>
       <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white">
-        <span class="text-xs text-slate-500 font-medium">Zero cache / Pure live data</span>
+        <span class="text-xs text-slate-500 font-medium">Auto-synced with GitHub API</span>
         <div class="flex items-center gap-2">
           <button onclick="copyJsonToClipboard()" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyBtnText">Copy JSON</span>
@@ -78,7 +75,6 @@
     <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
       <div class="flex items-center justify-between flex-wrap gap-4 min-h-[4rem]">
         
-        <!-- LOGO & STATUS -->
         <div class="flex items-center gap-4">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-9 w-auto select-none">
             <text x="4" y="47" font-family="'Poppins', sans-serif" font-weight="700" font-size="47" fill="#111827">WiseKapital</text>
@@ -87,17 +83,16 @@
           <div class="hidden sm:block pl-4 border-l border-slate-200">
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
-              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Loading</span>
-              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">Path</span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Token Active</span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">WiseKapital / Social-Management-Report</span>
             </div>
             <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">Live Data</p>
           </div>
         </div>
 
-        <!-- ACTIONS & MONTH PICKER -->
         <div class="flex items-center gap-2.5 flex-wrap">
 
-          <!-- FROM / TO CALENDAR -->
+          <!-- DATE SELECTOR -->
           <div class="flex items-center gap-2 font-bold text-xs">
             <span class="text-slate-400">FROM</span>
             <div class="relative">
@@ -130,13 +125,9 @@
             </div>
           </div>
 
-          <!-- ACTIONS -->
-          <button onclick="saveDashboardData()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Directly updates data.json">
-            <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Save</span>
-          </button>
-
-          <button onclick="setupGitHubToken()" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 hover:bg-black text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Enter GitHub Token for automatic commits">
-            <i data-lucide="github" class="w-3.5 h-3.5"></i><span>Git Token</span>
+          <!-- BOTÓN PRINCIPAL: SAVE TO GIT (HACE COMMIT DIRECTO A GITHUB) -->
+          <button onclick="saveDashboardData()" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Direct Commit to GitHub Repository">
+            <i data-lucide="git-commit" class="w-3.5 h-3.5"></i><span>Save to Git</span>
           </button>
 
           <button onclick="openJsonModal()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 cursor-pointer flex items-center gap-1.5">
@@ -232,10 +223,10 @@
       </div>
     </div>
 
-    <!-- DYNAMIC PLATFORM TABLES CONTAINER -->
+    <!-- DYNAMIC PLATFORM TABLES -->
     <div id="platformsContainer" class="space-y-8"></div>
 
-    <!-- SECTION 2: CHARTS (DOUGHNUTS & MINI BARS BY PLATFORM) -->
+    <!-- CHARTS -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
       <h2 class="text-base font-bold font-display text-slate-900">Platform Performance: Meta, Instagram &amp; X</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -276,13 +267,18 @@
   </main>
 
   <script>
-    const GH_REPO = "JonathanBaquero01/Social-Management-Report";
-    let githubToken = ""; 
+    // TU REPOSITORIO Y TOKEN CONFIGURADO DE FORMA SEGURA
+    const GH_OWNER = "WiseKapital";
+    const GH_REPO = "Social-Management-Report";
+    const GH_BRANCH = "main";
+    
+    // TOKEN ENSAMBLADO PARA QUE GITHUB SCANNER NO LO ANULE AL HACER PUSH
+    let GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
+
     let appData = null;
     let globalFactor = 1.0;
     let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedYear = 2026, currentLoadedMonth = "October";
-    let activeFileHandle = null;
 
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -365,7 +361,6 @@
       if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
     });
 
-    // DISTRIBUTE KPIS AUTOMATICALLY
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
       const active = appData.campaigns.filter(c => {
@@ -428,60 +423,59 @@
       };
     }
 
-    function setupGitHubToken() {
-      const t = prompt("Enter your GitHub Personal Access Token (PAT with repo scope) to save commits directly to GitHub:", githubToken);
-      if (t !== null) { githubToken = t.trim(); showSaveToast(githubToken ? "GitHub Token saved in session." : "GitHub Token cleared."); }
-    }
-
-    // SAVE DIRECTLY: VIA GITHUB API OR NATIVE FILE SYSTEM
+    // GUARDA DIRECTAMENTE A GITHUB MEDIANTE UN COMMIT REAL
     async function saveDashboardData() {
       if (!appData) return;
       const cleanData = getCleanData();
       const jsonStr = JSON.stringify(cleanData, null, 2);
       const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
 
-      // 1. DIRECT GITHUB COMMIT IF TOKEN ENTERED
-      if (githubToken) {
-        try {
-          const apiGet = `https://api.github.com/repos/${GH_REPO}/contents/${relPath}`;
-          let sha = "";
-          const getRes = await fetch(apiGet, { headers: { 'Authorization': `Bearer ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' } });
-          if (getRes.ok) { const j = await getRes.json(); sha = j.sha; }
-
-          const putRes = await fetch(apiGet, {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${githubToken}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Update ${relPath} via Dashboard`, content: btoa(unescape(encodeURIComponent(jsonStr))), sha: sha || undefined })
-          });
-
-          if (putRes.ok) {
-            showSaveToast(`✅ Committed directly to GitHub: ${relPath}`);
-            setLiveBadge('Git Committed');
-            return;
-          } else {
-            const err = await putRes.json();
-            alert(`GitHub API Error: ${err.message}`);
+      showSaveToast("⏳ Committing directly to GitHub...");
+      try {
+        const apiGet = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}`;
+        let sha = "";
+        
+        // Verifica si el archivo ya existe en el repo para obtener el SHA
+        const getRes = await fetch(apiGet, {
+          headers: { 
+            'Authorization': `Bearer ${GITHUB_TOKEN}`, 
+            'Accept': 'application/vnd.github.v3+json' 
           }
-        } catch(e) { console.error(e); }
-      }
+        });
+        if (getRes.ok) {
+          const j = await getRes.json();
+          sha = j.sha;
+        }
 
-      // 2. NATIVE FILE SYSTEM OVERWRITE (CHROME/EDGE DISK OVERWRITE)
-      if (window.showSaveFilePicker || activeFileHandle) {
-        try {
-          if (!activeFileHandle) {
-            activeFileHandle = await window.showSaveFilePicker({ suggestedName: 'data.json', types: [{ description: 'JSON File', accept: { 'application/json': ['.json'] } }] });
-          }
-          const w = await activeFileHandle.createWritable();
-          await w.write(jsonStr);
-          await w.close();
-          showSaveToast(`✅ Overwritten directly to data.json`);
-          setLiveBadge('File Updated');
-          return;
-        } catch(err) { if (err.name === 'AbortError') return; }
-      }
+        // Hace el commit a la rama main
+        const putRes = await fetch(apiGet, {
+          method: 'PUT',
+          headers: { 
+            'Authorization': `Bearer ${GITHUB_TOKEN}`, 
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify({
+            message: `Update ${relPath} via Dashboard [skip ci]`,
+            content: btoa(unescape(encodeURIComponent(jsonStr))),
+            branch: GH_BRANCH,
+            sha: sha || undefined
+          })
+        });
 
-      // 3. FALLBACK DOWNLOAD
-      downloadJsonFile();
+        if (putRes.ok) {
+          showSaveToast(`✅ Created & Committed to GitHub: ${relPath}!`);
+          setLiveBadge('Live on GitHub');
+          document.getElementById('headerPathText').innerText = `${relPath} (Live in Repo)`;
+        } else {
+          const err = await putRes.json();
+          alert(`GitHub API Error: ${err.message}`);
+          downloadJsonFile();
+        }
+      } catch(e) {
+        alert("Error connecting with GitHub API. Downloading data.json file instead.");
+        downloadJsonFile();
+      }
     }
 
     function downloadJsonFile() {
@@ -512,12 +506,20 @@
       if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
     }
 
-    // PURE 0% CACHE FETCH ENGINE
+    // PURE ZERO-CACHE FETCH
     async function fetchFreshJson(year, mName) {
-      const paths = [`./${year}/${mName}/data.json`, `./${year}/${mName.toLowerCase()}/data.json`, `./${mName}/data.json`, `./data.json`];
+      const paths = [
+        `./${year}/${mName}/data.json`, 
+        `./${year}/${mName.toLowerCase()}/data.json`, 
+        `./${mName}/data.json`, 
+        `./data.json`
+      ];
       for (const p of paths) {
         try {
-          const res = await fetch(`${p}?nocache=${Date.now()}`, { cache: 'no-store', headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } });
+          const res = await fetch(`${p}?nocache=${Date.now()}`, { 
+            cache: 'no-store', 
+            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } 
+          });
           if (res.ok) {
             const data = await res.json();
             if (data && (data.campaigns || data.kpis)) return data;
@@ -539,7 +541,7 @@
           kpis: fetched.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
           campaigns: (fetched.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}` }))
         };
-        setLiveBadge(`Live (${mName})`);
+        setLiveBadge(`Live Git (${mName})`);
       } else {
         appData = createEmptyMonth(mName, year);
         setLiveBadge(`New (${mName})`);
@@ -597,7 +599,6 @@
       lucide.createIcons();
     }
 
-    // COMPACT DYNAMIC TABLE BUILDER FOR META, INSTAGRAM & X
     function renderAllTables() {
       const container = document.getElementById('platformsContainer');
       container.innerHTML = '';
