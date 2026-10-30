@@ -12,6 +12,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Kalam:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Flatpickr CSS & JS (Custom Date Picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <script>
     tailwind.config = {
@@ -35,20 +39,23 @@
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
     
-    .glass-card {
-      background: #FFFFFF; border: 1px solid #E2E8F0;
-      box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04);
+    .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04); }
+
+    /* Date Picker Theme Override */
+    .flatpickr-calendar { font-family: 'Inter', sans-serif; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); border-radius: 12px; padding: 5px; }
+    .flatpickr-months .flatpickr-month { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 14px; color: #0F172A; margin-bottom: 5px;}
+    .flatpickr-current-month .flatpickr-monthDropdown-months { appearance: none; -webkit-appearance: none; font-weight: 800; outline: none; }
+    .flatpickr-weekdays .flatpickr-weekday { color: #64748B; font-weight: 800; font-size: 11px; }
+    .flatpickr-day { border-radius: 8px; color: #0F172A; font-weight: 600; }
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+        background-color: #10B981 !important; border-color: #10B981 !important; color: white; font-weight: 800; border-radius: 8px;
     }
+    .flatpickr-day.flatpickr-disabled { color: #CBD5E1 !important; font-weight: 400; }
 
     /* Master Table Styles */
     .master-sheet-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
-    .master-sheet-table th, .master-sheet-table td {
-      border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB;
-      padding: 5px 6px; white-space: nowrap; text-align: center;
-    }
-    .master-sheet-table thead tr:first-child th {
-      border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800;
-    }
+    .master-sheet-table th, .master-sheet-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
+    .master-sheet-table thead tr:first-child th { border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800; }
     .master-sheet-table thead tr:last-child th { font-weight: 700; font-size: 10px; }
 
     /* Column Color Palette */
@@ -86,7 +93,6 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-  <!-- INPUT DE ARCHIVO OCULTO -->
   <input type="file" id="localFileInput" accept=".json" class="hidden" onchange="loadLocalFile(event)">
 
   <!-- TOP HEADER -->
@@ -110,46 +116,43 @@
             </div>
             <p id="periodLabel" class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
               <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-500"></i>
-              <span id="dateAutoInfo">Loading month...</span>
+              <span id="dateAutoInfo">Loading dates...</span>
             </p>
           </div>
         </div>
 
-        <!-- ACTIONS & FILTERS -->
-        <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- ACTIONS & DUAL DATE PICKER -->
+        <div class="flex items-center gap-3 flex-wrap">
 
-          <!-- SELECTOR DE MES (DIVISIÓN POR MESES) -->
-          <div class="relative">
-            <i data-lucide="calendar-days" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"></i>
-            <select id="monthSelector" onchange="changeSelectedMonth(this.value)" class="pl-8 pr-7 py-1.5 text-xs font-bold text-slate-800 bg-white border border-slate-300 rounded-lg shadow-xs cursor-pointer focus:ring-2 focus:ring-indigo-500">
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
-            </select>
+          <!-- NEW: FROM - TO DUAL DATE PICKER -->
+          <div class="flex items-center gap-1.5 font-bold text-xs">
+            <span class="text-slate-400 tracking-wider">FROM</span>
+            <div class="relative">
+              <input type="text" id="dateFrom" class="pl-2.5 pr-8 py-1.5 border border-slate-200 hover:border-slate-300 rounded-lg text-slate-900 bg-white focus:outline-none focus:border-slate-400 w-[105px] cursor-pointer text-center shadow-sm transition" placeholder="MM/DD/YYYY" readonly>
+              <i data-lucide="calendar" class="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+            </div>
+            <span class="text-slate-400 tracking-wider ml-1">TO</span>
+            <div class="relative">
+              <input type="text" id="dateTo" class="pl-2.5 pr-8 py-1.5 border-[1.5px] border-slate-900 rounded-lg text-slate-900 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 w-[105px] cursor-pointer text-center shadow-sm transition" placeholder="MM/DD/YYYY" readonly>
+              <i data-lucide="calendar" class="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-900 pointer-events-none"></i>
+            </div>
           </div>
 
-          <!-- IMPORTAR JSON LOCAL (VISIBLE SOLO EN FILE://) -->
+          <div class="h-6 w-px bg-slate-200 mx-1"></div>
+
+          <!-- IMPORT LOCAL (Solo visible si estás en file://) -->
           <button id="headerImportJsonBtn" onclick="document.getElementById('localFileInput').click()" class="hidden px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-            <span>Import JSON</span>
+            <span>Import</span>
           </button>
 
-          <!-- EXPORTAR EXCEL -->
+          <!-- EXPORT EXCEL -->
           <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
             <span>Export Excel</span>
           </button>
 
-          <!-- FILTRO DE PLATAFORMA -->
+          <!-- FILTER PLATFORM -->
           <div class="relative">
             <i data-lucide="filter" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <select id="platformFilter" onchange="filterPlatform()" class="pl-8 pr-7 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer">
@@ -172,7 +175,7 @@
     <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
       <div>
         <span class="font-bold text-sm block mb-0.5">📁 Local File Mode Detected</span>
-        <p class="text-amber-800">Al abrir el archivo directamente en tu equipo, la seguridad del navegador restringe la lectura directa. Para cargar tus métricas, selecciona tu archivo <code>data.json</code> de la carpeta correspondiente:</p>
+        <p class="text-amber-800">Al abrir el archivo localmente tu navegador restringe la lectura. Para cargar datos en este modo, selecciona tu <code>data.json</code> manualmente:</p>
       </div>
       <div>
         <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
@@ -180,6 +183,17 @@
           <span>Import data.json</span>
         </button>
       </div>
+    </div>
+
+    <!-- DYNAMIC DATE BANNER -->
+    <div class="glass-card rounded-xl p-3 px-4 flex items-center justify-between flex-wrap gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-slate-700">Days tracking: <strong id="lblTotalDaysRange" class="text-slate-900">—</strong> selected.</span>
+        <span class="text-slate-400">|</span>
+        <span class="text-slate-600">Global Factor: <strong id="lblRrFactor" class="text-indigo-600 font-mono">—</strong></span>
+      </div>
+      <span class="text-slate-500 italic">🟢 RR ≥ KPI: Verde | 🔴 RR &lt; KPI: Rojo</span>
     </div>
 
     <!-- TEAM PERFORMANCE TABLE -->
@@ -473,7 +487,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <!-- Signups by Platform -->
         <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
@@ -499,7 +512,6 @@
           </div>
         </div>
 
-        <!-- Users by Platform -->
         <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
@@ -526,7 +538,6 @@
         </div>
       </div>
 
-      <!-- Mini Spent vs Revenue Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-blue-600">
           <div>
@@ -537,9 +548,7 @@
               </div>
               <span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
             </div>
-            <div class="relative h-52 w-full mt-1">
-              <canvas id="metaBudgetRevenueChart"></canvas>
-            </div>
+            <div class="relative h-52 w-full mt-1"><canvas id="metaBudgetRevenueChart"></canvas></div>
           </div>
         </div>
 
@@ -552,9 +561,7 @@
               </div>
               <span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
             </div>
-            <div class="relative h-52 w-full mt-1">
-              <canvas id="instagramBudgetRevenueChart"></canvas>
-            </div>
+            <div class="relative h-52 w-full mt-1"><canvas id="instagramBudgetRevenueChart"></canvas></div>
           </div>
         </div>
 
@@ -567,9 +574,7 @@
               </div>
               <span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
             </div>
-            <div class="relative h-52 w-full mt-1">
-              <canvas id="xBudgetRevenueChart"></canvas>
-            </div>
+            <div class="relative h-52 w-full mt-1"><canvas id="xBudgetRevenueChart"></canvas></div>
           </div>
         </div>
       </div>
@@ -579,45 +584,20 @@
 
   <script>
     let appData = null;
-    let currentSelectedMonth = "";
+    let globalFactor = 1.0;
+    
+    let dateFromPicker, dateToPicker;
 
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
 
-    function getRunRateFactor(monthName) {
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonthIndex = now.getMonth();
-      const currentDay = now.getDate();
-
-      const selIdx = monthNames.findIndex(m => m.toLowerCase() === (monthName || '').toLowerCase());
-      const monthIdx = selIdx >= 0 ? selIdx : currentMonthIndex;
-      const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
-
-      let factor = 1.0;
-      let dayDisplay = daysInMonth;
-
-      if (monthIdx === currentMonthIndex) {
-        dayDisplay = currentDay;
-        factor = currentDay > 0 ? (daysInMonth / currentDay) : 1;
-      } else if (monthIdx < currentMonthIndex) {
-        dayDisplay = daysInMonth;
-        factor = 1.0;
-      } else {
-        dayDisplay = 1;
-        factor = 1.0;
-      }
-
-      return { currentYear, monthIndex: monthIdx, monthName: monthNames[monthIdx], dayDisplay, daysInMonth, factor };
-    }
-
     function calculateAutoRR(val) {
       if (val === undefined || val === null || val === '' || val === '—') return 0;
       const num = parseFloat(String(val).replace(/[$,%]/g, ''));
       if (isNaN(num) || num <= 0) return 0;
-      return Math.round(num * getRunRateFactor(currentSelectedMonth).factor);
+      return Math.round(num * globalFactor);
     }
 
     function getRrColorClass(rrVal, kpiVal) {
@@ -738,13 +718,7 @@
         try {
           appData = JSON.parse(e.target.result);
           document.getElementById('localFileHelper').classList.add('hidden');
-          
-          const badge = document.getElementById('liveStatusBadge');
-          if (badge) {
-            badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
-            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block"></span> Local Loaded`;
-          }
-
+          setLiveBadge('local', 'Local Loaded');
           ensureCampaignIds();
           distributeKpisToCampaigns();
           recalcAll();
@@ -764,56 +738,163 @@
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
       } else if (type === 'auto') {
         badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1 inline-block animate-pulse"></span> Auto: ${label}`;
-      } else {
-        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block"></span> Saved: ${label}`;
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1 inline-block"></span> Auto: ${label}`;
+      } else if (type === 'local') {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1 inline-block"></span> ${label}`;
       }
     }
 
-    async function changeSelectedMonth(monthName) {
-      currentSelectedMonth = monthName;
-      const { currentYear, dayDisplay } = getRunRateFactor(monthName);
-      const dateEl = document.getElementById('dateAutoInfo');
-      if (dateEl) {
-        dateEl.innerText = `${monthName} 01-${dayDisplay < 10 ? '0' + dayDisplay : dayDisplay}, ${currentYear}`;
+    function getMonthsInRange(startStr, endStr) {
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+      const months = [];
+      let curr = new Date(start.getFullYear(), start.getMonth(), 1);
+      while (curr <= end) {
+        months.push({
+          monthIndex: curr.getMonth(),
+          monthName: monthNames[curr.getMonth()],
+          year: curr.getFullYear()
+        });
+        curr.setMonth(curr.getMonth() + 1);
       }
+      return months;
+    }
 
+    function getFactorForMonth(monthObj, endDateObj) {
+      const daysInMonth = new Date(monthObj.year, monthObj.monthIndex + 1, 0).getDate();
+      if (monthObj.monthIndex === endDateObj.getMonth() && monthObj.year === endDateObj.getFullYear()) {
+        const currentDay = endDateObj.getDate();
+        return currentDay > 0 ? (daysInMonth / currentDay) : 1;
+      } else if (new Date(monthObj.year, monthObj.monthIndex, daysInMonth) < endDateObj) {
+        return 1.0;
+      }
+      return 1.0;
+    }
+
+    // CARGA DE DATOS BASADA EN EL RANGO SELECCIONADO (CON SUMA TOTAL)
+    async function loadDataForRange(startStr, endStr) {
+      const endDateObj = new Date(endStr);
+      const months = getMonthsInRange(startStr, endStr);
       const isLocal = window.location.protocol === 'file:';
 
-      try {
-        let pathPrimary = `./${monthName}/data.json?v=${Date.now()}`;
-        let response = await fetch(pathPrimary);
+      let mergedKpis = { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 };
+      let mergedCampaignsMap = new Map();
+      let fetchedAny = false;
 
-        if (!response.ok && monthName.toLowerCase() === "october") {
-           response = await fetch('./data.json?v=' + Date.now());
+      for (const m of months) {
+        let mData = null;
+        const factor = getFactorForMonth(m, endDateObj);
+
+        // 1. SIEMPRE PRIORIZAR LA LECTURA DEL ARCHIVO JSON DEL SERVIDOR
+        try {
+          let path = `./${m.monthName}/data.json?v=${Date.now()}`;
+          let res = await fetch(path);
+          if (!res.ok && m.monthName.toLowerCase() === 'october') {
+            res = await fetch('./data.json?v=' + Date.now()); // fallback raiz
+          }
+          if (res.ok) {
+            mData = await res.json();
+            fetchedAny = true;
+            try { localStorage.setItem(`wisekapital_data_${m.monthName.toLowerCase()}`, JSON.stringify(mData)); } catch(e){}
+          }
+        } catch(e) {}
+
+        // 2. SI FALLA LA LECTURA, BUSCAR EN CACHE TEMPORAL (POR SI ESTÁ EN MODO LOCAL)
+        if (!mData) {
+          const savedLocal = localStorage.getItem(`wisekapital_data_${m.monthName.toLowerCase()}`);
+          if (savedLocal) {
+            try { mData = JSON.parse(savedLocal); } catch(e){}
+          }
         }
 
-        if (response.ok) {
-          appData = await response.json();
-          document.getElementById('localFileHelper').classList.add('hidden');
-          document.getElementById('headerImportJsonBtn').classList.add('hidden');
-          setLiveBadge('server', `${monthName}/data.json`);
-        } else {
-          throw new Error("HTTP Status: " + response.status);
+        // 3. SI AÚN NO HAY DATOS, CREAR PLANTILLA POR DEFECTO PARA ESE MES
+        if (!mData) {
+          mData = createDefaultMonthData(m.monthName, m.year);
         }
-      } catch (err) {
-        console.warn(`No se encontró ./json remoto para ${monthName}:`, err);
-        
-        if (isLocal) {
-          document.getElementById('localFileHelper').classList.remove('hidden');
-          document.getElementById('headerImportJsonBtn').classList.remove('hidden');
-          setLiveBadge('auto', 'Awaiting Import');
-        } else {
-          setLiveBadge('auto', `${monthName} (Default)`);
-        }
-        
-        appData = createDefaultMonthData(monthName, currentYear);
+
+        // --- SUMATORIA DE KPIS DE TODOS LOS MESES EN EL RANGO ---
+        mergedKpis.budget += Number(mData.kpis.budget) || 0;
+        mergedKpis.signups += Number(mData.kpis.signups) || 0;
+        mergedKpis.users += Number(mData.kpis.users) || 0;
+        mergedKpis.revenue += Number(mData.kpis.revenue) || 0;
+        mergedKpis.profit += Number(mData.kpis.profit) || 0;
+
+        // --- SUMATORIA DE CAMPAÑAS ---
+        (mData.campaigns || []).forEach(c => {
+          // Calculamos el RR mensual ANTES de sumarlo
+          c.rrBudget = Math.round((Number(c.spent) || 0) * factor);
+          c.impRr = Math.round((Number(c.impMtd) || 0) * factor);
+          c.clicksRr = Math.round((Number(c.clicksMtd) || 0) * factor);
+          c.regRr = Math.round((Number(c.regMtd) || 0) * factor);
+          c.usersRr = Math.round((Number(c.usersMtd) || 0) * factor);
+
+          if (!mergedCampaignsMap.has(c.id)) {
+            mergedCampaignsMap.set(c.id, JSON.parse(JSON.stringify(c)));
+          } else {
+            let ex = mergedCampaignsMap.get(c.id);
+            ex.budget += Number(c.budget) || 0;
+            ex.spent += Number(c.spent) || 0;
+            ex.rrBudget += c.rrBudget;
+            ex.dailyBudget += Number(c.dailyBudget) || 0;
+            ex.impKpi += Number(c.impKpi) || 0;
+            ex.impMtd += Number(c.impMtd) || 0;
+            ex.impRr += c.impRr;
+            ex.productViews += Number(c.productViews) || 0;
+            ex.v2p += Number(c.v2p) || 0;
+            ex.clicksKpi += Number(c.clicksKpi) || 0;
+            ex.clicksMtd += Number(c.clicksMtd) || 0;
+            ex.clicksRr += c.clicksRr;
+            ex.regKpi += Number(c.regKpi) || 0;
+            ex.regMtd += Number(c.regMtd) || 0;
+            ex.regRr += c.regRr;
+            ex.usersFtp += Number(c.usersFtp) || 0;
+            ex.usersMtd += Number(c.usersMtd) || 0;
+            ex.usersRr += c.usersRr;
+            ex.revenue += Number(c.revenue) || 0;
+          }
+        });
       }
 
-      ensureCampaignIds();
-      distributeKpisToCampaigns();
-      recalcAll();
+      let finalCampaigns = Array.from(mergedCampaignsMap.values());
+      finalCampaigns.forEach(c => {
+        c.ctr = c.impMtd > 0 ? Math.round((c.clicksMtd / c.impMtd) * 100) + '%' : '0%';
+        c.s2p = calculateAutoS2P(c.regMtd, c.usersMtd);
+        c.roi = c.revenue - c.spent;
+      });
+
+      appData = {
+        period: `${startStr} - ${endStr}`,
+        kpis: mergedKpis,
+        campaigns: finalCampaigns
+      };
+
+      // Establecer factor global (usado si el usuario edita una celda manualmente en la vista agrupada)
+      globalFactor = getFactorForMonth({ monthIndex: endDateObj.getMonth(), year: endDateObj.getFullYear() }, endDateObj);
+
+      // Actualizar Banner
+      if (months.length === 1) {
+        document.getElementById('lblTotalDaysRange').innerText = endDateObj.getDate() + " days";
+        document.getElementById('lblRrFactor').innerText = `×${globalFactor.toFixed(2)}`;
+        setLiveBadge(fetchedAny ? 'server' : 'auto', `${months[0].monthName}`);
+      } else {
+        const msDiff = endDateObj.getTime() - new Date(startStr).getTime();
+        const daysDiff = Math.ceil(msDiff / (1000 * 3600 * 24)) + 1;
+        document.getElementById('lblTotalDaysRange').innerText = daysDiff + " days";
+        document.getElementById('lblRrFactor').innerText = `Mixed`;
+        setLiveBadge('server', `Aggregated Range`);
+      }
+      
+      document.getElementById('dateAutoInfo').innerText = `Data from ${startStr} to ${endStr}`;
+
+      if (fetchedAny && !isLocal) {
+        document.getElementById('localFileHelper').classList.add('hidden');
+        document.getElementById('headerImportJsonBtn').classList.add('hidden');
+      } else if (isLocal) {
+        document.getElementById('localFileHelper').classList.remove('hidden');
+        document.getElementById('headerImportJsonBtn').classList.remove('hidden');
+      }
+
       renderDashboard();
     }
 
@@ -910,9 +991,7 @@
       updateTableFooter(pKey);
       syncGlobalSummaries();
 
-      if (isBlur) {
-        updateCharts();
-      }
+      if (isBlur) updateCharts();
     }
 
     function onKeyDownCell(e, el) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } }
@@ -980,7 +1059,6 @@
           <td class="text-center font-mono readonly-auto cell-rr-budget col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" title="Calculated automatically based on current date">$${c.rrBudget}</td>
           <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)" onkeydown="onKeyDownCell(event, this)">$${c.dailyBudget}</td>
           
-          <!-- IMP. (KPI) - EDITABLE -->
           <td class="text-center font-mono editable-cell cell-imp-kpi col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impKpi || 0).toLocaleString()}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impMtd || 0).toLocaleString()}</td>
           <td class="text-center font-mono readonly-auto cell-rr-imp col-tint-views ${getRrColorClass(c.impRr, c.impKpi)}" title="Calculated automatically">${c.impRr > 0 ? Number(c.impRr).toLocaleString() : '0'}</td>
@@ -988,7 +1066,6 @@
           <td class="text-center font-mono font-bold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'productViews')" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)" onkeydown="onKeyDownCell(event, this)">${c.productViews}</td>
           <td class="text-center font-mono font-extrabold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'v2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)" onkeydown="onKeyDownCell(event, this)">${c.v2p}</td>
           
-          <!-- CLICKS (KPI) - EDITABLE -->
           <td class="text-center font-mono editable-cell cell-clicks-kpi col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksKpi}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksMtd}</td>
           <td class="text-center font-mono readonly-auto cell-rr-clicks col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" title="Calculated automatically">${c.clicksRr > 0 ? c.clicksRr.toLocaleString() : '0'}</td>
@@ -1142,7 +1219,6 @@
       document.getElementById('chartProfitIG').innerText = `${iP < 0 ? '-$' : '$'}${Math.abs(iP).toFixed(2)}`;
       document.getElementById('chartProfitTotal').innerText = `${tP < 0 ? '-$' : '$'}${Math.abs(tP).toFixed(2)}`;
 
-      // 1. Bar Chart: Spent vs Revenue vs RR
       if (chartBar) chartBar.destroy();
       chartBar = new Chart(document.getElementById('budgetCleanBarChart').getContext('2d'), {
         type: 'bar',
@@ -1157,7 +1233,6 @@
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // 2. Bar Chart: Profit
       if (chartProfit) chartProfit.destroy();
       chartProfit = new Chart(document.getElementById('profitPlatformChart').getContext('2d'), {
         type: 'bar',
@@ -1168,7 +1243,6 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 3. Section 2: Signups & Users Donuts + ROI comparisons
       const mSignups = sum(meta, 'regMtd');
       const iSignups = sum(ig, 'regMtd');
       const totSignups = mSignups + iSignups || 1;
@@ -1202,7 +1276,6 @@
       const sDist = document.getElementById('lblSignupsDist');
       if (sDist) sDist.innerText = `Total Signups distribution across Meta (${mSignups}) and Instagram (${iSignups})`;
 
-      // Doughnut: Signups
       const pieCanvasS = document.getElementById('signupsPieChart');
       if (pieCanvasS) {
         if (chartSignups) chartSignups.destroy();
@@ -1216,7 +1289,6 @@
         });
       }
 
-      // Doughnut: Users
       const pieCanvasU = document.getElementById('usersPieChart');
       if (pieCanvasU) {
         if (chartUsers) chartUsers.destroy();
@@ -1257,7 +1329,6 @@
       chartXBR = renderMiniBR('xBudgetRevenueChart', xS, xR);
     }
 
-    // EXCEL EXPORT
     async function exportToExcel() {
       if (!appData || !appData.campaigns) return;
 
@@ -1318,7 +1389,7 @@
         let r = startRow;
         ws.mergeCells(r, 1, r, 23);
         const tc = ws.getCell(r, 1);
-        tc.value = `${title} (${camps.length} Campaigns) — ${currentSelectedMonth} ${new Date().getFullYear()}`;
+        tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
         tc.font = { name: 'Calibri', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
         tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: pKey === 'meta' ? 'FF2563EB' : pKey === 'instagram' ? 'FFDB2777' : 'FF1E293B' } };
         tc.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -1425,7 +1496,7 @@
       const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `WiseKapital_Social_Report_${currentSelectedMonth}_${new Date().getFullYear()}.xlsx`;
+      a.download = `WiseKapital_Social_Report_${new Date().toISOString().slice(0,10)}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -1440,12 +1511,33 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const currentCalMonth = monthNames[new Date().getMonth()];
-      currentSelectedMonth = currentCalMonth;
-      const sel = document.getElementById('monthSelector');
-      if (sel) sel.value = currentCalMonth;
+      // INICIALIZACIÓN DE FLATPICKR (CALENDARIO CUSTOM)
+      dateFromPicker = flatpickr("#dateFrom", {
+        dateFormat: "m/d/Y",
+        minDate: "2026-10-01",
+        maxDate: "today",
+        defaultDate: "10/01/2026",
+        onChange: function(selectedDates, dateStr) {
+          dateToPicker.set('minDate', dateStr);
+          if (dateToPicker.selectedDates[0] && selectedDates[0] > dateToPicker.selectedDates[0]) {
+             dateToPicker.setDate(dateStr);
+          }
+          loadDataForRange(dateStr, document.getElementById('dateTo').value);
+        }
+      });
 
-      changeSelectedMonth(currentCalMonth);
+      dateToPicker = flatpickr("#dateTo", {
+        dateFormat: "m/d/Y",
+        minDate: "2026-10-01",
+        maxDate: "today",
+        defaultDate: "today",
+        onChange: function(selectedDates, dateStr) {
+          loadDataForRange(document.getElementById('dateFrom').value, dateStr);
+        }
+      });
+
+      // Llamada inicial
+      loadDataForRange(document.getElementById('dateFrom').value, document.getElementById('dateTo').value);
     });
   </script>
 </body>
