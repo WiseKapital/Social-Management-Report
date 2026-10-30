@@ -22,7 +22,7 @@
     .master-table th, .master-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
     .master-table thead tr:first-child th { border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800; }
     .sticky-col { position: sticky; left: 0; z-index: 10; border-left: 1px solid #D1D5DB; background: #fff; }
-    .editable-cell { outline: none; cursor: text; transition: background 0.15s; }
+    .editable-cell { outline: none; cursor: text; transition: filter 0.15s; }
     .editable-cell:hover { filter: brightness(0.95); }
     .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
     .col-budget { background-color: #F4F4F4 !important; }
@@ -36,43 +36,43 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-  <!-- TOAST NOTIFICATION -->
+  <!-- TOAST -->
   <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
     <span id="saveToastText">Updated</span>
   </div>
 
-  <!-- VIEW JSON MODAL -->
+  <!-- VIEW / EDIT JSON MODAL -->
   <div id="jsonModal" onclick="if(event.target === this) closeJsonModal()" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
     <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[88vh]">
       <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="code" class="w-4 h-4"></i></div>
           <div>
-            <h3 class="text-sm font-bold font-display text-slate-900">Live JSON Preview</h3>
+            <h3 class="text-sm font-bold font-display text-slate-900">View / Edit JSON</h3>
             <span id="jsonPathBadge" class="text-[10px] font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">2026/October/data.json</span>
           </div>
         </div>
-        <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 transition flex items-center justify-center cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 flex items-center justify-center cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-      <div class="p-5 overflow-y-auto custom-scrollbar bg-[#0B1120] flex-1 font-mono text-xs">
-        <pre><code id="jsonModalCode" class="text-emerald-400 leading-relaxed block select-all"></code></pre>
+      <div class="p-4 bg-[#0B1120] flex-1 flex flex-col">
+        <textarea id="jsonModalCode" spellcheck="false" class="w-full h-96 bg-transparent text-emerald-400 font-mono text-xs leading-relaxed outline-none resize-none custom-scrollbar"></textarea>
       </div>
-      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white">
-        <span class="text-xs text-slate-500 font-medium">Synced with GitHub Repository</span>
+      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white flex-wrap gap-2">
+        <span class="text-xs text-slate-500">You can copy or paste JSON here and save directly to Git</span>
         <div class="flex items-center gap-2">
-          <button onclick="copyJsonToClipboard()" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+          <button onclick="copyJsonToClipboard()" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-slate-800 hover:bg-black text-white flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyBtnText">Copy JSON</span>
           </button>
-          <button onclick="downloadJsonFile()" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>Download data.json</span>
+          <button onclick="applyJsonFromModal()" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="git-commit" class="w-3.5 h-3.5"></i><span>Apply &amp; Save to Git</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TOP HEADER -->
+  <!-- HEADER -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
     <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
       <div class="flex items-center justify-between flex-wrap gap-4 min-h-[4rem]">
@@ -85,27 +85,26 @@
           <div class="hidden sm:block pl-4 border-l border-slate-200">
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
-              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Connecting...</span>
-              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">2026 / October / data.json</span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Syncing...</span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">2026/October/data.json</span>
             </div>
-            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">October 2026</p>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">Loading...</p>
           </div>
         </div>
 
         <div class="flex items-center gap-2.5 flex-wrap">
-
-          <!-- DATE SELECTOR -->
+          <!-- DATE PICKER -->
           <div class="flex items-center gap-2 font-bold text-xs">
             <span class="text-slate-400">FROM</span>
             <div class="relative">
-              <button id="fromBtn" onclick="toggleCal('from', event)" class="w-[105px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 shadow-2xs hover:border-slate-400 cursor-pointer">
+              <button id="fromBtn" onclick="toggleCal('from', event)" class="w-[105px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 hover:border-slate-400 cursor-pointer">
                 <span id="fromDateText">Oct 2026</span>
               </button>
               <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px]">
                 <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
-                  <button onclick="navCal('from', -1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                  <span id="fromYearLabel" class="font-extrabold text-sm font-display">2026</span>
-                  <button onclick="navCal('from', 1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                  <button onclick="navCal('from', -1, event)" class="p-1 hover:bg-slate-100 rounded cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="fromYearLabel" class="font-extrabold text-sm">2026</span>
+                  <button onclick="navCal('from', 1, event)" class="p-1 hover:bg-slate-100 rounded cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                 </div>
                 <div id="fromMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
@@ -113,51 +112,48 @@
 
             <span class="text-slate-400">TO</span>
             <div class="relative">
-              <button id="toBtn" onclick="toggleCal('to', event)" class="w-[105px] px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 shadow-2xs cursor-pointer">
+              <button id="toBtn" onclick="toggleCal('to', event)" class="w-[105px] px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 cursor-pointer">
                 <span id="toDateText">Oct 2026</span>
               </button>
               <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px]">
                 <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
-                  <button onclick="navCal('to', -1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                  <span id="toYearLabel" class="font-extrabold text-sm font-display">2026</span>
-                  <button onclick="navCal('to', 1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                  <button onclick="navCal('to', -1, event)" class="p-1 hover:bg-slate-100 rounded cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="toYearLabel" class="font-extrabold text-sm">2026</span>
+                  <button onclick="navCal('to', 1, event)" class="p-1 hover:bg-slate-100 rounded cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                 </div>
                 <div id="toMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
             </div>
           </div>
 
-          <!-- SAVE TO GIT -->
-          <button onclick="saveDashboardData(false)" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Commits changes directly to GitHub">
-            <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Save</span>
+          <button onclick="saveDashboardData(false)" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Save to Git</span>
           </button>
 
-          <button onclick="openJsonModal()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 cursor-pointer flex items-center gap-1.5">
+          <button onclick="openJsonModal()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 hover:bg-slate-50 cursor-pointer flex items-center gap-1.5">
             <i data-lucide="code" class="w-3.5 h-3.5"></i><span>View JSON</span>
           </button>
 
-          <button onclick="exportToExcel()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export</span>
+          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export Excel</span>
           </button>
 
-          <div class="relative">
-            <select id="platformFilter" onchange="filterPlatform()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer outline-none">
-              <option value="all">All Platforms</option>
-              <option value="meta">Meta Ads</option>
-              <option value="instagram">Instagram Ads</option>
-              <option value="x">X Campaigns</option>
-            </select>
-          </div>
+          <select id="platformFilter" onchange="filterPlatform()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer outline-none">
+            <option value="all">All Platforms</option>
+            <option value="meta">Meta Ads</option>
+            <option value="instagram">Instagram Ads</option>
+            <option value="x">X Campaigns</option>
+          </select>
         </div>
 
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <!-- MAIN -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-    <!-- TEAM PERFORMANCE TABLE -->
+    <!-- TEAM PERFORMANCE -->
     <div class="space-y-2">
       <h2 class="text-base font-bold font-display text-slate-900">Team Performance</h2>
       <div class="glass-card rounded-xl overflow-hidden">
@@ -165,12 +161,12 @@
           <table class="w-full text-xs border-collapse text-center">
             <thead>
               <tr>
-                <th class="bg-white py-2 px-3 text-center font-extrabold text-slate-900" style="width: 100px;">TEAM</th>
+                <th class="bg-white py-2 px-3 font-extrabold text-slate-900" style="width: 100px;">TEAM</th>
                 <th colspan="5" class="bg-[#1976D2] text-white font-extrabold py-2 px-2 border-r border-white/20">KPIS (CLICK TO EDIT TARGETS)</th>
                 <th colspan="5" class="bg-[#2E7D32] text-white font-extrabold py-2 px-2 border-r border-white/20">MTD</th>
                 <th colspan="6" class="bg-[#B45309] text-white font-extrabold py-2 px-2">RR - RUN-RATE</th>
               </tr>
-              <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
+              <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-200">
                 <th class="py-2 px-2"></th>
                 <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
                 <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
@@ -180,11 +176,11 @@
             <tbody class="divide-y divide-slate-100 bg-white">
               <tr>
                 <td class="py-3 px-3"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FCE4EC] text-[#D81B60]">SOCIAL</span></td>
-                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'budget')" id="tpKpiBudget">$0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'signups')" id="tpKpiSignups">0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'users')" id="tpKpiUsers">0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'revenue')" id="tpKpiRevenue">$0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200 editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'profit')" id="tpKpiProfit">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'budget')" id="tpKpiBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'signups')" id="tpKpiSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'users')" id="tpKpiUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'revenue')" id="tpKpiRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200 editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'profit')" id="tpKpiProfit">$0</td>
 
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdBudget">$0</td>
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdSignups">0</td>
@@ -234,7 +230,7 @@
       </div>
     </div>
 
-    <!-- DYNAMIC PLATFORM TABLES (META, INSTAGRAM, X) -->
+    <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
     <div id="platformsContainer" class="space-y-8"></div>
 
     <!-- CHARTS -->
@@ -284,7 +280,7 @@
     let GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
 
     let appData = null;
-    let globalFactor = 1.0;
+    let globalFactor = 1.03;
     let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedYear = 2026, currentLoadedMonth = "October";
 
@@ -292,22 +288,23 @@
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
     const PLATFORMS = [
-      { key: 'meta', title: 'Meta (Facebook Ads)', color: '#0081FB', bg: 'bg-[#0081FB]', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 640 512"><path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/></svg>` },
-      { key: 'instagram', title: 'Instagram Ads', color: '#E1306C', bg: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
-      { key: 'x', title: 'X Campaigns', color: '#000000', bg: 'bg-black', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` }
+      { key: 'meta', title: 'Meta (Facebook Ads)', btnBg: 'bg-blue-600 hover:bg-blue-700', bg: 'bg-[#0081FB]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 640 512"><path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/></svg>` },
+      { key: 'instagram', title: 'Instagram Ads', btnBg: 'bg-pink-600 hover:bg-pink-700', bg: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
+      { key: 'x', title: 'X Campaigns', btnBg: 'bg-slate-800 hover:bg-slate-900', bg: 'bg-black', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` }
     ];
 
-    const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
-    const toNum = val => { if (!val || val === '—' || val === '-') return 0; const n = parseFloat(String(val).replace(/[$,%]/g, '')); return isNaN(n) ? 0 : n; };
-    function calculateAutoRR(val) { const n = toNum(val); return n <= 0 ? 0 : Math.round(n * globalFactor); }
-    function getRrColorClass(rr, kpi) { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; }
+    const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.innerText = v; };
+    const toNum = val => { if (val === undefined || val === null || val === '—' || val === '-' || val === '') return 0; const n = parseFloat(String(val).replace(/[$,%]/g, '')); return isNaN(n) ? 0 : n; };
+    const utf8ToB64 = str => { const bytes = new TextEncoder().encode(str); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+    const b64ToUtf8 = b64 => { const bin = atob(b64.replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); };
+    const cellEnter = (e, el) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
+    const calculateAutoRR = val => { const n = toNum(val); return n <= 0 ? 0 : Math.round(n * globalFactor); };
+    const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
 
-    function getSystemToday() { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
-    const sysToday = getSystemToday();
+    const now = new Date();
     let fromDate = new Date(2026, 9, 1);
-    let toDate = (sysToday.getFullYear() === 2026 && sysToday.getMonth() === 9) ? new Date(sysToday) : new Date(2026, 9, 28);
-    let fromViewYear = fromDate.getFullYear(), toViewYear = toDate.getFullYear();
-
+    let toDate = new Date(2026, 9, 30);
+    let fromViewYear = 2026, toViewYear = 2026;
     const fmtMonthYear = d => `${shortMonthNames[d.getMonth()]} ${d.getFullYear()}`;
 
     function updateDatesUI() {
@@ -329,9 +326,8 @@
 
     function navCal(t, s, e) {
       e?.stopPropagation();
-      if (t === 'from') fromViewYear += s; else toViewYear += s;
-      if (fromViewYear < 2026) fromViewYear = 2026;
-      if (toViewYear < 2026) toViewYear = 2026;
+      if (t === 'from') fromViewYear = Math.max(2026, fromViewYear + s);
+      else toViewYear = Math.max(2026, toViewYear + s);
       renderMonthGrid(t);
     }
 
@@ -355,8 +351,8 @@
           cell.className = 'py-2 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold';
           cell.onclick = (e) => {
             e.stopPropagation();
-            if (isFrom) { fromDate = new Date(y, m, 1); if (fromDate > toDate) toDate = new Date(y, m + 1, 0); }
-            else { toDate = new Date(y, m + 1, 0); if (toDate < fromDate) fromDate = new Date(y, m, 1); }
+            fromDate = new Date(y, m, 1);
+            toDate = new Date(y, m + 1, 0);
             document.getElementById(t + 'Pop').classList.add('hidden');
             updateDatesUI();
             loadDataForRange(fromDate, toDate);
@@ -400,53 +396,57 @@
     function addCampaign(platform) {
       if (!appData) appData = createEmptyMonth(currentLoadedMonth, currentLoadedYear);
       appData.campaigns.push({
-        id: `camp_${Date.now()}`, name: `New Campaign`, platform,
+        id: `camp_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+        name: `New Campaign`, platform, highlight: false,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
         regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: "—", s2p: "—", revenue: 0, roi: 0
       });
       distributeKpisToCampaigns();
       renderDashboard();
-      showSaveToast(`Added campaign to ${platform.toUpperCase()}. Click Save to push to Git.`);
+      showSaveToast('Campaign added. Click "Save to Git" to commit.');
     }
 
     function deleteCampaign(id, e) {
       e?.stopPropagation();
-      if (!confirm("Delete campaign?")) return;
+      if (!confirm("Delete this campaign?")) return;
       appData.campaigns = (appData.campaigns || []).filter(c => String(c.id) !== String(id));
       distributeKpisToCampaigns();
-      syncGlobalSummaries();
       renderDashboard();
+      showSaveToast('Campaign removed. Click "Save to Git" to commit.');
     }
 
     function showSaveToast(text) {
       const t = document.getElementById('saveToast');
       setTxt('saveToastText', text);
-      t.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-      setTimeout(() => t.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 3500);
+      if (t) {
+        t.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => t.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 3500);
+      }
     }
 
     function getCleanData() {
       distributeKpisToCampaigns();
       return {
-        period: appData.period, kpis: appData.kpis,
+        period: appData.period,
+        kpis: appData.kpis,
         campaigns: (appData.campaigns || []).map(c => { const o = { ...c }; delete o.id; return o; })
       };
     }
 
-    // GUARDA DIRECTAMENTE A GITHUB CREANDO CARPETA DE AÑO/MES Y ARCHIVO
-    async function saveDashboardData(isAutoInit = false) {
+    // COMMIT REAL A GITHUB API (CREA CARPETA DEL AÑO, MES Y DATA.JSON)
+    async function saveDashboardData(silentAutoCreate = false) {
       if (!appData) return;
       const cleanData = getCleanData();
       const jsonStr = JSON.stringify(cleanData, null, 2);
       const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
 
-      if (!isAutoInit) showSaveToast("⏳ Committing directly to GitHub...");
+      if (!silentAutoCreate) showSaveToast("⏳ Committing to GitHub...");
       try {
-        const apiGet = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}?ref=${GH_BRANCH}&t=${Date.now()}`;
+        const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}`;
         let sha = "";
         
-        const getRes = await fetch(apiGet, {
+        const getRes = await fetch(`${apiUrl}?ref=${GH_BRANCH}&t=${Date.now()}`, {
           cache: 'no-store',
           headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
         });
@@ -455,54 +455,66 @@
           sha = j.sha;
         }
 
-        const putRes = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}`, {
+        const putRes = await fetch(apiUrl, {
           method: 'PUT',
-          headers: { 
-            'Authorization': `Bearer ${GITHUB_TOKEN}`, 
+          headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
             'Content-Type': 'application/json',
             'Accept': 'application/vnd.github.v3+json'
           },
           body: JSON.stringify({
-            message: isAutoInit ? `Auto-create ${relPath}` : `Update ${relPath} via Dashboard`,
-            content: btoa(unescape(encodeURIComponent(jsonStr))),
+            message: silentAutoCreate ? `Auto-create ${relPath}` : `Update ${relPath} via Dashboard`,
+            content: utf8ToB64(jsonStr),
             branch: GH_BRANCH,
             sha: sha || undefined
           })
         });
 
         if (putRes.ok) {
-          showSaveToast(`✅ Saved in GitHub: ${relPath}`);
-          setLiveBadge(`Synced (${currentLoadedMonth})`);
-          setTxt('headerPathBadge', `${currentLoadedYear} / ${currentLoadedMonth} / data.json`);
-        } else if (!isAutoInit) {
+          showSaveToast(silentAutoCreate ? `🆕 Auto-created ${relPath} in GitHub!` : `✅ Saved to GitHub: ${relPath}`);
+          setLiveBadge(`Live Git (${currentLoadedMonth})`);
+          setTxt('headerPathBadge', `${relPath} ✓`);
+        } else {
           const err = await putRes.json();
-          alert(`GitHub API Error: ${err.message}`);
+          if (!silentAutoCreate) alert(`GitHub Error: ${err.message}`);
         }
-      } catch(e) {
-        if (!isAutoInit) alert("Error connecting to GitHub API.");
+      } catch (e) {
+        if (!silentAutoCreate) alert("Network error while saving to GitHub.");
       }
-    }
-
-    function downloadJsonFile() {
-      const blob = new Blob([JSON.stringify(getCleanData(), null, 2)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data.json';
-      document.body.appendChild(a); a.click(); a.remove();
     }
 
     function openJsonModal() {
       if (!appData) return;
-      setTxt('jsonModalCode', JSON.stringify(getCleanData(), null, 2));
+      document.getElementById('jsonModalCode').value = JSON.stringify(getCleanData(), null, 2);
       setTxt('jsonPathBadge', `${currentLoadedYear}/${currentLoadedMonth}/data.json`);
       document.getElementById('jsonModal').classList.remove('hidden');
       lucide.createIcons();
     }
+
     function closeJsonModal() { document.getElementById('jsonModal').classList.add('hidden'); }
 
     async function copyJsonToClipboard() {
-      await navigator.clipboard.writeText(document.getElementById('jsonModalCode').textContent);
+      await navigator.clipboard.writeText(document.getElementById('jsonModalCode').value);
       setTxt('copyBtnText', "Copied!");
       showSaveToast("✅ JSON copied to clipboard!");
       setTimeout(() => setTxt('copyBtnText', "Copy JSON"), 2000);
+    }
+
+    async function applyJsonFromModal() {
+      try {
+        const parsed = JSON.parse(document.getElementById('jsonModalCode').value);
+        appData = {
+          period: parsed.period || `${currentLoadedMonth} ${currentLoadedYear}`,
+          kpis: parsed.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+          campaigns: (parsed.campaigns || []).map((c, i) => ({ ...c, id: `c_${i}_${Date.now()}` }))
+        };
+        distributeKpisToCampaigns();
+        renderDashboard();
+        closeJsonModal();
+        await saveDashboardData(false);
+      } catch (err) {
+        alert("Invalid JSON format: " + err.message);
+      }
     }
 
     function setLiveBadge(label) {
@@ -510,67 +522,72 @@
       if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
     }
 
-    // LECTURA EN TIEMPO REAL DIRECTO DESDE LA API DE GITHUB (0 SEGUNDOS DE DELAY)
+    // LECTURA EN TIEMPO REAL DIRECTO DESDE GITHUB API (0% CACHÉ)
     async function fetchFreshJson(year, mName) {
-      const apiPaths = [`${year}/${mName}/data.json`, `${mName}/data.json`];
-      for (const rel of apiPaths) {
+      const candidates = [`${year}/${mName}/data.json`, `${mName}/data.json`];
+      let got404 = false;
+
+      for (const rel of candidates) {
         try {
+          const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${rel}?ref=${GH_BRANCH}&t=${Date.now()}`;
           const headers = { 'Accept': 'application/vnd.github.v3+json' };
           if (GITHUB_TOKEN) headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
-          const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${rel}?ref=${GH_BRANCH}&t=${Date.now()}`, {
-            cache: 'no-store',
-            headers
-          });
+          const res = await fetch(apiUrl, { cache: 'no-store', headers });
           if (res.ok) {
-            const meta = await res.json();
-            if (meta && meta.content) {
-              const decoded = decodeURIComponent(escape(atob(meta.content.replace(/\s/g, ''))));
-              const data = JSON.parse(decoded);
-              if (data && (data.campaigns || data.kpis)) return data;
+            const fileObj = await res.json();
+            if (fileObj && fileObj.content) {
+              const data = JSON.parse(b64ToUtf8(fileObj.content));
+              return { status: 'found', data };
             }
+          } else if (res.status === 404) {
+            got404 = true;
           }
-        } catch(e) {}
+        } catch (e) {}
       }
 
-      const localPaths = [`./${year}/${mName}/data.json`, `./${mName}/data.json`, `./data.json`];
-      for (const p of localPaths) {
+      // Fallback relativo local
+      for (const rel of candidates) {
         try {
-          const res = await fetch(`${p}?nocache=${Date.now()}`, { cache: 'no-store' });
+          const res = await fetch(`./${rel}?nocache=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const data = await res.json();
-            if (data && (data.campaigns || data.kpis)) return data;
+            return { status: 'found', data };
           }
-        } catch(e) {}
+        } catch (e) {}
       }
-      return null;
+
+      return { status: got404 ? 'not_found' : 'error', data: null };
     }
 
     async function loadDataForRange(startObj, endObj) {
       const year = startObj.getFullYear();
       const mName = fullMonthNames[startObj.getMonth()] || "October";
-      currentLoadedYear = year; currentLoadedMonth = mName;
+      currentLoadedYear = year;
+      currentLoadedMonth = mName;
+      setTxt('headerPathBadge', `${year}/${mName}/data.json`);
 
-      setTxt('headerPathBadge', `${year} / ${mName} / data.json`);
-
-      const fetched = await fetchFreshJson(year, mName);
-      if (fetched) {
+      const result = await fetchFreshJson(year, mName);
+      if (result.status === 'found' && result.data) {
         appData = {
-          period: fetched.period || `${mName} ${year}`,
-          kpis: fetched.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
-          campaigns: (fetched.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}` }))
+          period: result.data.period || `${mName} ${year}`,
+          kpis: result.data.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+          campaigns: (result.data.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}_${Date.now()}` }))
         };
         setLiveBadge(`Live Git (${mName})`);
         distributeKpisToCampaigns();
         setTxt('dateAutoInfo', appData.period);
         renderDashboard();
       } else {
-        // SI NO EXISTE EN GITHUB, CREA LA ESTRUCTURA Y HACE EL COMMIT AUTOMÁTICO
         appData = createEmptyMonth(mName, year);
-        setLiveBadge(`Auto-Created (${mName})`);
+        setLiveBadge(`New (${mName})`);
         distributeKpisToCampaigns();
         setTxt('dateAutoInfo', appData.period);
         renderDashboard();
-        if (GITHUB_TOKEN) saveDashboardData(true);
+
+        // SI NO EXISTE LA CARPETA DEL AÑO/MES NI EL JSON EN GITHUB, LO CREA AUTOMÁTICAMENTE
+        if (result.status === 'not_found' && GITHUB_TOKEN) {
+          await saveDashboardData(true);
+        }
       }
     }
 
@@ -581,7 +598,7 @@
       renderDashboard();
     }
 
-    function handleCellInputOrBlur(el, id, field, isBlur) {
+    function handleCellBlur(el, id, field) {
       const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
       if (!c) return;
       if (['name', 'ctr', 's2p', 'usersRr'].includes(field)) c[field] = el.innerText.trim();
@@ -593,18 +610,21 @@
       c.regRr = calculateAutoRR(c.regMtd);
       c.roi = toNum(c.revenue) - toNum(c.spent);
 
-      syncGlobalSummaries();
-      if (isBlur) {
-        renderAllTables();
-        updateCharts();
-        lucide.createIcons();
-      }
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function filterPlatform() {
+      const val = document.getElementById('platformFilter').value;
+      PLATFORMS.forEach(p => {
+        const sec = document.getElementById(`section_${p.key}`);
+        if (sec) sec.style.display = (val === 'all' || val === p.key) ? 'block' : 'none';
+      });
     }
 
     function renderDashboard() {
       if (!appData) return;
       const k = appData.kpis || {};
-
       setTxt('tpKpiBudget', `$${toNum(k.budget).toLocaleString()}`);
       setTxt('tpKpiSignups', toNum(k.signups).toLocaleString());
       setTxt('tpKpiUsers', toNum(k.users).toLocaleString());
@@ -618,6 +638,7 @@
       setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
 
       renderAllTables();
+      filterPlatform();
       syncGlobalSummaries();
       updateCharts();
       lucide.createIcons();
@@ -625,7 +646,6 @@
 
     function renderAllTables() {
       const container = document.getElementById('platformsContainer');
-      if (!container) return;
       container.innerHTML = '';
 
       PLATFORMS.forEach(p => {
@@ -644,14 +664,16 @@
         card.className = 'space-y-2';
         card.innerHTML = `
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2.5">
               <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center shadow-xs">${p.icon}</span>
               <h2 class="text-base font-bold font-display text-slate-900">${p.title}</h2>
             </div>
             <div class="flex items-center gap-2 text-xs font-bold">
-              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
-              <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
-              <button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1 cursor-pointer transition"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span></button>
+              <span class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
+              <span class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
+              <button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded-md ${p.btnBg} text-white transition flex items-center gap-1 cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
+              </button>
             </div>
           </div>
           <div class="glass-card rounded-xl overflow-hidden">
@@ -679,35 +701,35 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${camps.length === 0 ? `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform. Click "Add Campaign" to create one.</td></tr>` : camps.map(c => `
+                  ${camps.length === 0 ? `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform — click "+ Add Campaign"</td></tr>` : camps.map(c => `
                     <tr class="hover:brightness-95">
                       <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
                         <div class="relative flex items-center justify-center min-h-[26px]">
-                          <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)">${c.name}</span>
-                          <button onclick="deleteCampaign('${c.id}', event)" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                          <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'name')">${c.name}</span>
+                          <button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                         </div>
                       </td>
                       <td class="col-budget font-mono font-bold">$${c.budget}</td>
-                      <td class="col-budget font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)">$${c.spent}</td>
+                      <td class="col-budget font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
                       <td class="col-budget font-mono font-bold ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
-                      <td class="col-budget font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)">$${c.dailyBudget}</td>
-                      <td class="col-views font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)">${toNum(c.impKpi).toLocaleString()}</td>
-                      <td class="col-views font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)">${toNum(c.impMtd).toLocaleString()}</td>
+                      <td class="col-budget font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'dailyBudget')">$${c.dailyBudget}</td>
+                      <td class="col-views font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
+                      <td class="col-views font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
                       <td class="col-views font-mono ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
-                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)">${c.productViews}</td>
-                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)">${c.v2p}</td>
-                      <td class="col-clicks font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)">${c.clicksKpi}</td>
-                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)">${c.clicksMtd}</td>
+                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'productViews')">${c.productViews}</td>
+                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'v2p')">${c.v2p}</td>
+                      <td class="col-clicks font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksKpi')">${c.clicksKpi}</td>
+                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksMtd')">${c.clicksMtd}</td>
                       <td class="col-clicks font-mono ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
-                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)">${c.ctr}</td>
-                      <td class="col-regs font-mono font-bold">${c.regKpi || '—'}</td>
-                      <td class="col-regs font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)">${c.regMtd}</td>
+                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'ctr')">${c.ctr}</td>
+                      <td class="col-regs font-mono font-bold">${c.regKpi !== undefined ? c.regKpi : '—'}</td>
+                      <td class="col-regs font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'regMtd')">${c.regMtd}</td>
                       <td class="col-regs font-mono ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
-                      <td class="col-users font-mono font-bold">${c.usersFtp || '—'}</td>
-                      <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)">${c.usersMtd}</td>
-                      <td class="col-users font-mono ${getRrColorClass(c.usersRr, c.usersFtp)}">${c.usersRr || '—'}</td>
-                      <td class="col-perf font-mono font-bold">${c.s2p || '0.0%'}</td>
-                      <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)">$${toNum(c.revenue).toFixed(2)}</td>
+                      <td class="col-users font-mono font-bold">${c.usersFtp !== undefined ? c.usersFtp : '—'}</td>
+                      <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersMtd')">${c.usersMtd}</td>
+                      <td class="col-users font-mono editable-cell ${getRrColorClass(c.usersRr, c.usersFtp)}" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersRr')">${c.usersRr ?? '—'}</td>
+                      <td class="col-perf font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 's2p')">${c.s2p ?? '—'}</td>
+                      <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
                     </tr>
                   `).join('')}
@@ -722,7 +744,7 @@
                     <td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0%'}</td>
                     <td class="col-regs">${totRK > 0 ? totRK : '—'}</td><td class="col-regs">${totRM}</td><td class="col-regs">${totRR}</td>
                     <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users">—</td>
-                    <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0%'}</td>
+                    <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
                     <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
                     <td class="col-perf ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'}">${totRoi < 0 ? '-$' + Math.abs(totRoi) : '$' + totRoi}</td>
                   </tr>
@@ -735,14 +757,6 @@
       });
     }
 
-    function filterPlatform() {
-      const val = document.getElementById('platformFilter').value;
-      PLATFORMS.forEach(p => {
-        const el = document.getElementById(`section_${p.key}`);
-        if (el) el.style.display = (val === 'all' || val === p.key) ? 'block' : 'none';
-      });
-    }
-
     function syncGlobalSummaries() {
       const all = appData.campaigns || [];
       const sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
@@ -750,7 +764,7 @@
       const k = appData.kpis || {};
 
       setTxt('tpMtdBudget', `$${totSpent}`); setTxt('tpMtdSignups', totSign); setTxt('tpMtdUsers', totUsers); setTxt('tpMtdRevenue', `$${totRev.toFixed(0)}`); setTxt('tpMtdProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
-      setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totUsers || 1); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
+      setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totUsers); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
 
       setTxt('kpiBudget', `$${totSpent}`); setTxt('kpiSignups', totSign); setTxt('kpiFtd', totUsers); setTxt('kpiRevenue', `$${totRev.toFixed(0)}`); setTxt('kpiProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       
@@ -758,7 +772,7 @@
         const el = document.getElementById(id);
         if (el) { el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${(toNum(v) >= toNum(target) && toNum(target) > 0) ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`; el.innerText = `RR: ${p}${v}`; }
       };
-      badge('rrBudget', totRRB, k.budget, '$'); badge('rrSignups', totRRSign, k.signups); badge('rrFtd', totUsers || 1, k.users); badge('rrRevenue', calculateAutoRR(totRev), k.revenue, '$'); badge('rrProfit', calculateAutoRR(totProf), k.profit, '$');
+      badge('rrBudget', totRRB, k.budget, '$'); badge('rrSignups', totRRSign, k.signups); badge('rrFtd', totUsers, k.users); badge('rrRevenue', calculateAutoRR(totRev), k.revenue, '$'); badge('rrProfit', calculateAutoRR(totProf), k.profit, '$');
     }
 
     function updateCharts() {
@@ -802,13 +816,10 @@
       const wb = new ExcelJS.Workbook();
       const ws = wb.addWorksheet('Social Report');
       ws.addRow(['WISEKAPITAL SOCIAL REPORT', appData.period]);
-      ws.addRow(['Team', 'Budget KPI', 'Spent', 'Signups KPI', 'Signups MTD', 'Revenue MTD', 'Profit']);
-      ws.addRow(['SOCIAL', appData.kpis.budget, document.getElementById('tpMtdBudget').innerText, appData.kpis.signups, document.getElementById('tpMtdSignups').innerText, document.getElementById('tpMtdRevenue').innerText, document.getElementById('tpMtdProfit').innerText]);
-      ws.addRow([]);
-      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'Clicks', 'Signups', 'Users', 'Revenue', 'ROI']);
-      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.clicksMtd, c.regMtd, c.usersMtd, c.revenue, c.roi]));
+      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Revenue', 'ROI']);
+      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.revenue, c.roi]));
       const buf = await wb.xlsx.writeBuffer();
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `Report_${Date.now()}.xlsx`; a.click(); a.remove();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `WiseKapital_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`; a.click(); a.remove();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
