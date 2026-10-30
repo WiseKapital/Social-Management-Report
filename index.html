@@ -280,7 +280,7 @@
     let GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
 
     let appData = null;
-    let globalFactor = 1.03;
+    let globalFactor = 1.0;
     let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedYear = 2026, currentLoadedMonth = "October";
 
@@ -301,9 +301,8 @@
     const calculateAutoRR = val => { const n = toNum(val); return n <= 0 ? 0 : Math.round(n * globalFactor); };
     const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
 
-    const now = new Date();
     let fromDate = new Date(2026, 9, 1);
-    let toDate = new Date(2026, 9, 30);
+    let toDate = new Date(2026, 9, 31);
     let fromViewYear = 2026, toViewYear = 2026;
     const fmtMonthYear = d => `${shortMonthNames[d.getMonth()]} ${d.getFullYear()}`;
 
@@ -331,6 +330,7 @@
       renderMonthGrid(t);
     }
 
+    // CALENDARIO INDEPENDIENTE PARA FROM Y TO
     function renderMonthGrid(t) {
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
@@ -343,16 +343,23 @@
         cell.textContent = name;
         const isDisabled = (y < 2026 || (y === 2026 && m < 9));
         const isSelected = (active.getFullYear() === y && active.getMonth() === m);
+
         if (isDisabled) {
           cell.className = 'py-2 select-none text-slate-300 font-semibold cursor-not-allowed';
-        } else if (isSelected) {
-          cell.className = 'py-2 select-none cursor-pointer bg-emerald-500 text-white rounded-xl font-extrabold';
         } else {
-          cell.className = 'py-2 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold';
+          cell.className = isSelected 
+            ? 'py-2 select-none cursor-pointer bg-emerald-500 text-white rounded-xl font-extrabold shadow-xs' 
+            : 'py-2 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold transition';
+
           cell.onclick = (e) => {
             e.stopPropagation();
-            fromDate = new Date(y, m, 1);
-            toDate = new Date(y, m + 1, 0);
+            if (isFrom) {
+              fromDate = new Date(y, m, 1);
+              if (fromDate > toDate) toDate = new Date(y, m + 1, 0);
+            } else {
+              toDate = new Date(y, m + 1, 0);
+              if (toDate < fromDate) fromDate = new Date(y, m, 1);
+            }
             document.getElementById(t + 'Pop').classList.add('hidden');
             updateDatesUI();
             loadDataForRange(fromDate, toDate);
@@ -367,24 +374,40 @@
       if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
     });
 
+    function getMonthsInRange(start, end) {
+      const list = [];
+      let curr = new Date(start.getFullYear(), start.getMonth(), 1);
+      const last = new Date(end.getFullYear(), end.getMonth(), 1);
+      while (curr <= last) {
+        list.push({
+          year: curr.getFullYear(),
+          monthIndex: curr.getMonth(),
+          monthName: fullMonthNames[curr.getMonth()]
+        });
+        curr.setMonth(curr.getMonth() + 1);
+      }
+      return list;
+    }
+
+    // DISTRIBUCIÓN EQUITATIVA Y AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (INCLUYENDO X)
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
-      const active = appData.campaigns.filter(c => {
-        const p = (c.platform || '').toLowerCase();
-        return p === 'meta' || p === 'instagram' || (toNum(c.spent) > 0 || toNum(c.budget) > 0);
-      });
-      const count = active.length || 1;
-      const bPer = Math.round(toNum(appData.kpis.budget) / count);
-      const sPer = Math.round(toNum(appData.kpis.signups) / count);
-      const uPer = Math.round(toNum(appData.kpis.users) / count);
+      
+      const allCamps = appData.campaigns;
+      const count = allCamps.length || 1;
 
-      appData.campaigns.forEach(c => {
-        const p = (c.platform || '').toLowerCase();
-        if (p === 'meta' || p === 'instagram' || (toNum(c.spent) > 0 || toNum(c.budget) > 0)) {
-          c.budget = bPer; c.regKpi = sPer; c.usersFtp = uPer;
-        } else {
-          c.budget = 0; c.regKpi = "—"; c.usersFtp = "—";
-        }
+      const totalBudget = toNum(appData.kpis.budget);
+      const totalSignups = toNum(appData.kpis.signups);
+      const totalUsers = toNum(appData.kpis.users);
+
+      const bPer = Math.round(totalBudget / count);
+      const sPer = Math.round(totalSignups / count);
+      const uPer = Math.round(totalUsers / count);
+
+      allCamps.forEach(c => {
+        c.budget = bPer;
+        c.regKpi = sPer;
+        c.usersFtp = uPer;
       });
     }
 
@@ -400,11 +423,11 @@
         name: `New Campaign`, platform, highlight: false,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
-        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: "—", s2p: "—", revenue: 0, roi: 0
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "—", revenue: 0, roi: 0
       });
       distributeKpisToCampaigns();
       renderDashboard();
-      showSaveToast('Campaign added. Click "Save to Git" to commit.');
+      showSaveToast(`Added campaign to ${platform.toUpperCase()}. Click "Save to Git" to commit.`);
     }
 
     function deleteCampaign(id, e) {
@@ -434,9 +457,13 @@
       };
     }
 
-    // COMMIT REAL A GITHUB API (CREA CARPETA DEL AÑO, MES Y DATA.JSON)
     async function saveDashboardData(silentAutoCreate = false) {
       if (!appData) return;
+      if (fromDate.getMonth() !== toDate.getMonth() || fromDate.getFullYear() !== toDate.getFullYear()) {
+        alert("Please select a single month in FROM and TO to save/commit data to GitHub.");
+        return;
+      }
+
       const cleanData = getCleanData();
       const jsonStr = JSON.stringify(cleanData, null, 2);
       const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
@@ -471,7 +498,7 @@
         });
 
         if (putRes.ok) {
-          showSaveToast(silentAutoCreate ? `🆕 Auto-created ${relPath} in GitHub!` : `✅ Saved to GitHub: ${relPath}`);
+          showSaveToast(silentAutoCreate ? `🆕 Created ${relPath} in GitHub!` : `✅ Saved to GitHub: ${relPath}`);
           setLiveBadge(`Live Git (${currentLoadedMonth})`);
           setTxt('headerPathBadge', `${relPath} ✓`);
         } else {
@@ -522,7 +549,6 @@
       if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
     }
 
-    // LECTURA EN TIEMPO REAL DIRECTO DESDE GITHUB API (0% CACHÉ)
     async function fetchFreshJson(year, mName) {
       const candidates = [`${year}/${mName}/data.json`, `${mName}/data.json`];
       let got404 = false;
@@ -545,7 +571,6 @@
         } catch (e) {}
       }
 
-      // Fallback relativo local
       for (const rel of candidates) {
         try {
           const res = await fetch(`./${rel}?nocache=${Date.now()}`, { cache: 'no-store' });
@@ -560,34 +585,88 @@
     }
 
     async function loadDataForRange(startObj, endObj) {
-      const year = startObj.getFullYear();
-      const mName = fullMonthNames[startObj.getMonth()] || "October";
-      currentLoadedYear = year;
-      currentLoadedMonth = mName;
-      setTxt('headerPathBadge', `${year}/${mName}/data.json`);
+      const months = getMonthsInRange(startObj, endObj);
 
-      const result = await fetchFreshJson(year, mName);
-      if (result.status === 'found' && result.data) {
-        appData = {
-          period: result.data.period || `${mName} ${year}`,
-          kpis: result.data.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
-          campaigns: (result.data.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}_${Date.now()}` }))
-        };
-        setLiveBadge(`Live Git (${mName})`);
+      if (months.length === 1) {
+        const { year, monthName } = months[0];
+        currentLoadedYear = year;
+        currentLoadedMonth = monthName;
+        setTxt('headerPathBadge', `${year}/${monthName}/data.json`);
+
+        const result = await fetchFreshJson(year, monthName);
+        if (result.status === 'found' && result.data) {
+          appData = {
+            period: result.data.period || `${monthName} ${year}`,
+            kpis: result.data.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+            campaigns: (result.data.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}_${Date.now()}` }))
+          };
+          setLiveBadge(`Live Git (${monthName})`);
+        } else {
+          appData = createEmptyMonth(monthName, year);
+          setLiveBadge(`New (${monthName})`);
+          if (result.status === 'not_found' && GITHUB_TOKEN) {
+            await saveDashboardData(true);
+          }
+        }
         distributeKpisToCampaigns();
         setTxt('dateAutoInfo', appData.period);
         renderDashboard();
       } else {
-        appData = createEmptyMonth(mName, year);
-        setLiveBadge(`New (${mName})`);
+        setLiveBadge(`Range (${months.length} Months)`);
+        setTxt('headerPathBadge', `${months[0].year}/${months[0].monthName} – ${months[months.length-1].year}/${months[months.length-1].monthName}`);
+
+        let mergedKpis = { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 };
+        const campMap = new Map();
+
+        for (const m of months) {
+          const res = await fetchFreshJson(m.year, m.monthName);
+          if (res.status === 'found' && res.data) {
+            const k = res.data.kpis || {};
+            mergedKpis.budget += toNum(k.budget);
+            mergedKpis.signups += toNum(k.signups);
+            mergedKpis.users += toNum(k.users);
+            mergedKpis.revenue += toNum(k.revenue);
+            mergedKpis.profit += toNum(k.profit);
+
+            (res.data.campaigns || []).forEach(c => {
+              const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
+              if (!campMap.has(key)) {
+                campMap.set(key, { ...c, id: `c_agg_${key}` });
+              } else {
+                const ex = campMap.get(key);
+                ex.spent = toNum(ex.spent) + toNum(c.spent);
+                ex.impMtd = toNum(ex.impMtd) + toNum(c.impMtd);
+                ex.productViews = toNum(ex.productViews) + toNum(c.productViews);
+                ex.clicksMtd = toNum(ex.clicksMtd) + toNum(c.clicksMtd);
+                ex.regMtd = toNum(ex.regMtd) + toNum(c.regMtd);
+                ex.usersMtd = toNum(ex.usersMtd) + toNum(c.usersMtd);
+                ex.revenue = toNum(ex.revenue) + toNum(c.revenue);
+              }
+            });
+          }
+        }
+
+        const mergedCamps = Array.from(campMap.values()).map(c => {
+          c.rrBudget = calculateAutoRR(c.spent);
+          c.impRr = calculateAutoRR(c.impMtd);
+          c.clicksRr = calculateAutoRR(c.clicksMtd);
+          c.regRr = calculateAutoRR(c.regMtd);
+          c.usersRr = calculateAutoRR(c.usersMtd);
+          c.roi = toNum(c.revenue) - toNum(c.spent);
+          c.ctr = toNum(c.impMtd) > 0 ? ((toNum(c.clicksMtd) / toNum(c.impMtd)) * 100).toFixed(1) + '%' : '0%';
+          c.s2p = toNum(c.regMtd) > 0 ? ((toNum(c.usersMtd) / toNum(c.regMtd)) * 100).toFixed(1) + '%' : '0.0%';
+          return c;
+        });
+
+        appData = {
+          period: `${shortMonthNames[startObj.getMonth()]} ${startObj.getFullYear()} – ${shortMonthNames[endObj.getMonth()]} ${endObj.getFullYear()}`,
+          kpis: mergedKpis,
+          campaigns: mergedCamps
+        };
+
         distributeKpisToCampaigns();
         setTxt('dateAutoInfo', appData.period);
         renderDashboard();
-
-        // SI NO EXISTE LA CARPETA DEL AÑO/MES NI EL JSON EN GITHUB, LO CREA AUTOMÁTICAMENTE
-        if (result.status === 'not_found' && GITHUB_TOKEN) {
-          await saveDashboardData(true);
-        }
       }
     }
 
@@ -601,13 +680,14 @@
     function handleCellBlur(el, id, field) {
       const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
       if (!c) return;
-      if (['name', 'ctr', 's2p', 'usersRr'].includes(field)) c[field] = el.innerText.trim();
+      if (['name', 'ctr', 's2p'].includes(field)) c[field] = el.innerText.trim();
       else c[field] = toNum(el.innerText);
 
       c.rrBudget = calculateAutoRR(c.spent);
       c.impRr = calculateAutoRR(c.impMtd);
       c.clicksRr = calculateAutoRR(c.clicksMtd);
       c.regRr = calculateAutoRR(c.regMtd);
+      c.usersRr = calculateAutoRR(c.usersMtd); // Cálculo automático de Run-Rate para Users
       c.roi = toNum(c.revenue) - toNum(c.spent);
 
       distributeKpisToCampaigns();
@@ -656,7 +736,7 @@
         const totPV = sum('productViews'), totV2P = sum('v2p');
         const totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
         const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr');
-        const totUK = sum('usersFtp'), totUM = sum('usersMtd');
+        const totUK = sum('usersFtp'), totUM = sum('usersMtd'), totUR = sum('usersRr');
         const totRev = sum('revenue'), totRoi = sum('roi');
 
         const card = document.createElement('div');
@@ -669,8 +749,8 @@
               <h2 class="text-base font-bold font-display text-slate-900">${p.title}</h2>
             </div>
             <div class="flex items-center gap-2 text-xs font-bold">
-              <span class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
-              <span class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
+              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
+              <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
               <button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded-md ${p.btnBg} text-white transition flex items-center gap-1 cursor-pointer">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
               </button>
@@ -727,8 +807,8 @@
                       <td class="col-regs font-mono ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
                       <td class="col-users font-mono font-bold">${c.usersFtp !== undefined ? c.usersFtp : '—'}</td>
                       <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersMtd')">${c.usersMtd}</td>
-                      <td class="col-users font-mono editable-cell ${getRrColorClass(c.usersRr, c.usersFtp)}" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersRr')">${c.usersRr ?? '—'}</td>
-                      <td class="col-perf font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 's2p')">${c.s2p ?? '—'}</td>
+                      <td class="col-users font-mono ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : '—'}</td>
+                      <td class="col-perf font-mono font-bold">${c.s2p ?? '—'}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
                     </tr>
@@ -743,7 +823,7 @@
                     <td class="col-clicks">${totCK.toFixed(1)}</td><td class="col-clicks">${totCM}</td><td class="col-clicks">${totCR}</td>
                     <td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0%'}</td>
                     <td class="col-regs">${totRK > 0 ? totRK : '—'}</td><td class="col-regs">${totRM}</td><td class="col-regs">${totRR}</td>
-                    <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users">—</td>
+                    <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR > 0 ? totUR : '—'}</td>
                     <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
                     <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
                     <td class="col-perf ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'}">${totRoi < 0 ? '-$' + Math.abs(totRoi) : '$' + totRoi}</td>
@@ -760,11 +840,11 @@
     function syncGlobalSummaries() {
       const all = appData.campaigns || [];
       const sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
-      const totSpent = sum('spent'), totRRB = sum('rrBudget'), totSign = sum('regMtd'), totRRSign = sum('regRr'), totUsers = sum('usersMtd'), totRev = sum('revenue'), totProf = sum('roi');
+      const totSpent = sum('spent'), totRRB = sum('rrBudget'), totSign = sum('regMtd'), totRRSign = sum('regRr'), totUsers = sum('usersMtd'), totRRUsers = sum('usersRr'), totRev = sum('revenue'), totProf = sum('roi');
       const k = appData.kpis || {};
 
       setTxt('tpMtdBudget', `$${totSpent}`); setTxt('tpMtdSignups', totSign); setTxt('tpMtdUsers', totUsers); setTxt('tpMtdRevenue', `$${totRev.toFixed(0)}`); setTxt('tpMtdProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
-      setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totUsers); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
+      setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totRRUsers); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
 
       setTxt('kpiBudget', `$${totSpent}`); setTxt('kpiSignups', totSign); setTxt('kpiFtd', totUsers); setTxt('kpiRevenue', `$${totRev.toFixed(0)}`); setTxt('kpiProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       
@@ -772,7 +852,7 @@
         const el = document.getElementById(id);
         if (el) { el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${(toNum(v) >= toNum(target) && toNum(target) > 0) ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`; el.innerText = `RR: ${p}${v}`; }
       };
-      badge('rrBudget', totRRB, k.budget, '$'); badge('rrSignups', totRRSign, k.signups); badge('rrFtd', totUsers, k.users); badge('rrRevenue', calculateAutoRR(totRev), k.revenue, '$'); badge('rrProfit', calculateAutoRR(totProf), k.profit, '$');
+      badge('rrBudget', totRRB, k.budget, '$'); badge('rrSignups', totRRSign, k.signups); badge('rrFtd', totRRUsers, k.users); badge('rrRevenue', calculateAutoRR(totRev), k.revenue, '$'); badge('rrProfit', calculateAutoRR(totProf), k.profit, '$');
     }
 
     function updateCharts() {
@@ -816,8 +896,8 @@
       const wb = new ExcelJS.Workbook();
       const ws = wb.addWorksheet('Social Report');
       ws.addRow(['WISEKAPITAL SOCIAL REPORT', appData.period]);
-      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Revenue', 'ROI']);
-      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.revenue, c.roi]));
+      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Users RR', 'Revenue', 'ROI']);
+      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.usersRr, c.revenue, c.roi]));
       const buf = await wb.xlsx.writeBuffer();
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `WiseKapital_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`; a.click(); a.remove();
     }
