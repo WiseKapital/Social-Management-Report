@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WiseKapital - Marketing Performance Dashboard</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts: Poppins, Kalam, Inter & Outfit -->
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Kalam:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -24,7 +21,7 @@
             sans: ['Inter', 'sans-serif'],
             display: ['Outfit', 'sans-serif'],
             brand: ['Poppins', 'sans-serif'],
-            script: ['Kalam', 'cursive', 'sans-serif'],
+            script: ['Kalam', 'cursive', 'sans-serif']
           }
         }
       }
@@ -32,202 +29,200 @@
   </script>
 
   <style>
-    body {
-      background-color: #F8FAFC;
-      color: #0F172A;
-      font-family: 'Inter', sans-serif;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #F1F5F9;
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #94A3B8;
-    }
+    body { background-color: #F8FAFC; color: #0F172A; font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { height: 7px; width: 7px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    
     .glass-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-    }
-    .glass-card:hover {
-      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+      background: #FFFFFF; border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04);
     }
 
-    /* Excel-style Table Layout */
-    .excel-table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 12px;
+    /* Master Table Styles */
+    .master-sheet-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
+    .master-sheet-table th, .master-sheet-table td {
+      border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB;
+      padding: 5px 6px; white-space: nowrap; text-align: center;
     }
-    .excel-table th {
-      background-color: #102B56;
-      color: #FFFFFF;
-      font-weight: 700;
-      border: 1px solid #0B1F3E;
-      padding: 8px 10px;
-      text-align: center;
-      white-space: nowrap;
+    .master-sheet-table thead tr:first-child th {
+      border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800;
     }
-    .excel-table td {
-      border: 1px solid #CBD5E1;
-      padding: 7px 10px;
-      background-color: #FFFFFF;
-      white-space: nowrap;
-    }
-    .excel-table tr:hover td {
-      background-color: #F8FAFC;
-    }
-    .excel-table tfoot td {
-      background-color: #D9E1F2 !important;
-      color: #000000 !important;
-      font-weight: 800 !important;
-      border-top: 2px solid #0B1F3E;
-      border-bottom: 1px solid #0B1F3E;
-    }
-    .roi-positive {
-      background-color: #C6EFCE !important;
-      color: #006100 !important;
-      font-weight: 700;
-      text-align: center;
-    }
-    .roi-negative {
-      background-color: #FFC7CE !important;
-      color: #9C0006 !important;
-      font-weight: 700;
-      text-align: center;
-    }
+    .master-sheet-table thead tr:last-child th { font-weight: 700; font-size: 10px; }
+
+    /* Column Color Palette */
+    .bg-grp-budget { background-color: #D9D9D9 !important; color: #000; }
+    .bg-grp-views { background-color: #CFE2F3 !important; color: #000; }
+    .bg-grp-product { background-color: #FFF2CC !important; color: #000; }
+    .bg-grp-clicks { background-color: #FCE5CD !important; color: #000; }
+    .bg-grp-regs { background-color: #D9EAD3 !important; color: #000; }
+    .bg-grp-users { background-color: #EAD1DC !important; color: #000; }
+    .bg-grp-perf { background-color: #C9DAF8 !important; color: #000; }
+
+    .bg-sub-budget { background-color: #E8E8E8 !important; }
+    .bg-sub-views { background-color: #DFECF7 !important; }
+    .bg-sub-product { background-color: #FFF6D9 !important; }
+    .bg-sub-clicks { background-color: #FDEFE0 !important; }
+    .bg-sub-regs { background-color: #E5F1E1 !important; }
+    .bg-sub-users { background-color: #F2DFE8 !important; }
+    .bg-sub-perf { background-color: #D9E5FA !important; }
+
+    .col-tint-budget { background-color: #F4F4F4 !important; }
+    .col-tint-views { background-color: #F0F5FA !important; }
+    .col-tint-product { background-color: #FFFBEB !important; }
+    .col-tint-clicks { background-color: #FEF6ED !important; }
+    .col-tint-regs { background-color: #F2F8F1 !important; }
+    .col-tint-users { background-color: #FAF2F6 !important; }
+    .col-tint-perf { background-color: #F3F7FE !important; }
+
+    .campaign-highlight-blue { background-color: #CFE2F3 !important; font-weight: 700; }
+    .sticky-col { position: sticky; left: 0; z-index: 10; border-left: 1px solid #D1D5DB; background: #fff; }
+    .editable-cell { outline: none; cursor: text; transition: filter 0.15s ease; }
+    .editable-cell:hover { filter: brightness(0.94); }
+    .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
+    .readonly-auto { cursor: not-allowed; user-select: none; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- INPUT DE ARCHIVO OCULTO -->
+  <input type="file" id="localFileInput" accept=".json" class="hidden" onchange="loadLocalFile(event)">
 
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between min-h-[4.5rem] py-2">
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between min-h-[4.2rem] py-2 flex-wrap gap-4">
         
-        <!-- LOGO WISEKAPITAL + TITLE -->
-        <div class="flex items-center gap-4 sm:gap-6">
-          <div class="flex-shrink-0 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-11 sm:h-13 w-auto select-none">
-              <text x="4" y="47" font-family="'Poppins', 'Outfit', sans-serif" font-weight="700" font-size="47" letter-spacing="-0.5px" fill="#111827">WiseKapital</text>
-              <text x="112" y="77" font-family="'Kalam', cursive, sans-serif" font-weight="700" font-size="26" letter-spacing="0.5px" fill="#ECA51A">Who Dares Wins!</text>
-            </svg>
-          </div>
-
-          <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
-
+        <!-- LOGO & LIVE STATUS -->
+        <div class="flex items-center gap-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-10 w-auto select-none">
+            <text x="4" y="47" font-family="'Poppins', sans-serif" font-weight="700" font-size="47" fill="#111827">WiseKapital</text>
+            <text x="112" y="77" font-family="'Kalam', cursive" font-weight="700" font-size="26" fill="#ECA51A">Who Dares Wins!</text>
+          </svg>
+          <div class="h-7 w-px bg-slate-200 hidden md:block"></div>
           <div class="hidden sm:block">
             <div class="flex items-center gap-2">
-              <span class="font-display font-bold text-slate-800 text-sm tracking-tight">Social Report</span>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Active
+              <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block animate-pulse"></span> Detecting
               </span>
             </div>
-            <p class="text-xs text-slate-500 font-medium">October 01-28, 2026</p>
+            <p id="periodLabel" class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-500"></i>
+              <span id="dateAutoInfo">Loading month...</span>
+            </p>
           </div>
         </div>
 
-        <!-- PLATFORM FILTER -->
-        <div class="flex items-center gap-3">
+        <!-- ACTIONS & FILTERS -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+
+          <!-- SELECTOR DE MES (DIVISIÓN POR MESES) -->
           <div class="relative">
-            <i data-lucide="filter" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <select id="platformFilter" onchange="filterPlatform()" class="pl-9 pr-8 py-2 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition cursor-pointer appearance-none shadow-sm">
+            <i data-lucide="calendar-days" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"></i>
+            <select id="monthSelector" onchange="changeSelectedMonth(this.value)" class="pl-8 pr-7 py-1.5 text-xs font-bold text-slate-800 bg-white border border-slate-300 rounded-lg shadow-xs cursor-pointer focus:ring-2 focus:ring-indigo-500">
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+          </div>
+
+          <!-- IMPORTAR JSON LOCAL (VISIBLE SOLO EN FILE://) -->
+          <button id="headerImportJsonBtn" onclick="document.getElementById('localFileInput').click()" class="hidden px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <span>Import JSON</span>
+          </button>
+
+          <!-- EXPORTAR EXCEL -->
+          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+            <span>Export Excel</span>
+          </button>
+
+          <!-- FILTRO DE PLATAFORMA -->
+          <div class="relative">
+            <i data-lucide="filter" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <select id="platformFilter" onchange="filterPlatform()" class="pl-8 pr-7 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer">
               <option value="all">All Platforms</option>
               <option value="meta">Meta Ads</option>
               <option value="instagram">Instagram Ads</option>
+              <option value="x">X Campaigns</option>
             </select>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-    <!-- ========================================================================= -->
-    <!-- TEAM PERFORMANCE TABLE (SOCIAL - OCTUBRE CON $338 DE SPENT Y 52 SIGNUPS)  -->
-    <!-- ========================================================================= -->
-    <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold font-display text-slate-900 tracking-tight">Team Performance</h2>
+    <!-- LOCAL FILE HELPER -->
+    <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div>
+        <span class="font-bold text-sm block mb-0.5">📁 Local File Mode Detected</span>
+        <p class="text-amber-800">Al abrir el archivo directamente en tu equipo, la seguridad del navegador restringe la lectura directa. Para cargar tus métricas, selecciona tu archivo <code>data.json</code> de la carpeta correspondiente:</p>
       </div>
+      <div>
+        <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+          <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+          <span>Import data.json</span>
+        </button>
+      </div>
+    </div>
 
-      <div class="glass-card rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+    <!-- TEAM PERFORMANCE TABLE -->
+    <div class="space-y-2">
+      <h2 class="text-base font-bold font-display text-slate-900">Team Performance</h2>
+      <div class="glass-card rounded-xl overflow-hidden">
         <div class="overflow-x-auto custom-scrollbar">
           <table class="w-full text-xs border-collapse text-center">
             <thead>
               <tr>
-                <th class="bg-white py-2 px-3 text-left font-extrabold text-slate-900 text-xs tracking-wider" style="width: 110px;">
-                  TEAM
-                </th>
-                <th colspan="5" class="bg-[#1976D2] text-white font-extrabold py-2 px-2 text-center text-xs tracking-wider border-r border-white/20">
-                  KPIS
-                </th>
-                <th colspan="5" class="bg-[#2E7D32] text-white font-extrabold py-2 px-2 text-center text-xs tracking-wider border-r border-white/20">
-                  MTD - OCT 2026
-                </th>
-                <th colspan="6" class="bg-[#B45309] text-white font-extrabold py-2 px-2 text-center text-xs tracking-wider">
-                  RR - RUN-RATE TO OCT 31
-                </th>
+                <th class="bg-white py-2 px-3 text-center font-extrabold text-slate-900" style="width: 100px;">TEAM</th>
+                <th colspan="5" class="bg-[#1976D2] text-white font-extrabold py-2 px-2 border-r border-white/20">KPIS (CLICK TO EDIT TARGETS)</th>
+                <th colspan="5" class="bg-[#2E7D32] text-white font-extrabold py-2 px-2 border-r border-white/20">MTD</th>
+                <th colspan="6" class="bg-[#B45309] text-white font-extrabold py-2 px-2">RR - RUN-RATE</th>
               </tr>
               <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-200">
-                <th class="py-2.5 px-3 text-left"></th>
-                <th class="py-2.5 px-2 font-bold">BUDGET</th>
-                <th class="py-2.5 px-2 font-bold">SIGNUPS</th>
-                <th class="py-2.5 px-2 font-bold">USERS</th>
-                <th class="py-2.5 px-2 font-bold">REVENUE</th>
-                <th class="py-2.5 px-2 font-bold border-r border-slate-200">PROFIT</th>
-                <th class="py-2.5 px-2 font-bold">BUDGET</th>
-                <th class="py-2.5 px-2 font-bold">SIGNUPS</th>
-                <th class="py-2.5 px-2 font-bold">USERS</th>
-                <th class="py-2.5 px-2 font-bold">REVENUE</th>
-                <th class="py-2.5 px-2 font-bold border-r border-slate-200">PROFIT</th>
-                <th class="py-2.5 px-2 font-bold">BUDGET</th>
-                <th class="py-2.5 px-2 font-bold">SIGNUPS</th>
-                <th class="py-2.5 px-2 font-bold">USERS</th>
-                <th class="py-2.5 px-2 font-bold">REVENUE</th>
-                <th class="py-2.5 px-2 font-bold">PROFIT</th>
-                <th class="py-2.5 px-2 font-bold">ROI</th>
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2">PROFIT</th><th class="py-2 px-2">ROI</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 bg-white">
-              <tr class="hover:bg-slate-50 transition">
-                <td class="py-3.5 px-3 text-left">
-                  <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-[#FCE4EC] text-[#D81B60] tracking-wide shadow-xs">
-                    SOCIAL
-                  </span>
-                </td>
-                <!-- KPIS Targets -->
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">$800</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">250</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">20</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">$3,300</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight border-r border-slate-200">$2,500</td>
+              <tr>
+                <td class="py-3 px-3"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FCE4EC] text-[#D81B60]">SOCIAL</span></td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'budget')" id="tpKpiBudget">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'signups')" id="tpKpiSignups">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'users')" id="tpKpiUsers">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'revenue')" id="tpKpiRevenue">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200 editable-cell" contenteditable="true" onblur="onKpiEdit(this, 'profit')" id="tpKpiProfit">—</td>
 
-                <!-- MTD OCTUBRE ($338 Spent | 52 Signups | 1 FTD | $140 Revenue | -$198 Profit) -->
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">$338</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">52</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">1</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">$140</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight border-r border-slate-200">-$198</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdBudget">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdSignups">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdUsers">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdRevenue">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200" id="tpMtdProfit">—</td>
 
-                <!-- Run Rate a Octubre 31 (28 días de 31: Spent RR $374, Profit RR -$219, Ratio 1:0.4) -->
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#059669] tracking-tight">$374</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">58</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">1</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">$155</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-[#D81B60] tracking-tight">-$219</td>
-                <td class="py-3.5 px-2 font-sans font-extrabold text-[13px] text-slate-900 tracking-tight">1:0.4</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrBudget">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrSignups">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrUsers">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrRevenue">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrProfit">—</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">—</td>
               </tr>
             </tbody>
           </table>
@@ -235,431 +230,208 @@
       </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- KPI CARDS (CON $338 DE SPENT Y -$198 DE PROFIT)                           -->
-    <!-- ========================================================================= -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      
-      <!-- 1. Spent -->
-      <div class="glass-card rounded-2xl p-5 border-l-4 border-l-indigo-500 transition">
-        <div class="flex items-center justify-between text-slate-500 mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Spent</span>
-          <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
-          </div>
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">BUDGET</span>
+          <i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight" id="kpiBudget">$338</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-2">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">Budget: $800</span>
-          <span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-emerald-50 text-emerald-600 border-emerald-200">RR: $374</span>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">—</div>
+        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
+          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetBudget">KPI: —</span>
+          <span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
         </div>
       </div>
 
-      <!-- 2. Signups -->
-      <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500 transition">
-        <div class="flex items-center justify-between text-slate-500 mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Signups</span>
-          <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
-          </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Signups</span>
+          <i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight" id="kpiSignups">52</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-2">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: 250</span>
-          <span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: 58</span>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiSignups">—</div>
+        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
+          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetSignups">KPI: —</span>
+          <span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
         </div>
       </div>
 
-      <!-- 3. Users (FTDs) -->
-      <div class="glass-card rounded-2xl p-5 border-l-4 border-l-purple-500 transition">
-        <div class="flex items-center justify-between text-slate-500 mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Users (FTD)</span>
-          <div class="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-            <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
-          </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-purple-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Users (FTD)</span>
+          <i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight" id="kpiFtd">1</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-2">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: 20</span>
-          <span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: 1</span>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiFtd">—</div>
+        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
+          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetUsers">KPI: —</span>
+          <span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
         </div>
       </div>
 
-      <!-- 4. Revenue -->
-      <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500 transition">
-        <div class="flex items-center justify-between text-slate-500 mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Revenue</span>
-          <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <i data-lucide="dollar-sign" class="w-3.5 h-3.5"></i>
-          </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Revenue</span>
+          <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 tracking-tight" id="kpiRevenue">$140</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-2">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: $3,300</span>
-          <span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: $155</span>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiRevenue">—</div>
+        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
+          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetRevenue">KPI: —</span>
+          <span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
         </div>
       </div>
 
-      <!-- 5. Profit -->
-      <div class="glass-card rounded-2xl p-5 border-l-4 border-l-teal-500 transition">
-        <div class="flex items-center justify-between text-slate-500 mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Profit</span>
-          <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
-            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-          </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-teal-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider">Profit</span>
+          <i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i>
         </div>
-        <div class="text-2xl sm:text-3xl font-extrabold font-display text-rose-600 tracking-tight" id="kpiProfit">-$198</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-2">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md">KPI: $2,500</span>
-          <span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border bg-rose-50 text-rose-600 border-rose-200">RR: -$219</span>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">—</div>
+        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
+          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetProfit">KPI: —</span>
+          <span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
         </div>
       </div>
-
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- TABLAS DE PLATAFORMAS (SIGN UPS EXACTOS VERIFICADOS)                      -->
-    <!-- ========================================================================= -->
+    <!-- PLATFORM TABLES -->
     <div class="space-y-8">
-      
-      <!-- ================= TABLA 1: META ================= -->
-      <div id="sectionMeta">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
-              <i data-lucide="layers" class="w-4 h-4"></i>
-            </div>
-            <h2 class="text-lg font-bold font-display text-slate-900 tracking-tight">Meta (Facebook Ads)</h2>
+
+      <!-- 1. META TABLE -->
+      <div id="sectionMetaTable" class="space-y-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center"><i data-lucide="layers" class="w-3.5 h-3.5"></i></span>
+            <h2 class="text-base font-bold font-display text-slate-900">Meta (Facebook Ads)</h2>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold">
-            <span class="text-slate-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">Budget: $532.00</span>
-            <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $177.00</span>
+            <span id="metaBadgeBudget" class="text-slate-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-200">Budget: $0</span>
+            <span id="metaBadgeSpent" class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $0</span>
+            <button onclick="addCampaign('meta')" class="px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition flex items-center gap-1 cursor-pointer">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
+            </button>
           </div>
         </div>
 
-        <div class="glass-card rounded-xl overflow-hidden border border-slate-300 shadow-sm">
+        <div class="glass-card rounded-xl overflow-hidden">
           <div class="overflow-x-auto custom-scrollbar">
-            <table class="excel-table min-w-[940px]">
+            <table class="master-sheet-table min-w-[1360px]">
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 30%;">Campaign (Brand)</th>
-                  <th>Budget</th>
-                  <th>Spent</th>
-                  <th>Clicks</th>
-                  <th>Product Views</th>
-                  <th>Leads</th>
-                  <th>Sign Ups</th>
-                  <th>FTDs</th>
-                  <th>Revenue</th>
-                  <th>ROI</th>
+                  <th rowspan="2" class="bg-white text-slate-900 sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
+                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
+                  <th colspan="2" class="bg-grp-product">Product Views</th>
+                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
+                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
+                  <th colspan="3" class="bg-grp-users">USERS</th>
+                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
+                </tr>
+                <tr>
+                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
+                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
+                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
+                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
+                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
+                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
+                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- SweepzKings Facebook: Signups 12 -->
-                <tr>
-                  <td class="font-semibold text-slate-800 text-left">SweepzKings – Facebook (C2-SwzK-FB)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-bold text-indigo-700">$84.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">241</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">225</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">3,772</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">12</td>
-                  <td class="text-center font-mono font-bold text-blue-600 bg-blue-50">1</td>
-                  <td class="text-right font-mono font-bold text-emerald-600">$140.00</td>
-                  <td class="roi-positive font-mono">+66.67%</td>
-                </tr>
-                <!-- Imperial Sweeps Facebook: Signups 24 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">Imperial Sweeps – Facebook (C4-IS-FB)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$81.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">386</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">352</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">3,968</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">24</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="roi-negative font-mono">-100%</td>
-                </tr>
-                <!-- V1 Imperial Sweeps: Signups 1 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">V1 Imperial Sweeps - FB (V1-IS-FB)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$6.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">24</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">41</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">599</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">1</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="roi-negative font-mono">-100%</td>
-                </tr>
-                <!-- V2 SweepzKings: Signups 0 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">V2 SweepzKings - FB (V2-SwzK-FB)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$6.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">8</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">12</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">386</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="roi-negative font-mono">-100%</td>
-                </tr>
-                <!-- WSMeta SWEEPSvid: Signups 2 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">WSMeta_First_WeekSWEEPSvid</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">865</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">2</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <!-- WSMeta SWEEPSimg: Signups 2 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">WSMeta_First_WeekSWEEPSimg</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">864</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">2</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <!-- WSMeta REWARDSimg: Signups 1 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">WSMeta_First_WeekREWARDSimg</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">629</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">1</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">WSMeta_First_WeekREWARDSvid</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">644</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">c2-swzk-fb</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">590</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">c4-is-fb</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">522</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">Ad2_IMGREWARD</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">140</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td class="text-left font-bold">Total</td>
-                  <td class="text-right font-mono font-bold">$532.00</td>
-                  <td class="text-right font-mono font-bold text-indigo-900">$177.00</td>
-                  <td class="text-right font-mono font-bold">659</td>
-                  <td class="text-right font-mono font-bold">630</td>
-                  <td class="text-right font-mono font-bold">12,979</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-100">42</td>
-                  <td class="text-center font-mono font-bold text-blue-800">1</td>
-                  <td class="text-right font-mono font-bold text-emerald-800">$140.00</td>
-                  <td class="roi-negative font-mono font-bold">-20.90%</td>
-                </tr>
-              </tfoot>
+              <tbody id="metaTableBody"></tbody>
+              <tfoot id="metaTableFoot"></tfoot>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- ================= TABLA 2: INSTAGRAM ================= -->
-      <div id="sectionInstagram">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-lg bg-pink-600 flex items-center justify-center text-white shadow-sm">
-              <i data-lucide="camera" class="w-4 h-4"></i>
-            </div>
-            <h2 class="text-lg font-bold font-display text-slate-900 tracking-tight">Instagram Ads</h2>
+      <!-- 2. INSTAGRAM TABLE -->
+      <div id="sectionInstagramTable" class="space-y-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-md bg-pink-600 text-white flex items-center justify-center"><i data-lucide="camera" class="w-3.5 h-3.5"></i></span>
+            <h2 class="text-base font-bold font-display text-slate-900">Instagram Ads</h2>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold">
-            <span class="text-slate-600 bg-pink-50 px-2.5 py-1 rounded-md border border-pink-200">Budget: $266.00</span>
-            <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $161.00</span>
+            <span id="igBadgeBudget" class="text-slate-600 bg-pink-50 px-2 py-1 rounded-md border border-pink-200">Budget: $0</span>
+            <span id="igBadgeSpent" class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $0</span>
+            <button onclick="addCampaign('instagram')" class="px-2.5 py-1 rounded-md bg-pink-600 hover:bg-pink-700 text-white transition flex items-center gap-1 cursor-pointer">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
+            </button>
           </div>
         </div>
 
-        <div class="glass-card rounded-xl overflow-hidden border border-slate-300 shadow-sm">
+        <div class="glass-card rounded-xl overflow-hidden">
           <div class="overflow-x-auto custom-scrollbar">
-            <table class="excel-table min-w-[940px]">
+            <table class="master-sheet-table min-w-[1360px]">
               <thead>
                 <tr>
-                  <th class="text-left" style="width: 30%;">Campaign (Brand)</th>
-                  <th>Budget</th>
-                  <th>Spent</th>
-                  <th>Clicks</th>
-                  <th>Product Views</th>
-                  <th>Leads</th>
-                  <th>Sign Ups</th>
-                  <th>FTDs</th>
-                  <th>Revenue</th>
-                  <th>ROI</th>
+                  <th rowspan="2" class="bg-white text-slate-900 sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
+                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
+                  <th colspan="2" class="bg-grp-product">Product Views</th>
+                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
+                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
+                  <th colspan="3" class="bg-grp-users">USERS</th>
+                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
+                </tr>
+                <tr>
+                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
+                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
+                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
+                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
+                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
+                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
+                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- SweepzKings Instagram: Signups 9 -->
+              <tbody id="igTableBody"></tbody>
+              <tfoot id="igTableFoot"></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. X TABLE -->
+      <div id="sectionXTable" class="space-y-2">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-md bg-black text-white flex items-center justify-center font-bold text-xs">𝕏</span>
+            <h2 class="text-base font-bold font-display text-slate-900">X Campaigns</h2>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold">
+            <span id="xBadgeBudget" class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Budget: $0</span>
+            <span id="xBadgeSpent" class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Spent: $0</span>
+            <button onclick="addCampaign('x')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-900 text-white transition flex items-center gap-1 cursor-pointer">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-xl overflow-hidden">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="master-sheet-table min-w-[1360px]">
+              <thead>
                 <tr>
-                  <td class="font-medium text-slate-800 text-left">SweepzKings – Instagram (C1-SwzK-IG)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-bold text-indigo-700">$79.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">182</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">178</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">4,199</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">9</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="roi-negative font-mono">-100%</td>
-                </tr>
-                <!-- Imperial Sweeps Instagram: Signups 1 -->
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">Imperial Sweeps – Instagram (C3-IS-IG)</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">$133.00</td>
-                  <td class="text-right font-mono font-bold text-indigo-700">$82.00</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">158</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">144</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">2,377</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-50">1</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="roi-negative font-mono">-100%</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">C2-Imperial-Sweeps-Instagram</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">38</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
+                  <th rowspan="2" class="bg-white text-slate-900 border border-slate-300 text-center px-3 py-2 font-bold sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
+                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
+                  <th colspan="2" class="bg-grp-product">Product Views</th>
+                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
+                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
+                  <th colspan="3" class="bg-grp-users">USERS</th>
+                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
                 </tr>
                 <tr>
-                  <td class="font-medium text-slate-800 text-left">C4-Sweepz-Kings-Instagram</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">33</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
+                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
+                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
+                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
+                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
+                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
+                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
+                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
                 </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">c1-swzk-ig</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">902</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">c3-is-ig</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">424</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">Campaign-name</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">1</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-                <tr>
-                  <td class="font-medium text-slate-800 text-left">OCT26_SW_IG_ACQ</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono text-slate-400">—</td>
-                  <td class="text-right font-mono font-semibold text-slate-700">1</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-center font-mono font-semibold text-slate-700">0</td>
-                  <td class="text-right font-mono font-semibold text-slate-400">$0.00</td>
-                  <td class="text-center font-mono text-slate-400">—</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td class="text-left font-bold">Total</td>
-                  <td class="text-right font-mono font-bold">$266.00</td>
-                  <td class="text-right font-mono font-bold text-indigo-900">$161.00</td>
-                  <td class="text-right font-mono font-bold">340</td>
-                  <td class="text-right font-mono font-bold">322</td>
-                  <td class="text-right font-mono font-bold">7,975</td>
-                  <td class="text-center font-mono font-bold text-slate-900 bg-amber-100">10</td>
-                  <td class="text-center font-mono font-bold">0</td>
-                  <td class="text-right font-mono font-bold">$0.00</td>
-                  <td class="roi-negative font-mono font-bold">-100.00%</td>
-                </tr>
-              </tfoot>
+              </thead>
+              <tbody id="xTableBody"></tbody>
+              <tfoot id="xTableFoot"></tfoot>
             </table>
           </div>
         </div>
@@ -667,509 +439,1013 @@
 
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- SECTION 1: SOCIAL MEDIA BUDGET MANAGEMENT                                 -->
-    <!-- ========================================================================= -->
+    <!-- SECTION 1: CHARTS (SPENT VS REVENUE VS RUN RATE & PROFIT) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
-      
-      <!-- SECTION HEADER -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block shadow-sm"></span>
-            Social Media Budget Management
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1">
-            Executed spend ($338.00), generated revenue ($140.00), month-end projection, and net profit.
-          </p>
-        </div>
-
-        <!-- Legend / Indicators -->
-        <div class="flex items-center gap-3 flex-wrap text-xs font-semibold">
-          <span class="inline-flex items-center gap-1.5 text-slate-700 bg-white border border-slate-200 px-2.5 py-1 rounded-md shadow-xs">
-            <span class="w-2.5 h-2.5 rounded-xs bg-indigo-500"></span> Spent ($)
-          </span>
-          <span class="inline-flex items-center gap-1.5 text-slate-700 bg-white border border-slate-200 px-2.5 py-1 rounded-md shadow-xs">
-            <span class="w-2.5 h-2.5 rounded-xs bg-emerald-500"></span> Revenue ($)
-          </span>
-          <span class="inline-flex items-center gap-1.5 text-slate-700 bg-white border border-slate-200 px-2.5 py-1 rounded-md shadow-xs">
-            <span class="w-2.5 h-2.5 rounded-xs bg-amber-500"></span> Run Rate ($)
-          </span>
-        </div>
-      </div>
-
-      <!-- ROW 1 CHARTS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- GRÁFICA 1: BARRAS EN DÓLARES (SPENT $338) -->
-        <div class="glass-card rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="text-base font-bold font-display text-slate-900">Spent vs. Revenue vs. Run Rate</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Financial execution ($338.00) and projection in USD ($)</p>
-            </div>
-            <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-xs">
-              <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-            </div>
-          </div>
-          <div class="relative h-80 sm:h-96 w-full">
-            <canvas id="budgetCleanBarChart"></canvas>
+        <div class="glass-card rounded-2xl p-5 lg:col-span-2">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Spent vs. Revenue vs. Run Rate ($)</h3>
+          <div class="relative h-72 w-full"><canvas id="budgetCleanBarChart"></canvas></div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Profit ($) by Platform</h3>
+          <div class="relative h-56 w-full flex items-center justify-center"><canvas id="profitPlatformChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-3 gap-1.5 text-center text-[11px]">
+            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">Meta</span><strong id="chartProfitMeta">$0.00</strong></div>
+            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">IG</span><strong id="chartProfitIG">$0.00</strong></div>
+            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">Total</span><strong id="chartProfitTotal">$0.00</strong></div>
           </div>
         </div>
-
-        <!-- GRÁFICA 2: PROFIT ($) BY PLATFORM (Meta: -$37.00 | IG: -$161.00 | Total: -$198.00) -->
-        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold font-display text-slate-900">Profit ($) by Platform</h3>
-              <div class="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center shadow-xs">
-                <i data-lucide="trending-down" class="w-4 h-4"></i>
-              </div>
-            </div>
-            <p class="text-xs text-slate-500 mb-4">Net profit / loss in USD by platform</p>
-          </div>
-          
-          <div class="relative h-72 w-full flex items-center justify-center">
-            <canvas id="profitPlatformChart"></canvas>
-          </div>
-
-          <!-- Bottom Metric Cards -->
-          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-xs">
-            <div class="p-1.5 rounded-lg bg-rose-50 border border-rose-200">
-              <span class="text-rose-700 block text-[9px] uppercase font-bold">Meta</span>
-              <span class="font-mono font-bold text-rose-800 text-[11px]">-$37.00</span>
-            </div>
-            <div class="p-1.5 rounded-lg bg-rose-50 border border-rose-200">
-              <span class="text-rose-700 block text-[9px] uppercase font-bold">Instagram</span>
-              <span class="font-mono font-bold text-rose-800 text-[11px]">-$161.00</span>
-            </div>
-            <div class="p-1.5 rounded-lg bg-rose-50 border border-rose-200">
-              <span class="text-rose-700 block text-[9px] uppercase font-bold">Total</span>
-              <span class="font-mono font-bold text-rose-800 text-[11px]">-$198.00</span>
-            </div>
-          </div>
-        </div>
-
       </div>
-
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- SECTION 2: PLATFORM PERFORMANCE (META & INSTAGRAM)                        -->
-    <!-- ========================================================================= -->
+    <!-- SECTION 2: CHARTS (DONAS Y MINI BARRAS POR PLATAFORMA) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
-      
-      <!-- SECTION HEADER -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 class="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight flex items-center gap-2.5">
-            <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block shadow-sm"></span>
-            Platform Performance: Meta &amp; Instagram
+          <h2 class="text-base sm:text-lg font-bold font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block shadow-xs"></span>
+            Platform Performance: Meta, Instagram &amp; X
           </h2>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1">
-            Signups and Users distribution across platforms, with individual Budget vs. Revenue comparison.
+          <p class="text-xs text-slate-500 mt-0.5">
+            Signups and Users distribution across platforms, with individual Spent vs. Revenue comparison.
           </p>
-        </div>
-
-        <div class="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-xs">
-          <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-indigo-500"></i>
-          <span>Platform Distribution</span>
         </div>
       </div>
 
-      <!-- 2 CIRCULAR CHARTS: SIGNUPS & USERS BY PLATFORM -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- CIRCULAR CHART 1: SIGNUPS BY PLATFORM (Meta: 42, Instagram: 10) -->
-        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Signups by Platform -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold font-display text-slate-900">Signups by Platform</h3>
-              <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
-                <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <h3 class="text-sm font-bold font-display text-slate-900">Signups by Platform</h3>
+              <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
+                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
               </div>
             </div>
-            <p class="text-xs text-slate-500 mb-4">Total Signups distribution across Meta (42) and Instagram (10)</p>
+            <p class="text-xs text-slate-500 mb-3" id="lblSignupsDist">Total Signups distribution across platforms</p>
           </div>
-
-          <div class="relative h-60 sm:h-64 flex items-center justify-center">
+          <div class="relative h-56 flex items-center justify-center">
             <canvas id="signupsPieChart"></canvas>
           </div>
-
-          <!-- Bottom Legend / Values -->
-          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-3 text-center text-xs">
+          <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
             <div class="p-2 rounded-lg bg-blue-50 border border-blue-200">
               <span class="text-blue-700 block text-[10px] uppercase font-bold">Meta</span>
-              <span class="font-mono font-bold text-blue-900 text-sm">42 (80.8%)</span>
+              <span id="pieMetaSignups" class="font-mono font-bold text-blue-900 text-xs sm:text-sm">0 (0%)</span>
             </div>
             <div class="p-2 rounded-lg bg-pink-50 border border-pink-200">
               <span class="text-pink-700 block text-[10px] uppercase font-bold">Instagram</span>
-              <span class="font-mono font-bold text-pink-900 text-sm">10 (19.2%)</span>
+              <span id="pieIGSignups" class="font-mono font-bold text-pink-900 text-xs sm:text-sm">0 (0%)</span>
             </div>
           </div>
         </div>
 
-        <!-- CIRCULAR CHART 2: USERS (FTD) BY PLATFORM (Meta: 1, Instagram: 0) -->
-        <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+        <!-- Users by Platform -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="text-base font-bold font-display text-slate-900">Users (FTD) by Platform</h3>
-              <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shadow-xs">
-                <i data-lucide="badge-check" class="w-4 h-4"></i>
+              <h3 class="text-sm font-bold font-display text-slate-900">Users (FTD) by Platform</h3>
+              <div class="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shadow-xs">
+                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
               </div>
             </div>
-            <p class="text-xs text-slate-500 mb-4">Total Users (FTDs) distribution across Meta and Instagram</p>
+            <p class="text-xs text-slate-500 mb-3">Total Users (FTDs) distribution across platforms</p>
           </div>
-
-          <div class="relative h-60 sm:h-64 flex items-center justify-center">
+          <div class="relative h-56 flex items-center justify-center">
             <canvas id="usersPieChart"></canvas>
           </div>
-
-          <!-- Bottom Legend / Values -->
-          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-3 text-center text-xs">
+          <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
             <div class="p-2 rounded-lg bg-blue-50 border border-blue-200">
               <span class="text-blue-700 block text-[10px] uppercase font-bold">Meta</span>
-              <span class="font-mono font-bold text-blue-900 text-sm">1 (100%)</span>
+              <span id="pieMetaUsers" class="font-mono font-bold text-blue-900 text-xs sm:text-sm">0 (0%)</span>
             </div>
             <div class="p-2 rounded-lg bg-pink-50 border border-pink-200">
               <span class="text-pink-700 block text-[10px] uppercase font-bold">Instagram</span>
-              <span class="font-mono font-bold text-pink-900 text-sm">0 (0%)</span>
+              <span id="pieIGUsers" class="font-mono font-bold text-pink-900 text-xs sm:text-sm">0 (0%)</span>
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- 2 SEPARATE CARDS: SPENT VS REVENUE -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- ================= CARD 1: META ================= -->
-        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-blue-600">
+      <!-- Mini Spent vs Revenue Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-blue-600">
           <div>
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs">
-                  <i data-lucide="layers" class="w-3.5 h-3.5"></i>
-                </div>
-                <div>
-                  <h3 class="text-base font-bold font-display text-slate-900">Meta</h3>
-                  <p class="text-[11px] text-slate-500">Spent vs. Revenue</p>
-                </div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white"><i data-lucide="layers" class="w-3.5 h-3.5"></i></div>
+                <div><h3 class="text-sm font-bold text-slate-900">Meta</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
               </div>
-              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">ROI: -20.90%</span>
+              <span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
             </div>
-
-            <div class="relative h-60 sm:h-64 w-full mt-2">
+            <div class="relative h-52 w-full mt-1">
               <canvas id="metaBudgetRevenueChart"></canvas>
             </div>
           </div>
         </div>
 
-        <!-- ================= CARD 2: INSTAGRAM ================= -->
-        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-pink-600">
+        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-pink-600">
           <div>
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-pink-600 flex items-center justify-center text-white shadow-xs">
-                  <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                </div>
-                <div>
-                  <h3 class="text-base font-bold font-display text-slate-900">Instagram</h3>
-                  <p class="text-[11px] text-slate-500">Spent vs. Revenue</p>
-                </div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded bg-pink-600 flex items-center justify-center text-white"><i data-lucide="camera" class="w-3.5 h-3.5"></i></div>
+                <div><h3 class="text-sm font-bold text-slate-900">Instagram</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
               </div>
-              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">ROI: -100.00%</span>
+              <span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
             </div>
-
-            <div class="relative h-60 sm:h-64 w-full mt-2">
+            <div class="relative h-52 w-full mt-1">
               <canvas id="instagramBudgetRevenueChart"></canvas>
             </div>
           </div>
         </div>
 
+        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-slate-900">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded bg-black flex items-center justify-center text-white font-bold text-xs">𝕏</div>
+                <div><h3 class="text-sm font-bold text-slate-900">X</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
+              </div>
+              <span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
+            </div>
+            <div class="relative h-52 w-full mt-1">
+              <canvas id="xBudgetRevenueChart"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
 
   </main>
 
-  <!-- JAVASCRIPT LOGIC -->
   <script>
-    const targetKPIs = {
-      budget: 800,
-      revenue: 3300,
-      profit: 2500,
-      signups: 250,
-      users: 20
-    };
+    let appData = null;
+    let currentSelectedMonth = "";
 
-    // PERIOD: OCTOBER 01 TO 28 (28 DAYS ELAPSED OUT OF 31 DAYS IN OCTOBER)
-    const DAYS_ELAPSED = 28;
-    const TOTAL_DAYS_IN_MONTH = 31;
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
 
-    const fmtMoney = (n) => "$" + Math.round(Number(n)).toLocaleString('en-US');
+    function getRunRateFactor(monthName) {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonthIndex = now.getMonth();
+      const currentDay = now.getDate();
 
-    function initCharts() {
-      const platforms = ['Meta', 'Instagram', 'Total'];
+      const selIdx = monthNames.findIndex(m => m.toLowerCase() === (monthName || '').toLowerCase());
+      const monthIdx = selIdx >= 0 ? selIdx : currentMonthIndex;
+      const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
 
-      // =========================================================================
-      // 1. GRÁFICA: SPENT VS REVENUE VS RUN RATE (OCTUBRE)
-      // Meta: Spent $177, Rev $140 | IG: Spent $161, Rev $0 | Total: Spent $338
-      // =========================================================================
-      const ctxBudget = document.getElementById('budgetCleanBarChart').getContext('2d');
-      new Chart(ctxBudget, {
+      let factor = 1.0;
+      let dayDisplay = daysInMonth;
+
+      if (monthIdx === currentMonthIndex) {
+        dayDisplay = currentDay;
+        factor = currentDay > 0 ? (daysInMonth / currentDay) : 1;
+      } else if (monthIdx < currentMonthIndex) {
+        dayDisplay = daysInMonth;
+        factor = 1.0;
+      } else {
+        dayDisplay = 1;
+        factor = 1.0;
+      }
+
+      return { currentYear, monthIndex: monthIdx, monthName: monthNames[monthIdx], dayDisplay, daysInMonth, factor };
+    }
+
+    function calculateAutoRR(val) {
+      if (val === undefined || val === null || val === '' || val === '—') return 0;
+      const num = parseFloat(String(val).replace(/[$,%]/g, ''));
+      if (isNaN(num) || num <= 0) return 0;
+      return Math.round(num * getRunRateFactor(currentSelectedMonth).factor);
+    }
+
+    function getRrColorClass(rrVal, kpiVal) {
+      const rr = parseFloat(String(rrVal).replace(/[$,%]/g, '')) || 0;
+      const kpi = parseFloat(String(kpiVal).replace(/[$,%]/g, '')) || 0;
+      if (kpi > 0) { return rr >= kpi ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; }
+      return rr > 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
+    }
+
+    function getRrColorArgb(rrVal, kpiVal, ARGB) {
+      const rr = parseFloat(String(rrVal).replace(/[$,%]/g, '')) || 0;
+      const kpi = parseFloat(String(kpiVal).replace(/[$,%]/g, '')) || 0;
+      if (kpi > 0) { return rr >= kpi ? ARGB.textGreen : ARGB.textRed; }
+      return rr > 0 ? ARGB.textGreen : ARGB.textRed;
+    }
+
+    function calculateAutoS2P(regVal, userVal) {
+      const reg = parseFloat(String(regVal).replace(/[$,%]/g, '')) || 0;
+      const users = parseFloat(String(userVal).replace(/[$,%]/g, '')) || 0;
+      if (reg <= 0 || users <= 0) return '0.0%';
+      return ((users / reg) * 100).toFixed(1) + '%';
+    }
+
+    function ensureCampaignIds() {
+      if (!appData || !appData.campaigns) return;
+      appData.campaigns.forEach((c, idx) => { if (!c.id) c.id = 'camp_' + idx; });
+    }
+
+    function distributeKpisToCampaigns() {
+      if (!appData || !appData.campaigns || !appData.kpis) return;
+      const active = appData.campaigns.filter(c => {
+        const p = (c.platform || '').toLowerCase();
+        return p === 'meta' || p === 'instagram' || (p === 'x' && (Number(c.budget) > 0 || Number(c.spent) > 0));
+      });
+
+      const n = active.length || 1;
+      const bKpi = Math.round((Number(appData.kpis.budget) || 0) / n);
+      const sKpi = Math.round((Number(appData.kpis.signups) || 0) / n);
+      const uKpi = Math.round((Number(appData.kpis.users) || 0) / n);
+
+      appData.campaigns.forEach(c => {
+        const p = (c.platform || '').toLowerCase();
+        const isActive = p === 'meta' || p === 'instagram' || (p === 'x' && (Number(c.budget) > 0 || Number(c.spent) > 0));
+        if (isActive) {
+          c.budget = bKpi; c.regKpi = sKpi; c.usersFtp = uKpi;
+        } else {
+          c.budget = 0; c.regKpi = 0; c.usersFtp = 0;
+        }
+      });
+    }
+
+    function createDefaultMonthData(monthName, year) {
+      return {
+        period: `${monthName} ${year}`,
+        kpis: { budget: 800, signups: 250, users: 18, revenue: 1200, profit: 400 },
+        campaigns: [
+          { id: "camp_meta_1", name: "V1 Imperial Sweeps - FB", platform: "meta", highlight: true, budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 1400, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 120, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_meta_2", name: "Imperial Sweeps — Facebook", platform: "meta", budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 9000, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 500, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_meta_3", name: "V2 SweepzKings - FB", platform: "meta", highlight: true, budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 1100, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 50, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_meta_4", name: "SweepzKings — Facebook", platform: "meta", budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 16000, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 200, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_ig_1", name: "Imperial Sweeps — Instagram", platform: "instagram", budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 6800, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 210, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_ig_2", name: "SweepzKings — Instagram", platform: "instagram", budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 13000, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 250, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 },
+          { id: "camp_x_1", name: "XWannnaSee_Sep", platform: "x", budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0, productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0 }
+        ]
+      };
+    }
+
+    function addCampaign(platform) {
+      ensureCampaignIds();
+      const newCampaign = {
+        id: 'camp_' + Date.now(),
+        name: platform === 'meta' ? 'New Meta Campaign' : platform === 'instagram' ? 'New Instagram Campaign' : 'New X Campaign',
+        platform: platform,
+        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0,
+        impKpi: 0, impMtd: 0, impRr: 0, productViews: 0, v2p: 0,
+        clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: '0%',
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0,
+        s2p: '0.0%', revenue: 0, roi: 0
+      };
+
+      appData.campaigns.push(newCampaign);
+      distributeKpisToCampaigns();
+      recalcAll();
+      renderDashboard();
+    }
+
+    function deleteCampaign(campaignId) {
+      ensureCampaignIds();
+      const campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
+      if (!campaign) return;
+
+      if (confirm(`Delete campaign "${campaign.name}"?`)) {
+        appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
+        distributeKpisToCampaigns();
+        recalcAll();
+        renderDashboard();
+      }
+    }
+
+    function recalcAll() {
+      (appData.campaigns || []).forEach(c => {
+        c.rrBudget = calculateAutoRR(c.spent);
+        c.impRr = calculateAutoRR(c.impMtd);
+        c.clicksRr = calculateAutoRR(c.clicksMtd);
+        c.regRr = calculateAutoRR(c.regMtd);
+        c.usersRr = calculateAutoRR(c.usersMtd);
+        c.s2p = calculateAutoS2P(c.regMtd, c.usersMtd);
+        c.roi = (Number(c.revenue) || 0) - (Number(c.spent) || 0);
+      });
+    }
+
+    function loadLocalFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          appData = JSON.parse(e.target.result);
+          document.getElementById('localFileHelper').classList.add('hidden');
+          
+          const badge = document.getElementById('liveStatusBadge');
+          if (badge) {
+            badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block"></span> Local Loaded`;
+          }
+
+          ensureCampaignIds();
+          distributeKpisToCampaigns();
+          recalcAll();
+          renderDashboard();
+        } catch (err) {
+          alert("Error parsing JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function setLiveBadge(type, label) {
+      const badge = document.getElementById('liveStatusBadge');
+      if (!badge) return;
+      if (type === 'server') {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
+      } else if (type === 'auto') {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1 inline-block animate-pulse"></span> Auto: ${label}`;
+      } else {
+        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block"></span> Saved: ${label}`;
+      }
+    }
+
+    async function changeSelectedMonth(monthName) {
+      currentSelectedMonth = monthName;
+      const { currentYear, dayDisplay } = getRunRateFactor(monthName);
+      const dateEl = document.getElementById('dateAutoInfo');
+      if (dateEl) {
+        dateEl.innerText = `${monthName} 01-${dayDisplay < 10 ? '0' + dayDisplay : dayDisplay}, ${currentYear}`;
+      }
+
+      const isLocal = window.location.protocol === 'file:';
+
+      try {
+        let pathPrimary = `./${monthName}/data.json?v=${Date.now()}`;
+        let response = await fetch(pathPrimary);
+
+        if (!response.ok && monthName.toLowerCase() === "october") {
+           response = await fetch('./data.json?v=' + Date.now());
+        }
+
+        if (response.ok) {
+          appData = await response.json();
+          document.getElementById('localFileHelper').classList.add('hidden');
+          document.getElementById('headerImportJsonBtn').classList.add('hidden');
+          setLiveBadge('server', `${monthName}/data.json`);
+        } else {
+          throw new Error("HTTP Status: " + response.status);
+        }
+      } catch (err) {
+        console.warn(`No se encontró ./json remoto para ${monthName}:`, err);
+        
+        if (isLocal) {
+          document.getElementById('localFileHelper').classList.remove('hidden');
+          document.getElementById('headerImportJsonBtn').classList.remove('hidden');
+          setLiveBadge('auto', 'Awaiting Import');
+        } else {
+          setLiveBadge('auto', `${monthName} (Default)`);
+        }
+        
+        appData = createDefaultMonthData(monthName, currentYear);
+      }
+
+      ensureCampaignIds();
+      distributeKpisToCampaigns();
+      recalcAll();
+      renderDashboard();
+    }
+
+    function onKpiEdit(el, field) {
+      if (!appData) return;
+      if (!appData.kpis) appData.kpis = {};
+
+      let numVal = parseFloat(el.innerText.replace(/[$,%]/g, '').trim());
+      appData.kpis[field] = isNaN(numVal) ? 0 : numVal;
+
+      el.innerText = (field === 'budget' || field === 'revenue' || field === 'profit') ? `$${Number(appData.kpis[field]).toLocaleString()}` : Number(appData.kpis[field]).toLocaleString();
+
+      document.getElementById('kpiTargetBudget').innerText = `KPI: $${appData.kpis.budget}`;
+      document.getElementById('kpiTargetSignups').innerText = `KPI: ${appData.kpis.signups}`;
+      document.getElementById('kpiTargetUsers').innerText = `KPI: ${appData.kpis.users}`;
+      document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(appData.kpis.revenue || 0).toLocaleString()}`;
+      document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(appData.kpis.profit || 0).toLocaleString()}`;
+
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function handleCellInputOrBlur(el, campaignId, field, isBlur = false) {
+      let numVal = parseFloat(el.innerText.replace(/[$,%]/g, '').trim());
+      ensureCampaignIds();
+
+      let campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
+      if (!campaign) return;
+
+      if (field === 'name' || field === 'ctr') {
+        campaign[field] = el.innerText.trim();
+      } else {
+        campaign[field] = isNaN(numVal) ? 0 : numVal;
+      }
+
+      campaign.rrBudget = calculateAutoRR(campaign.spent);
+      campaign.impRr = calculateAutoRR(campaign.impMtd);
+      campaign.clicksRr = calculateAutoRR(campaign.clicksMtd);
+      campaign.regRr = calculateAutoRR(campaign.regMtd);
+      campaign.usersRr = calculateAutoRR(campaign.usersMtd);
+      campaign.s2p = calculateAutoS2P(campaign.regMtd, campaign.usersMtd);
+      campaign.roi = (Number(campaign.revenue) || 0) - (Number(campaign.spent) || 0);
+
+      if (campaign.impMtd > 0 && (field === 'impMtd' || field === 'clicksMtd')) {
+        campaign.ctr = Math.round((campaign.clicksMtd / campaign.impMtd) * 100) + '%';
+      }
+
+      const tr = el.closest('tr');
+      if (tr) {
+        const rrB = tr.querySelector('.cell-rr-budget');
+        if (rrB) {
+          rrB.innerText = `$${campaign.rrBudget}`;
+          rrB.className = `text-center font-mono readonly-auto cell-rr-budget col-tint-budget ${getRrColorClass(campaign.rrBudget, campaign.budget)}`;
+        }
+
+        const rrI = tr.querySelector('.cell-rr-imp');
+        if (rrI) {
+          rrI.innerText = campaign.impRr > 0 ? campaign.impRr.toLocaleString() : '0';
+          rrI.className = `text-center font-mono readonly-auto cell-rr-imp col-tint-views ${getRrColorClass(campaign.impRr, campaign.impKpi)}`;
+        }
+
+        const rrC = tr.querySelector('.cell-rr-clicks');
+        if (rrC) {
+          rrC.innerText = campaign.clicksRr > 0 ? campaign.clicksRr.toLocaleString() : '0';
+          rrC.className = `text-center font-mono readonly-auto cell-rr-clicks col-tint-clicks ${getRrColorClass(campaign.clicksRr, campaign.clicksKpi)}`;
+        }
+
+        const ctr = tr.querySelector('.cell-ctr');
+        if (ctr && campaign.ctr) ctr.innerText = campaign.ctr;
+
+        const rrR = tr.querySelector('.cell-rr-reg');
+        if (rrR) {
+          rrR.innerText = campaign.regRr > 0 ? campaign.regRr.toLocaleString() : '0';
+          rrR.className = `text-center font-mono readonly-auto cell-rr-reg col-tint-regs ${getRrColorClass(campaign.regRr, campaign.regKpi)}`;
+        }
+
+        const rrU = tr.querySelector('.cell-rr-users');
+        if (rrU) {
+          rrU.innerText = campaign.usersRr > 0 ? campaign.usersRr.toLocaleString() : '—';
+          rrU.className = `text-center font-mono readonly-auto cell-rr-users col-tint-users ${getRrColorClass(campaign.usersRr, campaign.usersFtp)}`;
+        }
+
+        const s2p = tr.querySelector('.cell-s2p');
+        if (s2p) s2p.innerText = campaign.s2p;
+
+        const roi = tr.querySelector('.cell-roi');
+        if (roi) {
+          roi.innerText = campaign.roi < 0 ? `-$ ${Math.abs(campaign.roi)}` : `$ ${campaign.roi}`;
+          roi.className = `text-center font-mono font-extrabold cell-roi col-tint-perf ${campaign.roi < 0 ? 'text-rose-600' : 'text-emerald-700'}`;
+        }
+      }
+
+      const pKey = campaign.platform ? campaign.platform.toLowerCase() : 'meta';
+      updateTableFooter(pKey);
+      syncGlobalSummaries();
+
+      if (isBlur) {
+        updateCharts();
+      }
+    }
+
+    function onKeyDownCell(e, el) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } }
+
+    function renderDashboard() {
+      if (!appData) return;
+      ensureCampaignIds();
+
+      if (appData.kpis) {
+        const k = appData.kpis;
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.innerText = val; };
+        setVal('tpKpiBudget', `$${Number(k.budget || 0).toLocaleString()}`);
+        setVal('tpKpiSignups', Number(k.signups || 0).toLocaleString());
+        setVal('tpKpiUsers', Number(k.users || 0).toLocaleString());
+        setVal('tpKpiRevenue', `$${Number(k.revenue || 0).toLocaleString()}`);
+        setVal('tpKpiProfit', `$${Number(k.profit || 0).toLocaleString()}`);
+
+        document.getElementById('kpiTargetBudget').innerText = `KPI: $${k.budget}`;
+        document.getElementById('kpiTargetSignups').innerText = `KPI: ${k.signups}`;
+        document.getElementById('kpiTargetUsers').innerText = `KPI: ${k.users}`;
+        document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(k.revenue || 0).toLocaleString()}`;
+        document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(k.profit || 0).toLocaleString()}`;
+      }
+
+      renderPlatformTable('meta', 'metaTableBody');
+      renderPlatformTable('instagram', 'igTableBody');
+      renderPlatformTable('x', 'xTableBody');
+
+      updateTableFooter('meta');
+      updateTableFooter('instagram');
+      updateTableFooter('x');
+
+      syncGlobalSummaries();
+      updateCharts();
+      lucide.createIcons();
+    }
+
+    function renderPlatformTable(platformName, tbodyId) {
+      const tbody = document.getElementById(tbodyId);
+      const campaigns = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === platformName);
+
+      tbody.innerHTML = '';
+      if (campaigns.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>`;
+        return;
+      }
+
+      campaigns.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:brightness-95 transition';
+        const nameBg = c.highlight ? 'campaign-highlight-blue' : 'bg-white';
+
+        tr.innerHTML = `
+          <td class="font-bold text-slate-900 sticky-col ${nameBg}">
+            <div class="flex items-center justify-between gap-1.5 px-1">
+              <span class="editable-cell flex-1 text-center" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
+              <button type="button" onclick="deleteCampaign('${c.id}')" title="Delete" class="text-slate-300 hover:text-rose-600 p-1 rounded transition cursor-pointer">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </td>
+          
+          <td class="text-center font-mono font-bold readonly-auto cell-budget-kpi col-tint-budget">$${c.budget}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'spent')" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)" onkeydown="onKeyDownCell(event, this)">$${c.spent}</td>
+          <td class="text-center font-mono readonly-auto cell-rr-budget col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" title="Calculated automatically based on current date">$${c.rrBudget}</td>
+          <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)" onkeydown="onKeyDownCell(event, this)">$${c.dailyBudget}</td>
+          
+          <!-- IMP. (KPI) - EDITABLE -->
+          <td class="text-center font-mono editable-cell cell-imp-kpi col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impKpi || 0).toLocaleString()}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impMtd || 0).toLocaleString()}</td>
+          <td class="text-center font-mono readonly-auto cell-rr-imp col-tint-views ${getRrColorClass(c.impRr, c.impKpi)}" title="Calculated automatically">${c.impRr > 0 ? Number(c.impRr).toLocaleString() : '0'}</td>
+          
+          <td class="text-center font-mono font-bold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'productViews')" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)" onkeydown="onKeyDownCell(event, this)">${c.productViews}</td>
+          <td class="text-center font-mono font-extrabold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'v2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)" onkeydown="onKeyDownCell(event, this)">${c.v2p}</td>
+          
+          <!-- CLICKS (KPI) - EDITABLE -->
+          <td class="text-center font-mono editable-cell cell-clicks-kpi col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksKpi}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksMtd}</td>
+          <td class="text-center font-mono readonly-auto cell-rr-clicks col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" title="Calculated automatically">${c.clicksRr > 0 ? c.clicksRr.toLocaleString() : '0'}</td>
+          <td class="text-center font-mono font-extrabold editable-cell cell-ctr col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'ctr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)" onkeydown="onKeyDownCell(event, this)">${c.ctr}</td>
+          
+          <td class="text-center font-mono font-bold readonly-auto cell-reg-kpi col-tint-regs" title="Calculated automatically: Total Signups KPI / active campaigns">${c.regKpi || '—'}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.regMtd}</td>
+          <td class="text-center font-mono readonly-auto cell-rr-reg col-tint-regs ${getRrColorClass(c.regRr, c.regKpi)}" title="Calculated automatically">${c.regRr > 0 ? c.regRr.toLocaleString() : '0'}</td>
+          
+          <td class="text-center font-mono font-bold readonly-auto cell-users-kpi col-tint-users" title="Calculated automatically: Total Users KPI / active campaigns">${c.usersFtp || '—'}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.usersMtd}</td>
+          <td class="text-center font-mono readonly-auto cell-rr-users col-tint-users ${getRrColorClass(c.usersRr, c.usersFtp)}" title="Calculated automatically">${c.usersRr > 0 ? c.usersRr.toLocaleString() : '—'}</td>
+          
+          <td class="text-center font-mono font-bold readonly-auto cell-s2p col-tint-perf" title="Signup to Paid Conversion Rate: (Users MTD / Reg MTD) * 100">${c.s2p || '0.0%'}</td>
+          
+          <td class="text-center font-mono font-extrabold ${Number(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'revenue')" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)" onkeydown="onKeyDownCell(event, this)">
+            ${Number(c.revenue) > 0 ? '$ ' + Number(c.revenue).toFixed(2) : '$-'}
+          </td>
+          <td class="text-center font-mono font-extrabold ${Number(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'} cell-roi col-tint-perf">
+            ${Number(c.roi) < 0 ? '-$ ' + Math.abs(c.roi) : '$ ' + c.roi}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateTableFooter(pName) {
+      const tfoot = document.getElementById(pName === 'meta' ? 'metaTableFoot' : pName === 'instagram' ? 'igTableFoot' : 'xTableFoot');
+      const filtered = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === pName);
+
+      const sum = f => filtered.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const totBudget = sum('budget'), totSpent = sum('spent'), totRrBudget = sum('rrBudget'), totDailyBudget = sum('dailyBudget');
+      const totImpKpi = sum('impKpi'), totImpMtd = sum('impMtd'), totImpRr = sum('impRr');
+      const totProdViews = sum('productViews'), totV2p = sum('v2p'), totClicksKpi = sum('clicksKpi'), totClicksMtd = sum('clicksMtd'), totClicksRr = sum('clicksRr');
+      const totRegKpi = sum('regKpi'), totRegMtd = sum('regMtd'), totRegRr = sum('regRr');
+      const totUsersKpi = sum('usersFtp'), totUsersMtd = sum('usersMtd');
+      
+      const totS2p = totRegMtd > 0 ? ((totUsersMtd / totRegMtd) * 100).toFixed(1) + '%' : '0.0%';
+      const totRevenue = sum('revenue'), totRoi = sum('roi');
+
+      const bBudget = document.getElementById(`${pName === 'instagram' ? 'ig' : pName}BadgeBudget`);
+      const bSpent = document.getElementById(`${pName === 'instagram' ? 'ig' : pName}BadgeSpent`);
+      if (bBudget) bBudget.innerText = `Budget: $${totBudget.toFixed(2)}`;
+      if (bSpent) bSpent.innerText = `Spent: $${totSpent.toFixed(2)}`;
+
+      tfoot.innerHTML = `
+        <tr>
+          <td class="text-center font-black sticky-col bg-white">TOTAL ${pName.toUpperCase()}</td>
+          <td class="font-mono font-black col-tint-budget">$${totBudget}</td>
+          <td class="font-mono font-black col-tint-budget">$${totSpent}</td>
+          <td class="font-mono font-black col-tint-budget ${getRrColorClass(totRrBudget, totBudget)}">${totRrBudget}</td>
+          <td class="font-mono font-black col-tint-budget">$${totDailyBudget}</td>
+          <td class="font-mono font-black col-tint-views">${totImpKpi.toLocaleString()}</td>
+          <td class="font-mono font-black col-tint-views">${totImpMtd.toLocaleString()}</td>
+          <td class="font-mono font-black col-tint-views ${getRrColorClass(totImpRr, totImpKpi)}">${totImpRr.toLocaleString()}</td>
+          <td class="font-mono font-black col-tint-product">${totProdViews}</td>
+          <td class="font-mono font-black col-tint-product">${totV2p}</td>
+          <td class="font-mono font-black col-tint-clicks">${totClicksKpi.toFixed(1)}</td>
+          <td class="font-mono font-black col-tint-clicks">${totClicksMtd}</td>
+          <td class="font-mono font-black col-tint-clicks ${getRrColorClass(totClicksRr, totClicksKpi)}">${totClicksRr}</td>
+          <td class="font-mono font-black col-tint-clicks">2%</td>
+          <td class="font-mono font-black col-tint-regs">${totRegKpi || '—'}</td>
+          <td class="font-mono font-black text-slate-900 col-tint-regs">${totRegMtd}</td>
+          <td class="font-mono font-black col-tint-regs ${getRrColorClass(totRegRr, totRegKpi)}">${totRegRr}</td>
+          <td class="font-mono font-black col-tint-users">${totUsersKpi || '—'}</td>
+          <td class="font-mono font-black text-slate-900 col-tint-users">${totUsersMtd}</td>
+          <td class="font-mono font-black text-slate-400 col-tint-users">—</td>
+          <td class="font-mono font-black col-tint-perf">${totS2p}</td>
+          <td class="font-mono font-black text-emerald-700 col-tint-perf">$ ${totRevenue.toFixed(2)}</td>
+          <td class="font-mono font-black text-rose-600 col-tint-perf">${totRoi < 0 ? '-$ ' + Math.abs(totRoi) : '$ ' + totRoi}</td>
+        </tr>
+      `;
+    }
+
+    function syncGlobalSummaries() {
+      const all = appData.campaigns || [];
+      const sum = f => all.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const totSpent = sum('spent'), totRrBudget = sum('rrBudget');
+      const totSignups = sum('regMtd'), totRrSignups = sum('regRr');
+      const totUsers = sum('usersMtd'), totRevenue = sum('revenue'), totProfit = sum('roi');
+
+      const k = appData.kpis || {};
+      const targetB = Number(k.budget) || 0;
+      const targetS = Number(k.signups) || 0;
+      const targetU = Number(k.users) || 0;
+      const targetR = Number(k.revenue) || 0;
+      const targetP = Number(k.profit) || 0;
+
+      const setTpColor = (id, rrVal, kpiVal) => {
+        const el = document.getElementById(id);
+        if (el) el.className = `py-3 px-2 font-extrabold text-[13px] ${getRrColorClass(rrVal, kpiVal)}`;
+      };
+
+      setTpColor('tpRrBudget', totRrBudget, targetB);
+      setTpColor('tpRrSignups', totRrSignups, targetS);
+      setTpColor('tpRrUsers', totUsers, targetU);
+      setTpColor('tpRrRevenue', calculateAutoRR(totRevenue), targetR);
+      setTpColor('tpRrProfit', calculateAutoRR(totProfit), targetP);
+
+      document.getElementById('tpMtdBudget').innerText = `$${totSpent}`;
+      document.getElementById('tpMtdSignups').innerText = totSignups;
+      document.getElementById('tpMtdUsers').innerText = totUsers;
+      document.getElementById('tpMtdRevenue').innerText = `$${totRevenue.toFixed(0)}`;
+      document.getElementById('tpMtdProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(totProfit)}`;
+
+      document.getElementById('tpRrBudget').innerText = `$${totRrBudget}`;
+      document.getElementById('tpRrSignups').innerText = totRrSignups;
+      document.getElementById('tpRrUsers').innerText = totUsers || 1;
+      document.getElementById('tpRrRevenue').innerText = `$${calculateAutoRR(totRevenue)}`;
+      document.getElementById('tpRrProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProfit))}`;
+      document.getElementById('tpRoiRatio').innerText = `1:0.4`;
+
+      const updateCardBadge = (id, rrVal, kpiVal, prefix = '') => {
+        const el = document.getElementById(id);
+        if (el) {
+          const isGreen = (parseFloat(rrVal) || 0) >= (parseFloat(kpiVal) || 0);
+          el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded-md border ${isGreen ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
+          el.innerText = `RR: ${prefix}${rrVal}`;
+        }
+      };
+
+      document.getElementById('kpiBudget').innerText = `$${totSpent}`;
+      updateCardBadge('rrBudget', totRrBudget, targetB, '$');
+
+      document.getElementById('kpiSignups').innerText = totSignups;
+      updateCardBadge('rrSignups', totRrSignups, targetS);
+
+      document.getElementById('kpiFtd').innerText = totUsers;
+      updateCardBadge('rrFtd', 1, targetU);
+
+      document.getElementById('kpiRevenue').innerText = `$${totRevenue.toFixed(0)}`;
+      updateCardBadge('rrRevenue', calculateAutoRR(totRevenue), targetR, '$');
+
+      document.getElementById('kpiProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(totProfit)}`;
+      updateCardBadge('rrProfit', calculateAutoRR(totProfit), targetP, '$');
+    }
+
+    function updateCharts() {
+      const all = appData.campaigns || [];
+      const fBy = p => all.filter(c => c.platform && c.platform.toLowerCase() === p);
+      const meta = fBy('meta'), ig = fBy('instagram'), x = fBy('x');
+
+      const sum = (arr, f) => arr.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue'), mP = sum(meta, 'roi'), mRR = sum(meta, 'rrBudget');
+      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue'), iP = sum(ig, 'roi'), iRR = sum(ig, 'rrBudget');
+      const xS = sum(x, 'spent'), xR = sum(x, 'revenue'), xP = sum(x, 'roi'), xRR = sum(x, 'rrBudget');
+
+      const tS = mS + iS + xS, tR = mR + iR + xR, tP = mP + iP + xP, tRR = mRR + iRR + xRR;
+
+      document.getElementById('chartProfitMeta').innerText = `${mP < 0 ? '-$' : '$'}${Math.abs(mP).toFixed(2)}`;
+      document.getElementById('chartProfitIG').innerText = `${iP < 0 ? '-$' : '$'}${Math.abs(iP).toFixed(2)}`;
+      document.getElementById('chartProfitTotal').innerText = `${tP < 0 ? '-$' : '$'}${Math.abs(tP).toFixed(2)}`;
+
+      // 1. Bar Chart: Spent vs Revenue vs RR
+      if (chartBar) chartBar.destroy();
+      chartBar = new Chart(document.getElementById('budgetCleanBarChart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: platforms,
+          labels: ['Meta', 'Instagram', 'Total'],
           datasets: [
-            {
-              label: 'Spent ($)',
-              data: [177.00, 161.00, 338.00],
-              backgroundColor: 'rgba(99, 102, 241, 0.85)',
-              borderRadius: 6,
-              barPercentage: 0.6,
-              categoryPercentage: 0.6
-            },
-            {
-              label: 'Revenue ($)',
-              data: [140.00, 0.00, 140.00],
-              backgroundColor: 'rgba(16, 185, 129, 0.85)',
-              borderRadius: 6,
-              barPercentage: 0.6,
-              categoryPercentage: 0.6
-            },
-            {
-              label: 'Run Rate ($)',
-              data: [196, 178, 374], // Proyección proporcional a fin de mes (28 de 31 días)
-              backgroundColor: 'rgba(245, 158, 11, 0.85)',
-              borderRadius: 6,
-              barPercentage: 0.6,
-              categoryPercentage: 0.6
-            }
+            { label: 'Spent ($)', data: [mS, iS, tS], backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 5 },
+            { label: 'Revenue ($)', data: [mR, iR, tR], backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 5 },
+            { label: 'Run Rate ($)', data: [mRR, iRR, tRR], backgroundColor: 'rgba(245, 158, 11, 0.85)', borderRadius: 5 }
           ]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                boxWidth: 12,
-                font: { family: 'Inter', size: 11, weight: 'bold' }
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { family: 'Inter', weight: 'bold', size: 12 } }
-            },
-            y: {
-              grid: { color: '#F1F5F9' },
-              ticks: {
-                callback: (v) => '$' + v,
-                font: { family: 'Inter', size: 11 }
-              }
-            }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // =========================================================================
-      // 2. PROFIT ($) BY PLATFORM (Meta: -$37.00 | IG: -$161.00 | Total: -$198.00)
-      // =========================================================================
-      const ctxProfit = document.getElementById('profitPlatformChart').getContext('2d');
-      new Chart(ctxProfit, {
+      // 2. Bar Chart: Profit
+      if (chartProfit) chartProfit.destroy();
+      chartProfit = new Chart(document.getElementById('profitPlatformChart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: platforms,
-          datasets: [{
-            label: 'Profit ($)',
-            data: [-37.00, -161.00, -198.00],
-            backgroundColor: [
-              'rgba(239, 68, 68, 0.85)', // Meta
-              'rgba(239, 68, 68, 0.85)', // Instagram
-              'rgba(239, 68, 68, 0.85)'  // Total
-            ],
-            borderRadius: 6,
-            barPercentage: 0.55
-          }]
+          labels: ['Meta', 'Instagram', 'Total'],
+          datasets: [{ label: 'Profit ($)', data: [mP, iP, tP], backgroundColor: 'rgba(239, 68, 68, 0.85)', borderRadius: 5 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Profit: ${ctx.parsed.y < 0 ? '-$' : '$'}${Math.abs(ctx.parsed.y).toFixed(2)}`
-              }
-            }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      // 3. Section 2: Signups & Users Donuts + ROI comparisons
+      const mSignups = sum(meta, 'regMtd');
+      const iSignups = sum(ig, 'regMtd');
+      const totSignups = mSignups + iSignups || 1;
+      const mPct = ((mSignups / totSignups) * 100).toFixed(1);
+      const iPct = ((iSignups / totSignups) * 100).toFixed(1);
+
+      const mUsers = sum(meta, 'usersMtd');
+      const iUsers = sum(ig, 'usersMtd');
+      const totUsers = mUsers + iUsers || 1;
+      const mUPct = ((mUsers / totUsers) * 100).toFixed(1);
+      const iUPct = ((iUsers / totUsers) * 100).toFixed(1);
+
+      const pMSignups = document.getElementById('pieMetaSignups');
+      if (pMSignups) pMSignups.innerText = `${mSignups} (${mPct}%)`;
+      const pISignups = document.getElementById('pieIGSignups');
+      if (pISignups) pISignups.innerText = `${iSignups} (${iPct}%)`;
+
+      const pMUsers = document.getElementById('pieMetaUsers');
+      if (pMUsers) pMUsers.innerText = `${mUsers} (${mUsers ? mUPct + '%' : '0%'})`;
+      const pIUsers = document.getElementById('pieIGUsers');
+      if (pIUsers) pIUsers.innerText = `${iUsers} (${iUsers ? iUPct + '%' : '0%'})`;
+
+      const mRoi = mS > 0 ? (((mR - mS) / mS) * 100).toFixed(2) : "0.00";
+      const iRoi = iS > 0 ? (((iR - iS) / iS) * 100).toFixed(2) : "-100.00";
+      const xRoi = xS > 0 ? (((xR - xS) / xS) * 100).toFixed(2) : "0.00";
+
+      const bM = document.getElementById('badgeRoiMeta'); if (bM) bM.innerText = `ROI: ${mRoi}%`;
+      const bI = document.getElementById('badgeRoiIG'); if (bI) bI.innerText = `ROI: ${iRoi}%`;
+      const bX = document.getElementById('badgeRoiX'); if (bX) bX.innerText = `ROI: ${xRoi}%`;
+
+      const sDist = document.getElementById('lblSignupsDist');
+      if (sDist) sDist.innerText = `Total Signups distribution across Meta (${mSignups}) and Instagram (${iSignups})`;
+
+      // Doughnut: Signups
+      const pieCanvasS = document.getElementById('signupsPieChart');
+      if (pieCanvasS) {
+        if (chartSignups) chartSignups.destroy();
+        chartSignups = new Chart(pieCanvasS.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Meta', 'Instagram'],
+            datasets: [{ data: [mSignups, iSignups], backgroundColor: ['#2563EB', '#DB2777'], borderWidth: 2, borderColor: '#fff' }]
           },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { font: { family: 'Inter', weight: 'bold' } }
-            },
-            y: {
-              grid: { color: '#F1F5F9' },
-              ticks: {
-                callback: (v) => (v < 0 ? '-$' : '$') + Math.abs(v),
-                font: { family: 'Inter', size: 11 }
-              }
-            }
-          }
-        }
-      });
+          options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+        });
+      }
 
-      // =========================================================================
-      // 3. CIRCULAR CHART 1: SIGNUPS BY PLATFORM (Meta: 42, Instagram: 10)
-      // =========================================================================
-      new Chart(document.getElementById('signupsPieChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Meta', 'Instagram'],
-          datasets: [{
-            data: [42, 10],
-            backgroundColor: [
-              'rgba(37, 99, 235, 0.85)', // Meta Blue
-              'rgba(219, 39, 119, 0.85)'  // Instagram Pink
-            ],
-            borderWidth: 2,
-            borderColor: '#FFFFFF'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '68%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { boxWidth: 12, font: { family: 'Inter', size: 11, weight: 'bold' } }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` Signups: ${ctx.parsed} (${((ctx.parsed / 52) * 100).toFixed(1)}%)`
-              }
-            }
-          }
-        }
-      });
+      // Doughnut: Users
+      const pieCanvasU = document.getElementById('usersPieChart');
+      if (pieCanvasU) {
+        if (chartUsers) chartUsers.destroy();
+        chartUsers = new Chart(pieCanvasU.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Meta', 'Instagram'],
+            datasets: [{ data: [mUsers, iUsers], backgroundColor: ['#2563EB', '#DB2777'], borderWidth: 2, borderColor: '#fff' }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+        });
+      }
 
-      // =========================================================================
-      // 4. CIRCULAR CHART 2: USERS (FTD) BY PLATFORM (Meta: 1, Instagram: 0)
-      // =========================================================================
-      new Chart(document.getElementById('usersPieChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Meta', 'Instagram'],
-          datasets: [{
-            data: [1, 0],
-            backgroundColor: [
-              'rgba(37, 99, 235, 0.85)',
-              'rgba(219, 39, 119, 0.85)'
-            ],
-            borderWidth: 2,
-            borderColor: '#FFFFFF'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '68%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { boxWidth: 12, font: { family: 'Inter', size: 11, weight: 'bold' } }
-            },
-            tooltip: {
-              callbacks: {
-                label: (ctx) => ` FTD: ${ctx.parsed}`
-              }
-            }
-          }
-        }
-      });
-
-      // =========================================================================
-      // 5. HELPER: SPENT VS REVENUE (META & INSTAGRAM)
-      // =========================================================================
-      function createBudgetRevenueChart(canvasId, spent, revenue) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        return new Chart(ctx, {
+      function renderMiniBR(canvasId, spent, rev) {
+        const c = document.getElementById(canvasId);
+        if (!c) return null;
+        return new Chart(c.getContext('2d'), {
           type: 'bar',
           data: {
             labels: ['Spent', 'Revenue'],
-            datasets: [{
-              label: 'USD ($)',
-              data: [spent, revenue],
-              backgroundColor: [
-                'rgba(99, 102, 241, 0.85)',
-                'rgba(16, 185, 129, 0.85)'
-              ],
-              borderRadius: 6,
-              barPercentage: 0.55
-            }]
+            datasets: [{ data: [spent, rev], backgroundColor: ['#6366F1', '#10B981'], borderRadius: 4 }]
           },
           options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => ` ${ctx.label}: $${ctx.parsed.y.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-                }
-              }
-            },
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { font: { family: 'Inter', weight: 'bold', size: 11 } }
-              },
-              y: {
-                grid: { color: '#F1F5F9' },
-                ticks: {
-                  callback: (v) => '$' + v,
-                  font: { family: 'Inter', size: 10 }
-                }
-              }
-            }
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => '$' + v } } }
           }
         });
       }
 
-      createBudgetRevenueChart('metaBudgetRevenueChart', 177.00, 140.00);
-      createBudgetRevenueChart('instagramBudgetRevenueChart', 161.00, 0.00);
+      if (chartMetaBR) chartMetaBR.destroy();
+      chartMetaBR = renderMiniBR('metaBudgetRevenueChart', mS, mR);
+
+      if (chartIGBR) chartIGBR.destroy();
+      chartIGBR = renderMiniBR('instagramBudgetRevenueChart', iS, iR);
+
+      if (chartXBR) chartXBR.destroy();
+      chartXBR = renderMiniBR('xBudgetRevenueChart', xS, xR);
+    }
+
+    // EXCEL EXPORT
+    async function exportToExcel() {
+      if (!appData || !appData.campaigns) return;
+
+      const ARGB = {
+        border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D',
+        highlightBlue: 'FFCFE2F3', white: 'FFFFFFFF',
+        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD',
+        grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
+        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0',
+        subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
+        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED',
+        tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
+      };
+
+      const thinBorder = {
+        top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } },
+        bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } }
+      };
+
+      function setCell(cell, value, bg, bold = false, color = ARGB.textDark) {
+        cell.value = value;
+        if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+        cell.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = thinBorder;
+      }
+
+      function mergeRange(ws, r1, c1, r2, c2, val, bg, bold = false, color = ARGB.textDark) {
+        ws.mergeCells(r1, c1, r2, c2);
+        for (let r = r1; r <= r2; r++) {
+          for (let c = c1; c <= c2; c++) {
+            const cell = ws.getCell(r, c);
+            if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+            cell.border = thinBorder;
+          }
+        }
+        const master = ws.getCell(r1, c1);
+        master.value = val;
+        master.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        master.alignment = { vertical: 'middle', horizontal: 'center' };
+      }
+
+      const wb = new ExcelJS.Workbook();
+      wb.creator = 'WiseKapital';
+
+      function makeSheet(ws, pKey, title, startRow = 1) {
+        const camps = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === pKey);
+        if (camps.length === 0 && startRow > 1) return startRow;
+
+        ws.columns = [
+          { width: 26 }, { width: 14 }, { width: 12 }, { width: 12 }, { width: 14 },
+          { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 10 },
+          { width: 14 }, { width: 12 }, { width: 12 }, { width: 10 }, { width: 14 },
+          { width: 12 }, { width: 12 }, { width: 14 }, { width: 12 }, { width: 12 },
+          { width: 10 }, { width: 16 }, { width: 16 }
+        ];
+
+        let r = startRow;
+        ws.mergeCells(r, 1, r, 23);
+        const tc = ws.getCell(r, 1);
+        tc.value = `${title} (${camps.length} Campaigns) — ${currentSelectedMonth} ${new Date().getFullYear()}`;
+        tc.font = { name: 'Calibri', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
+        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: pKey === 'meta' ? 'FF2563EB' : pKey === 'instagram' ? 'FFDB2777' : 'FF1E293B' } };
+        tc.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(r).height = 24;
+        r++;
+
+        const h1 = r, h2 = r + 1;
+        mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
+        mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
+        mergeRange(ws, h1, 6, h1, 8, 'META VIEWS', ARGB.grpViews, true);
+        mergeRange(ws, h1, 9, h1, 10, 'Product Views', ARGB.grpProduct, true);
+        mergeRange(ws, h1, 11, h1, 14, 'CLICKS', ARGB.grpClicks, true);
+        mergeRange(ws, h1, 15, h1, 17, 'REGISTRATIONS', ARGB.grpRegs, true);
+        mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
+        mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
+
+        const subs = [
+          { c: 2, t: 'Budget (KPI)', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget, color: ARGB.textDark }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
+          { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews, color: ARGB.textDark },
+          { c: 9, t: 'Product Views', bg: ARGB.subProduct }, { c: 10, t: 'V2P', bg: ARGB.subProduct },
+          { c: 11, t: 'Clicks (KPI)', bg: ARGB.subClicks }, { c: 12, t: 'MTD', bg: ARGB.subClicks }, { c: 13, t: 'RR', bg: ARGB.subClicks, color: ARGB.textDark }, { c: 14, t: 'CTR', bg: ARGB.subClicks },
+          { c: 15, t: 'Reg (KPI)', bg: ARGB.subRegs }, { c: 16, t: 'MTD', bg: ARGB.subRegs }, { c: 17, t: 'RR', bg: ARGB.subRegs, color: ARGB.textDark },
+          { c: 18, t: 'Users (KPI)', bg: ARGB.subUsers }, { c: 19, t: 'MTD', bg: ARGB.subUsers }, { c: 20, t: 'RR', bg: ARGB.subUsers, color: ARGB.textDark },
+          { c: 21, t: 'S2P', bg: ARGB.subPerf }, { c: 22, t: 'Revenue', bg: ARGB.subPerf }, { c: 23, t: 'ROI', bg: ARGB.subPerf }
+        ];
+
+        subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true, s.color || ARGB.textDark));
+        r += 2;
+
+        camps.forEach(c => {
+          const row = ws.getRow(r);
+          row.height = 19;
+          setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
+          setCell(row.getCell(2), `$${c.budget}`, ARGB.tintBudget, true);
+          setCell(row.getCell(3), `$${c.spent}`, ARGB.tintBudget, true);
+          setCell(row.getCell(4), `$${c.rrBudget}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget, ARGB));
+          setCell(row.getCell(5), `$${c.dailyBudget}`, ARGB.tintBudget);
+          setCell(row.getCell(6), Number(c.impKpi || 0).toLocaleString(), ARGB.tintViews);
+          setCell(row.getCell(7), Number(c.impMtd || 0).toLocaleString(), ARGB.tintViews, true);
+          setCell(row.getCell(8), Number(c.impRr || 0).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi, ARGB));
+          setCell(row.getCell(9), c.productViews, ARGB.tintProduct, true);
+          setCell(row.getCell(10), c.v2p, ARGB.tintProduct, true);
+          setCell(row.getCell(11), c.clicksKpi, ARGB.tintClicks);
+          setCell(row.getCell(12), c.clicksMtd, ARGB.tintClicks, true);
+          setCell(row.getCell(13), c.clicksRr, ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi, ARGB));
+          setCell(row.getCell(14), c.ctr, ARGB.tintClicks, true);
+          setCell(row.getCell(15), c.regKpi || '—', ARGB.tintRegs, true);
+          setCell(row.getCell(16), c.regMtd, ARGB.tintRegs, true);
+          setCell(row.getCell(17), c.regRr, ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi, ARGB));
+          setCell(row.getCell(18), c.usersFtp || '—', ARGB.tintUsers, true);
+          setCell(row.getCell(19), c.usersMtd, ARGB.tintUsers, true);
+          setCell(row.getCell(20), c.usersRr > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp, ARGB));
+          setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
+          setCell(row.getCell(22), Number(c.revenue) > 0 ? `$${Number(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, Number(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
+          setCell(row.getCell(23), Number(c.roi) < 0 ? `-$${Math.abs(c.roi)}` : `$${c.roi}`, ARGB.tintPerf, true, Number(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
+          r++;
+        });
+
+        const sum = f => camps.reduce((s, c) => s + Number(c[f] || 0), 0);
+        const fRow = ws.getRow(r);
+        fRow.height = 20;
+        setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
+        setCell(fRow.getCell(2), `$${sum('budget')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(3), `$${sum('spent')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(4), `${sum('rrBudget')}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget'), ARGB));
+        setCell(fRow.getCell(5), `$${sum('dailyBudget')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(6), sum('impKpi').toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(7), sum('impMtd').toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(8), sum('impRr').toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi'), ARGB));
+        setCell(fRow.getCell(9), sum('productViews'), ARGB.tintProduct, true);
+        setCell(fRow.getCell(10), sum('v2p'), ARGB.tintProduct, true);
+        setCell(fRow.getCell(11), sum('clicksKpi').toFixed(1), ARGB.tintClicks, true);
+        setCell(fRow.getCell(12), sum('clicksMtd'), ARGB.tintClicks, true);
+        setCell(fRow.getCell(13), sum('clicksRr'), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi'), ARGB));
+        setCell(fRow.getCell(14), '2%', ARGB.tintClicks, true);
+        setCell(fRow.getCell(15), `${sum('regKpi') || '—'}`, ARGB.tintRegs, true);
+        setCell(fRow.getCell(16), sum('regMtd'), ARGB.tintRegs, true);
+        setCell(fRow.getCell(17), sum('regRr'), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi'), ARGB));
+        setCell(fRow.getCell(18), `${sum('usersFtp') || '—'}`, ARGB.tintUsers, true);
+        setCell(fRow.getCell(19), sum('usersMtd'), ARGB.tintUsers, true);
+        setCell(fRow.getCell(20), '—', ARGB.tintUsers);
+        
+        const totRegs = sum('regMtd'), totUsrs = sum('usersMtd');
+        const s2pTotal = totRegs > 0 ? ((totUsrs / totRegs) * 100).toFixed(1) + '%' : '0.0%';
+        setCell(fRow.getCell(21), s2pTotal, ARGB.tintPerf, true);
+        setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
+        const tRoi = sum('roi');
+        setCell(fRow.getCell(23), tRoi < 0 ? `-$ ${Math.abs(tRoi)}` : `$ ${tRoi}`, ARGB.tintPerf, true, tRoi < 0 ? ARGB.textRed : ARGB.textGreen);
+        r++;
+        return r;
+      }
+
+      const sAll = wb.addWorksheet('All Platforms', { views: [{ showGridLines: true }] });
+      let nR = 1;
+      nR = makeSheet(sAll, 'meta', 'Meta (Facebook Ads)', nR); nR++;
+      nR = makeSheet(sAll, 'instagram', 'Instagram Ads', nR); nR++;
+      nR = makeSheet(sAll, 'x', 'X Campaigns', nR);
+
+      makeSheet(wb.addWorksheet('Meta Ads', { views: [{ showGridLines: true }] }), 'meta', 'Meta (Facebook Ads)');
+      makeSheet(wb.addWorksheet('Instagram Ads', { views: [{ showGridLines: true }] }), 'instagram', 'Instagram Ads');
+      makeSheet(wb.addWorksheet('X Campaigns', { views: [{ showGridLines: true }] }), 'x', 'X Campaigns');
+
+      const buf = await wb.xlsx.writeBuffer();
+      const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `WiseKapital_Social_Report_${currentSelectedMonth}_${new Date().getFullYear()}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
 
     function filterPlatform() {
-      const selected = document.getElementById('platformFilter').value;
-      const secMeta = document.getElementById('sectionMeta');
-      const secInstagram = document.getElementById('sectionInstagram');
-
-      if (selected === 'meta') {
-        secMeta.style.display = 'block';
-        secInstagram.style.display = 'none';
-      } else if (selected === 'instagram') {
-        secMeta.style.display = 'none';
-        secInstagram.style.display = 'block';
-      } else {
-        secMeta.style.display = 'block';
-        secInstagram.style.display = 'block';
-      }
+      const val = document.getElementById('platformFilter').value;
+      const setD = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
+      setD('sectionMetaTable', val === 'all' || val === 'meta');
+      setD('sectionInstagramTable', val === 'all' || val === 'instagram');
+      setD('sectionXTable', val === 'all' || val === 'x');
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
-      initCharts();
+      const currentCalMonth = monthNames[new Date().getMonth()];
+      currentSelectedMonth = currentCalMonth;
+      const sel = document.getElementById('monthSelector');
+      if (sel) sel.value = currentCalMonth;
+
+      changeSelectedMonth(currentCalMonth);
     });
   </script>
 </body>
