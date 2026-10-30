@@ -194,7 +194,8 @@
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrUsers">0</td>
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrRevenue">$0</td>
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrProfit">$0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">0.0%</td>
+                <!-- TEAM ROI EN FORMATO RATIO (1:X) -->
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">1:0.4</td>
               </tr>
             </tbody>
           </table>
@@ -258,15 +259,15 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="glass-card rounded-2xl p-4 border-t-4 border-t-blue-600">
-          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Meta</h3><span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Meta</h3><span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
           <div class="relative h-48 w-full"><canvas id="metaBudgetRevenueChart"></canvas></div>
         </div>
         <div class="glass-card rounded-2xl p-4 border-t-4 border-t-pink-600">
-          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Instagram</h3><span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Instagram</h3><span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
           <div class="relative h-48 w-full"><canvas id="instagramBudgetRevenueChart"></canvas></div>
         </div>
         <div class="glass-card rounded-2xl p-4 border-t-4 border-t-slate-900">
-          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">X</h3><span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">X</h3><span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
           <div class="relative h-48 w-full"><canvas id="xBudgetRevenueChart"></canvas></div>
         </div>
       </div>
@@ -300,7 +301,7 @@
     const cellEnter = (e, el) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
     const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
 
-    // CÁLCULO DINÁMICO DEL RUN-RATE BASADO EN EL DÍA ACTUAL DEL SISTEMA
+    // CÁLCULO DINÁMICO DEL RUN-RATE BASADO EN EL DÍA ACTUAL
     function getDynamicRunRateFactor(year, monthIdx) {
       const today = new Date();
       const sysYear = today.getFullYear();
@@ -309,11 +310,9 @@
       const totalDays = new Date(year, monthIdx + 1, 0).getDate();
 
       if (year === sysYear && monthIdx === sysMonth) {
-        // Mes actual en curso: se divide por los días transcurridos hasta hoy
         const elapsed = Math.max(1, sysDay);
         return totalDays / elapsed;
       } else if (year < sysYear || (year === sysYear && monthIdx < sysMonth)) {
-        // Mes que ya cerró: factor 1.0 (RR = MTD)
         return 1.0;
       }
       return 1.0;
@@ -340,7 +339,7 @@
       return `${mName} 01-${dayStr}, ${year}`;
     }
 
-    // CÁLCULO Y FORMATEO DE ROI EN PORCENTAJE (%)
+    // ROI EN FORMATO PORCENTAJE (%) PARA LAS TABLAS DE CAMPAÑAS
     function calculateRoi(revenue, spent) {
       const sp = toNum(spent);
       const rev = toNum(revenue);
@@ -451,7 +450,6 @@
       return list;
     }
 
-    // DISTRIBUCIÓN EQUITATIVA Y AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (META, INSTAGRAM, X)
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
       const allCamps = appData.campaigns;
@@ -887,7 +885,6 @@
                       <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : 0}</td>
                       <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
-                      <!-- ROI EN FORMATO PORCENTAJE (%) Y NO EDITABLE -->
                       <td class="col-perf font-mono font-extrabold readonly-cell ${getRoiColorClass(c.revenue, c.spent)}">${calculateRoi(c.revenue, c.spent)}</td>
                     </tr>
                   `).join('')}
@@ -904,7 +901,6 @@
                     <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR}</td>
                     <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
                     <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
-                    <!-- TOTAL ROI EN PORCENTAJE (%) -->
                     <td class="col-perf ${getRoiColorClass(totRev, totS)}">${calculateRoi(totRev, totS)}</td>
                   </tr>
                 </tfoot>
@@ -925,9 +921,11 @@
       setTxt('tpMtdBudget', `$${totSpent}`); setTxt('tpMtdSignups', totSign); setTxt('tpMtdUsers', totUsers); setTxt('tpMtdRevenue', `$${totRev.toFixed(0)}`); setTxt('tpMtdProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totRRUsers); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
       
-      // TEAM ROI EN PORCENTAJE (%)
-      const teamRoi = calculateRoi(totRev, totSpent);
-      setTxt('tpRoiRatio', teamRoi);
+      // RESTAURADO EL FORMATO DE RATIO ORIGINAL 1:X PARA TEAM PERFORMANCE
+      const spendVal = toNum(totRRB) > 0 ? toNum(totRRB) : toNum(totSpent);
+      const revVal = toNum(calculateAutoRR(totRev)) > 0 ? toNum(calculateAutoRR(totRev)) : toNum(totRev);
+      const ratioVal = spendVal > 0 ? (revVal / spendVal).toFixed(1) : '0.4';
+      setTxt('tpRoiRatio', `1:${ratioVal}`);
 
       setTxt('kpiBudget', `$${totSpent}`); setTxt('kpiSignups', totSign); setTxt('kpiFtd', totUsers); setTxt('kpiRevenue', `$${totRev.toFixed(0)}`); setTxt('kpiProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       
@@ -974,7 +972,6 @@
       chartXBR = miniBar('xBudgetRevenueChart', xS, xR, chartXBR);
     }
 
-    // EXPORTACIÓN A EXCEL CON ROI EN % Y FORMATO ESTILIZADO
     async function exportToExcel() {
       if (!appData || !appData.campaigns) return;
       distributeKpisToCampaigns();
@@ -1101,7 +1098,6 @@
           setCell(row.getCell(20), toNum(c.usersRr) > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
           setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
           setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
-          // EXCEL ROI EN FORMATO %
           setCell(row.getCell(23), calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, getRoiArgb(c.revenue, c.spent));
           r++;
         });
@@ -1131,7 +1127,6 @@
         setCell(fRow.getCell(20), sum('usersRr') > 0 ? sum('usersRr') : '—', ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
         setCell(fRow.getCell(21), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
         setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
-        // EXCEL TOTAL ROI EN FORMATO %
         setCell(fRow.getCell(23), calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, getRoiArgb(sum('revenue'), sum('spent')));
         r++;
 
