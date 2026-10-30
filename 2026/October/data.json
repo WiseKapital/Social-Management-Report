@@ -1,5 +1,5 @@
 {
-  "period": "October 01-31, 2026",
+  "period": "October 01-30, 2026",
   "kpis": {
     "budget": 800,
     "signups": 208,
@@ -30,8 +30,8 @@
       "regRr": 0,
       "usersFtp": 16,
       "usersMtd": 0,
-      "usersRr": "—",
-      "s2p": "—",
+      "usersRr": 0,
+      "s2p": "0.0%",
       "revenue": 0,
       "roi": 0
     }
