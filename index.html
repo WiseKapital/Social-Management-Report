@@ -77,10 +77,51 @@
 
   <input type="file" id="localFileInput" accept=".json" class="hidden" onchange="loadLocalFile(event)">
 
-  <!-- TOAST NOTIFICACIÓN GUARDADO -->
+  <!-- TOAST NOTIFICATION -->
   <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-    <span id="saveToastText">Cambios guardados con éxito</span>
+    <span id="saveToastText">Changes saved successfully</span>
+  </div>
+
+  <!-- VIEW JSON MODAL -->
+  <div id="jsonModal" onclick="if(event.target === this) closeJsonModal()" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
+    <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[88vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <i data-lucide="code" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold font-display text-slate-900">JSON Data Preview</h3>
+            <p class="text-[11px] text-slate-500 font-medium">Ready to copy and paste directly into your <code>data.json</code></p>
+          </div>
+        </div>
+        <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center cursor-pointer">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Code Box -->
+      <div class="p-5 overflow-y-auto custom-scrollbar bg-[#0B1120] flex-1 relative font-mono text-xs">
+        <pre><code id="jsonModalCode" class="text-emerald-400 leading-relaxed block select-all"></code></pre>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white">
+        <span class="text-xs text-slate-500 font-medium">Click copy to save to clipboard</span>
+        <div class="flex items-center gap-2">
+          <button onclick="copyJsonToClipboard()" id="btnCopyJsonModal" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span id="copyBtnText">Copy JSON</span>
+          </button>
+          <button onclick="downloadUpdatedJson()" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download File</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- TOP HEADER -->
@@ -99,7 +140,7 @@
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
               <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> Sincronizado
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> Live Sync
               </span>
             </div>
             <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">October 01-28, 2026</p>
@@ -109,7 +150,7 @@
         <!-- ACTIONS & MONTH/YEAR PICKER -->
         <div class="flex items-center gap-2.5 flex-wrap">
 
-          <!-- CALENDARIO SELECTOR DE MESES -->
+          <!-- MONTH PICKER CONTROLS -->
           <div class="flex items-center gap-2 font-bold text-xs">
             <span class="text-slate-400 tracking-wider">FROM</span>
             <div class="relative">
@@ -152,22 +193,22 @@
 
           <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
 
-          <!-- BOTÓN GUARDAR (PERSISTE EN LOCALSTORAGE) -->
-          <button onclick="saveDashboardData()" title="Guarda los cambios para que persistan al recargar la página" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Guardar</span>
+          <!-- SAVE BUTTON -->
+          <button onclick="saveDashboardData()" title="Save changes to persist upon page refresh" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Save</span>
           </button>
 
-          <!-- BOTÓN DESCARGAR JSON ACTUALIZADO -->
-          <button onclick="downloadUpdatedJson()" title="Descarga el data.json con tus cambios para subirlo a Git" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1 cursor-pointer">
-            <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i><span>Descargar JSON</span>
+          <!-- VIEW JSON BUTTON -->
+          <button onclick="openJsonModal()" title="View and copy formatted JSON data structure" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="code" class="w-3.5 h-3.5"></i><span>View JSON</span>
           </button>
 
-          <!-- RECARGAR DE GIT -->
-          <button onclick="reloadFromGit()" title="Descartar cambios locales y volver a cargar desde Git" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
+          <!-- RELOAD FROM GIT -->
+          <button onclick="reloadFromGit()" title="Discard local changes and reload fresh from Git" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
           </button>
 
-          <button onclick="exportToExcel()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export Excel</span>
           </button>
 
@@ -191,8 +232,8 @@
 
     <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
       <div>
-        <span class="font-bold text-sm block mb-0.5">📁 Modo Local</span>
-        <p class="text-amber-800">Selecciona tu <code>data.json</code> manualmente:</p>
+        <span class="font-bold text-sm block mb-0.5">📁 Local File Mode Detected</span>
+        <p class="text-amber-800">Browser restricts direct local file reading. Select your <code>data.json</code> manually:</p>
       </div>
       <div>
         <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
@@ -470,7 +511,7 @@
 
     </div>
 
-    <!-- SECTION 2: CHARTS (DONAS Y MINI BARRAS POR PLATAFORMA) -->
+    <!-- SECTION 2: CHARTS (DOUGHNUTS & MINI BARS BY PLATFORM) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -479,7 +520,7 @@
             Platform Performance: Meta, Instagram &amp; X
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">
-            Distribución de registros y usuarios por plataforma con comparativa individual de Gasto vs. Ingreso.
+            Registrations and users distribution across platforms with individual Spent vs. Revenue comparison.
           </p>
         </div>
       </div>
@@ -593,7 +634,7 @@
   </main>
 
   <script>
-    // DATOS DE RESPALDO DIRECTOS (IDÉNTICOS A TU JSON)
+    // EMBEDDED DEFAULT DATA (IDENTICAL TO YOUR JSON)
     const DEFAULT_DATA = {
       "period": "October 01-28, 2026",
       "kpis": { "budget": 800, "signups": 250, "users": 20, "revenue": 3300, "profit": 2500 },
@@ -614,7 +655,7 @@
     let chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedMonth = "October";
     
-    // ORDEN CORRECTO DE LOS 12 MESES
+    // STANDARD 12-MONTH ORDER
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
@@ -711,6 +752,10 @@
       if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
     });
 
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeJsonModal();
+    });
+
     const toNum = val => {
       if (val === undefined || val === null || val === '—' || val === '' || val === '-') return 0;
       const n = parseFloat(String(val).replace(/[$,%]/g, ''));
@@ -754,7 +799,7 @@
       };
       appData.campaigns.push(newCamp);
       renderDashboard();
-      showSaveToast('Campaña agregada. Recuerda pulsar "Guardar".');
+      showSaveToast('Campaign added. Click "Save" to keep changes.');
     }
 
     function deleteCampaign(campaignId, event) {
@@ -762,11 +807,11 @@
       const campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
       if (!campaign) return;
 
-      if (confirm(`¿Eliminar la campaña "${campaign.name}"?`)) {
+      if (confirm(`Delete campaign "${campaign.name}"?`)) {
         appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
         syncGlobalSummaries();
         renderDashboard();
-        showSaveToast('Campaña eliminada. Pulsa "Guardar" para conservar.');
+        showSaveToast('Campaign deleted. Click "Save" to keep changes.');
       }
     }
 
@@ -781,17 +826,67 @@
       }, 3000);
     }
 
-    // GUARDAR EN LOCALSTORAGE (SOBREVIVE A RECARGAS DE PÁGINA)
+    // PERSIST IN LOCALSTORAGE (SURVIVES PAGE REFRESH)
     function saveDashboardData() {
       if (!appData) return;
       const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
       localStorage.setItem(key, JSON.stringify(appData));
       localStorage.setItem('wisekapital_active', JSON.stringify(appData));
-      setLiveBadge('Cambios Guardados');
-      showSaveToast('✅ Cambios guardados correctamente en este navegador.');
+      setLiveBadge('Saved Locally');
+      showSaveToast('✅ Changes saved successfully in this browser.');
     }
 
-    // DESCARGAR JSON ACTUALIZADO PARA GIT
+    // VIEW JSON MODAL HANDLERS
+    function openJsonModal() {
+      if (!appData) return;
+      const cleanData = {
+        period: appData.period || "October 01-28, 2026",
+        kpis: appData.kpis || {},
+        campaigns: (appData.campaigns || []).map(c => {
+          const copy = { ...c };
+          delete copy.id;
+          return copy;
+        })
+      };
+      const jsonStr = JSON.stringify(cleanData, null, 2);
+      document.getElementById('jsonModalCode').textContent = jsonStr;
+      document.getElementById('jsonModal').classList.remove('hidden');
+      
+      const btnText = document.getElementById('copyBtnText');
+      if (btnText) btnText.textContent = "Copy JSON";
+      lucide.createIcons();
+    }
+
+    function closeJsonModal() {
+      document.getElementById('jsonModal').classList.add('hidden');
+    }
+
+    async function copyJsonToClipboard() {
+      const codeEl = document.getElementById('jsonModalCode');
+      if (!codeEl) return;
+      const text = codeEl.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        const btnText = document.getElementById('copyBtnText');
+        if (btnText) btnText.textContent = "Copied!";
+        showSaveToast('✅ JSON copied to clipboard!');
+        setTimeout(() => {
+          if (btnText) btnText.textContent = "Copy JSON";
+        }, 2500);
+      } catch (err) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        const btnText = document.getElementById('copyBtnText');
+        if (btnText) btnText.textContent = "Copied!";
+        showSaveToast('✅ JSON copied to clipboard!');
+      }
+    }
+
+    // DOWNLOAD UPDATED JSON FILE
     function downloadUpdatedJson() {
       if (!appData) return;
       const cleanData = {
@@ -799,7 +894,7 @@
         kpis: appData.kpis,
         campaigns: (appData.campaigns || []).map(c => {
           const copy = { ...c };
-          delete copy.id; // Limpio para Git
+          delete copy.id;
           return copy;
         })
       };
@@ -810,17 +905,17 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showSaveToast('📥 data.json descargado para subir a GitHub.');
+      showSaveToast('📥 data.json downloaded successfully.');
     }
 
-    // RECARGAR FRESCO DESDE GIT DESCARTANDO CAMBIOS LOCALES
+    // RELOAD FRESH FROM GIT DISCARDING LOCAL EDITS
     function reloadFromGit() {
-      if (confirm('¿Descartar cambios guardados en este navegador y recargar desde Git?')) {
+      if (confirm('Discard local changes in this browser and reload fresh from Git?')) {
         const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
         localStorage.removeItem(key);
         localStorage.removeItem('wisekapital_active');
         loadDataForRange(fromDate, toDate, true);
-        showSaveToast('🔄 Recargado desde el repositorio.');
+        showSaveToast('🔄 Reloaded from repository.');
       }
     }
 
@@ -833,7 +928,7 @@
         try {
           const raw = JSON.parse(e.target.result);
           applyLoadedData(raw, 'Local File');
-          showSaveToast('data.json cargado desde archivo local.');
+          showSaveToast('data.json loaded from local file.');
         } catch (err) {
           alert("Error parsing JSON: " + err.message);
         }
@@ -865,7 +960,7 @@
           if (res.ok) {
             const data = await res.json();
             if (data && (data.campaigns || data.kpis)) {
-              console.log(`[WiseKapital] JSON cargado exitosamente desde: ${p}`);
+              console.log(`[WiseKapital] Successfully loaded JSON from: ${p}`);
               return data;
             }
           }
@@ -878,7 +973,6 @@
       appData = {
         period: raw.period || "October 01-28, 2026",
         kpis: raw.kpis || { budget: 800, signups: 250, users: 20, revenue: 3300, profit: 2500 },
-        // ID único garantizado para que NUNCA se unan
         campaigns: (raw.campaigns || []).map((c, idx) => ({
           ...c,
           id: c.id || `camp_${idx}_${(c.name || 'camp').replace(/[^a-zA-Z0-9]/g, '_')}`
@@ -887,7 +981,7 @@
 
       document.getElementById('localFileHelper').classList.add('hidden');
       document.getElementById('dateAutoInfo').innerText = appData.period;
-      setLiveBadge(sourceLabel || 'Sincronizado');
+      setLiveBadge(sourceLabel || 'Synced');
       renderDashboard();
     }
 
@@ -896,27 +990,27 @@
       currentLoadedMonth = mName;
       const storageKey = `wisekapital_${mName.toLowerCase()}`;
 
-      // 1. Revisar si hay cambios guardados previamente por el usuario
+      // 1. Check if user has previously saved changes
       if (!forceGit) {
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-            applyLoadedData(parsed, 'Local Guardado');
+            applyLoadedData(parsed, 'Local Saved');
             return;
           } catch(e) {}
         }
       }
 
-      // 2. Intentar buscar en Git
+      // 2. Fetch directly from repository
       const fetched = await fetchMonthJson(mName);
       if (fetched) {
         applyLoadedData(fetched, `${mName} Git`);
         return;
       }
 
-      // 3. Fallback infalible (NUNCA queda la pantalla en blanco)
-      applyLoadedData(DEFAULT_DATA, 'Default Octubre');
+      // 3. Robust Fallback (Guaranteed to render)
+      applyLoadedData(DEFAULT_DATA, 'Default October');
     }
 
     function onKpiEdit(el, field) {
@@ -1022,7 +1116,7 @@
           <td class="font-bold text-slate-900 sticky-col ${nameBg} p-1">
             <div class="relative flex items-center justify-center min-h-[28px] group">
               <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
-              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Eliminar campaña" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center" aria-label="Eliminar campaña">
+              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center" aria-label="Delete campaign">
                 <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 6h18"/>
                   <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
