@@ -185,17 +185,6 @@
       </div>
     </div>
 
-    <!-- DYNAMIC BANNER -->
-    <div class="glass-card rounded-xl p-3 px-4 flex items-center justify-between flex-wrap gap-2 text-xs">
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-slate-700">Days tracking: <strong id="lblTotalDaysRange" class="text-slate-900">—</strong> selected.</span>
-        <span class="text-slate-400">|</span>
-        <span class="text-slate-600">Global Factor: <strong id="lblRrFactor" class="text-indigo-600 font-mono">—</strong></span>
-      </div>
-      <span class="text-slate-500 italic">🟢 RR ≥ KPI: Verde | 🔴 RR &lt; KPI: Rojo</span>
-    </div>
-
     <!-- TEAM PERFORMANCE TABLE -->
     <div class="space-y-2">
       <h2 class="text-base font-bold font-display text-slate-900">Team Performance</h2>
@@ -465,31 +454,6 @@
 
     </div>
 
-    <!-- SECTION 1: CHARTS (PROFIT BY PLATFORM - CLEAN & CENTERED) -->
-    <div class="space-y-6 pt-4 border-t border-slate-200">
-      <div class="glass-card rounded-2xl p-6 max-w-2xl mx-auto shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-sm font-bold font-display text-slate-900">Profit ($) by Platform</h3>
-          <span class="text-xs font-semibold text-slate-400">Total ROI Analysis</span>
-        </div>
-        <div class="relative h-60 w-full flex items-center justify-center"><canvas id="profitPlatformChart"></canvas></div>
-        <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2.5 text-center text-xs">
-          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
-            <span class="block text-[10px] font-bold text-rose-700 uppercase">Meta</span>
-            <strong id="chartProfitMeta" class="text-sm font-mono text-rose-900">$0.00</strong>
-          </div>
-          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
-            <span class="block text-[10px] font-bold text-rose-700 uppercase">Instagram</span>
-            <strong id="chartProfitIG" class="text-sm font-mono text-rose-900">$0.00</strong>
-          </div>
-          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
-            <span class="block text-[10px] font-bold text-rose-700 uppercase">Total</span>
-            <strong id="chartProfitTotal" class="text-sm font-mono text-rose-900">$0.00</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- SECTION 2: CHARTS (DONAS Y MINI BARRAS POR PLATAFORMA) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -615,7 +579,7 @@
   <script>
     let appData = null;
     let globalFactor = 1.0;
-    let chartProfit = null, chartSignups = null, chartUsers = null;
+    let chartSignups = null, chartUsers = null;
     let chartMetaBR = null, chartIGBR = null, chartXBR = null;
     
     // NOMBRES DE MESES (CORTO Y LARGO)
@@ -671,7 +635,6 @@
       let y = isFrom ? fromViewYear : toViewYear;
       y += s;
       
-      // No retroceder antes de 2026 ni superar el año actual
       if (y < 2026 || y > maxSelectableYear) return;
 
       if (isFrom) fromViewYear = y;
@@ -692,7 +655,6 @@
         const cell = document.createElement('div');
         cell.textContent = name;
         
-        // Reglas de negocio: Mínimo Octubre 2026 y máximo hasta el mes actual
         const isBeforeMin = (y < 2026 || (y === 2026 && m < 9));
         const isAfterMax = (y > maxSelectableYear || (y === maxSelectableYear && m > maxSelectableMonth));
         const isDisabled = isBeforeMin || isAfterMax;
@@ -710,7 +672,6 @@
             if (isFrom) {
               fromDate = new Date(y, m, 1);
               if (fromDate > toDate) {
-                // Si el mes de inicio supera el fin, ajustar toDate
                 if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
                   toDate = new Date(sysToday);
                 } else {
@@ -718,7 +679,6 @@
                 }
               }
             } else {
-              // Si se elige el mes actual, limitar exactamente al día actual
               if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
                 toDate = new Date(sysToday);
               } else {
@@ -996,9 +956,6 @@
         campaigns: finalCampaigns
       };
 
-      document.getElementById('lblTotalDaysRange').innerText = daysSelected;
-      document.getElementById('lblRrFactor').innerText = `×${globalFactor.toFixed(2)}`;
-      
       const monStr = months.length === 1 ? months[0].monthName : 'Multi-Month';
       document.getElementById('dateAutoInfo').innerText = `Data from ${fmtMonthYear(startObj)} to ${fmtMonthYear(endObj)}`;
 
@@ -1334,32 +1291,9 @@
       const meta = fBy('meta'), ig = fBy('instagram'), x = fBy('x');
 
       const sum = (arr, f) => arr.reduce((s, c) => s + Number(c[f] || 0), 0);
-      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue'), mP = sum(meta, 'roi');
-      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue'), iP = sum(ig, 'roi');
-      const xS = sum(x, 'spent'), xR = sum(x, 'revenue'), xP = sum(x, 'roi');
-
-      const tP = mP + iP + xP;
-
-      document.getElementById('chartProfitMeta').innerText = `${mP < 0 ? '-$' : '$'}${Math.abs(mP).toFixed(2)}`;
-      document.getElementById('chartProfitIG').innerText = `${iP < 0 ? '-$' : '$'}${Math.abs(iP).toFixed(2)}`;
-      document.getElementById('chartProfitTotal').innerText = `${tP < 0 ? '-$' : '$'}${Math.abs(tP).toFixed(2)}`;
-
-      if (chartProfit) chartProfit.destroy();
-      chartProfit = new Chart(document.getElementById('profitPlatformChart').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: ['Meta', 'Instagram', 'Total'],
-          datasets: [{ label: 'Profit ($)', data: [mP, iP, tP], backgroundColor: 'rgba(239, 68, 68, 0.85)', borderRadius: 6 }]
-        },
-        options: { 
-          responsive: true, 
-          maintainAspectRatio: false, 
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { ticks: { callback: v => '$' + v } }
-          }
-        }
-      });
+      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue');
+      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue');
+      const xS = sum(x, 'spent'), xR = sum(x, 'revenue');
 
       const mSignups = sum(meta, 'regMtd');
       const iSignups = sum(ig, 'regMtd');
