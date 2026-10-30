@@ -25,6 +25,7 @@
     .editable-cell { outline: none; cursor: text; transition: filter 0.15s; }
     .editable-cell:hover { filter: brightness(0.95); }
     .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
+    .readonly-cell { cursor: default; user-select: none; }
     .col-budget { background-color: #F4F4F4 !important; }
     .col-views { background-color: #F0F5FA !important; }
     .col-prod { background-color: #FFFBEB !important; }
@@ -59,7 +60,7 @@
         <textarea id="jsonModalCode" spellcheck="false" class="w-full h-96 bg-transparent text-emerald-400 font-mono text-xs leading-relaxed outline-none resize-none custom-scrollbar"></textarea>
       </div>
       <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white flex-wrap gap-2">
-        <span class="text-xs text-slate-500">You can copy or paste JSON here and save directly to Git</span>
+        <span class="text-xs text-slate-500">Live JSON auto-calculated</span>
         <div class="flex items-center gap-2">
           <button onclick="copyJsonToClipboard()" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-slate-800 hover:bg-black text-white flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyBtnText">Copy JSON</span>
@@ -330,7 +331,7 @@
       renderMonthGrid(t);
     }
 
-    // CALENDARIO INDEPENDIENTE PARA FROM Y TO
+    // CALENDARIO INDEPENDIENTE
     function renderMonthGrid(t) {
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
@@ -389,10 +390,9 @@
       return list;
     }
 
-    // DISTRIBUCIÓN EQUITATIVA Y AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (INCLUYENDO X)
+    // DISTRIBUCIÓN AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (META, INSTAGRAM, X)
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
-      
       const allCamps = appData.campaigns;
       const count = allCamps.length || 1;
 
@@ -423,7 +423,7 @@
         name: `New Campaign`, platform, highlight: false,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
-        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "—", revenue: 0, roi: 0
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0
       });
       distributeKpisToCampaigns();
       renderDashboard();
@@ -598,7 +598,15 @@
           appData = {
             period: result.data.period || `${monthName} ${year}`,
             kpis: result.data.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
-            campaigns: (result.data.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}_${Date.now()}` }))
+            campaigns: (result.data.campaigns || []).map((c, i) => {
+              const r = toNum(c.regMtd), u = toNum(c.usersMtd);
+              return {
+                ...c,
+                id: c.id || `c_${i}_${Date.now()}`,
+                usersRr: calculateAutoRR(c.usersMtd),
+                s2p: r > 0 ? ((u / r) * 100).toFixed(1) + '%' : '0.0%'
+              };
+            })
           };
           setLiveBadge(`Live Git (${monthName})`);
         } else {
@@ -654,7 +662,8 @@
           c.usersRr = calculateAutoRR(c.usersMtd);
           c.roi = toNum(c.revenue) - toNum(c.spent);
           c.ctr = toNum(c.impMtd) > 0 ? ((toNum(c.clicksMtd) / toNum(c.impMtd)) * 100).toFixed(1) + '%' : '0%';
-          c.s2p = toNum(c.regMtd) > 0 ? ((toNum(c.usersMtd) / toNum(c.regMtd)) * 100).toFixed(1) + '%' : '0.0%';
+          const r = toNum(c.regMtd), u = toNum(c.usersMtd);
+          c.s2p = r > 0 ? ((u / r) * 100).toFixed(1) + '%' : '0.0%';
           return c;
         });
 
@@ -677,18 +686,24 @@
       renderDashboard();
     }
 
+    // ACTUALIZACIÓN AUTOMÁTICA DE USERS RR Y S2P AL EDITAR
     function handleCellBlur(el, id, field) {
       const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
       if (!c) return;
-      if (['name', 'ctr', 's2p'].includes(field)) c[field] = el.innerText.trim();
+      if (['name', 'ctr'].includes(field)) c[field] = el.innerText.trim();
       else c[field] = toNum(el.innerText);
 
       c.rrBudget = calculateAutoRR(c.spent);
       c.impRr = calculateAutoRR(c.impMtd);
       c.clicksRr = calculateAutoRR(c.clicksMtd);
       c.regRr = calculateAutoRR(c.regMtd);
-      c.usersRr = calculateAutoRR(c.usersMtd); // Cálculo automático de Run-Rate para Users
+      c.usersRr = calculateAutoRR(c.usersMtd); // Cálculo automático de Users RR
       c.roi = toNum(c.revenue) - toNum(c.spent);
+
+      // Cálculo automático de S2P = (Users MTD / Reg MTD) * 100
+      const reg = toNum(c.regMtd);
+      const usr = toNum(c.usersMtd);
+      c.s2p = reg > 0 ? ((usr / reg) * 100).toFixed(1) + '%' : '0.0%';
 
       distributeKpisToCampaigns();
       renderDashboard();
@@ -789,28 +804,30 @@
                           <button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                         </div>
                       </td>
-                      <td class="col-budget font-mono font-bold">$${c.budget}</td>
+                      <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
-                      <td class="col-budget font-mono font-bold ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
+                      <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
                       <td class="col-budget font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'dailyBudget')">$${c.dailyBudget}</td>
                       <td class="col-views font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
                       <td class="col-views font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
-                      <td class="col-views font-mono ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
+                      <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
                       <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'productViews')">${c.productViews}</td>
                       <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'v2p')">${c.v2p}</td>
                       <td class="col-clicks font-mono editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksKpi')">${c.clicksKpi}</td>
                       <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksMtd')">${c.clicksMtd}</td>
-                      <td class="col-clicks font-mono ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
+                      <td class="col-clicks font-mono readonly-cell ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
                       <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'ctr')">${c.ctr}</td>
-                      <td class="col-regs font-mono font-bold">${c.regKpi !== undefined ? c.regKpi : '—'}</td>
+                      <td class="col-regs font-mono font-bold readonly-cell">${c.regKpi !== undefined ? c.regKpi : '—'}</td>
                       <td class="col-regs font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'regMtd')">${c.regMtd}</td>
-                      <td class="col-regs font-mono ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
-                      <td class="col-users font-mono font-bold">${c.usersFtp !== undefined ? c.usersFtp : '—'}</td>
+                      <td class="col-regs font-mono readonly-cell ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
+                      <td class="col-users font-mono font-bold readonly-cell">${c.usersFtp !== undefined ? c.usersFtp : '—'}</td>
                       <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersMtd')">${c.usersMtd}</td>
-                      <td class="col-users font-mono ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : '—'}</td>
-                      <td class="col-perf font-mono font-bold">${c.s2p ?? '—'}</td>
+                      <!-- USERS RR: AUTOMÁTICO Y NO EDITABLE -->
+                      <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : 0}</td>
+                      <!-- S2P: AUTOMÁTICO Y NO EDITABLE -->
+                      <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
-                      <td class="col-perf font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
+                      <td class="col-perf font-mono font-extrabold readonly-cell ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -823,7 +840,7 @@
                     <td class="col-clicks">${totCK.toFixed(1)}</td><td class="col-clicks">${totCM}</td><td class="col-clicks">${totCR}</td>
                     <td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0%'}</td>
                     <td class="col-regs">${totRK > 0 ? totRK : '—'}</td><td class="col-regs">${totRM}</td><td class="col-regs">${totRR}</td>
-                    <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR > 0 ? totUR : '—'}</td>
+                    <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR}</td>
                     <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
                     <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
                     <td class="col-perf ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'}">${totRoi < 0 ? '-$' + Math.abs(totRoi) : '$' + totRoi}</td>
@@ -896,8 +913,8 @@
       const wb = new ExcelJS.Workbook();
       const ws = wb.addWorksheet('Social Report');
       ws.addRow(['WISEKAPITAL SOCIAL REPORT', appData.period]);
-      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Users RR', 'Revenue', 'ROI']);
-      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.usersRr, c.revenue, c.roi]));
+      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Users RR', 'S2P', 'Revenue', 'ROI']);
+      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.usersRr, c.s2p, c.revenue, c.roi]));
       const buf = await wb.xlsx.writeBuffer();
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `WiseKapital_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`; a.click(); a.remove();
     }
