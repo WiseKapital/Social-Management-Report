@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Kalam:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -91,11 +92,14 @@
       <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <i data-lucide="code" class="w-4 h-4"></i>
+            <i data-lucide="folder-tree" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 class="text-sm font-bold font-display text-slate-900">JSON Data Preview</h3>
-            <p class="text-[11px] text-slate-500 font-medium">Auto-distributed KPIs ready to copy into your <code>data.json</code></p>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold font-display text-slate-900">JSON Data Preview</h3>
+              <span id="jsonPathBadge" class="text-[10px] font-mono font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">2026/October/data.json</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium">Dynamic data read directly from your JSON file.</p>
           </div>
         </div>
         <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center cursor-pointer">
@@ -109,16 +113,20 @@
       </div>
 
       <!-- Footer Actions -->
-      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white">
-        <span class="text-xs text-slate-500 font-medium">Click copy to save to clipboard</span>
-        <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white flex-wrap gap-2">
+        <span class="text-xs text-slate-500 font-medium">Ready for Git commit</span>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="downloadFolderZip()" title="Downloads a ZIP containing the exact Year/Month folder and data.json inside" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+            <span id="btnZipText">Download Folder ZIP</span>
+          </button>
           <button onclick="copyJsonToClipboard()" id="btnCopyJsonModal" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
             <span id="copyBtnText">Copy JSON</span>
           </button>
           <button onclick="downloadUpdatedJson()" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Download File</span>
+            <span>Download data.json</span>
           </button>
         </div>
       </div>
@@ -140,11 +148,15 @@
           <div class="hidden sm:block">
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
-              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> Live Sync
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block animate-pulse"></span> Querying
+              </span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 flex items-center gap-1">
+                <i data-lucide="folder" class="w-3 h-3 text-slate-400"></i>
+                <span id="headerPathText">Loading path...</span>
               </span>
             </div>
-            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">October 01-28, 2026</p>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">Loading data...</p>
           </div>
         </div>
 
@@ -200,7 +212,7 @@
           </button>
 
           <!-- VIEW JSON BUTTON -->
-          <button onclick="openJsonModal()" title="View and copy formatted JSON data structure" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
+          <button onclick="openJsonModal()" title="View, copy, or download folder structure" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="code" class="w-3.5 h-3.5"></i><span>View JSON</span>
           </button>
 
@@ -233,8 +245,8 @@
 
     <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
       <div>
-        <span class="font-bold text-sm block mb-0.5">📁 Local File Mode Detected</span>
-        <p class="text-amber-800">Browser restricts direct local file reading. Select your <code>data.json</code> manually:</p>
+        <span class="font-bold text-sm block mb-0.5">📁 Local File Mode</span>
+        <p class="text-amber-800">Browser restricts local file reading. Select your <code>data.json</code> manually:</p>
       </div>
       <div>
         <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
@@ -603,11 +615,7 @@
                 <div class="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-xs">
                   <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                </div>
-                <div><h3 class="text-sm font-bold text-slate-900">Instagram</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
-              </div>
-              <span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
+              </svg>
             </div>
             <div class="relative h-52 w-full mt-1"><canvas id="instagramBudgetRevenueChart"></canvas></div>
           </div>
@@ -635,25 +643,11 @@
   </main>
 
   <script>
-    // EMBEDDED DEFAULT DATA (OCTOBER 2026)
-    const DEFAULT_DATA = {
-      "period": "October 01-28, 2026",
-      "kpis": { "budget": 800, "signups": 250, "users": 20, "revenue": 3300, "profit": 2500 },
-      "campaigns": [
-        { "name": "V1 Imperial Sweeps - FB", "platform": "meta", "highlight": true, "budget": 0, "spent": 15, "rrBudget": 25, "dailyBudget": 7, "impKpi": 1417, "impMtd": 773, "impRr": 1288, "productViews": 80, "v2p": 10, "clicksKpi": 128.7, "clicksMtd": 70, "clicksRr": 117, "ctr": "10%", "regKpi": 0, "regMtd": 2, "regRr": 3, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -15 },
-        { "name": "Imperial Sweeps — Facebook", "platform": "meta", "highlight": false, "budget": 0, "spent": 88, "rrBudget": 153, "dailyBudget": 9, "impKpi": 9240, "impMtd": 7516, "impRr": 8400, "productViews": 390, "v2p": 19, "clicksKpi": 541.2, "clicksMtd": 440, "clicksRr": 492, "ctr": "5%", "regKpi": 0, "regMtd": 28, "regRr": 31, "usersFtp": 0, "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 0.00, "roi": -52 },
-        { "name": "Imperial Sweeps — Instagram", "platform": "instagram", "highlight": false, "budget": 0, "spent": 90, "rrBudget": 119, "dailyBudget": 7, "impKpi": 6816, "impMtd": 5544, "impRr": 7717, "productViews": 153, "v2p": 36, "clicksKpi": 211, "clicksMtd": 172, "clicksRr": 192, "ctr": "2%", "regKpi": 0, "regMtd": 2, "regRr": 2, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -90 },
-        { "name": "V2 SweepzKings - FB", "platform": "meta", "highlight": true, "budget": 0, "spent": 12, "rrBudget": 20, "dailyBudget": 7, "impKpi": 1164, "impMtd": 635, "impRr": 1058, "productViews": 25, "v2p": 25, "clicksKpi": 52, "clicksMtd": 28, "clicksRr": 47, "ctr": "3%", "regKpi": 0, "regMtd": 2, "regRr": 3, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -12 },
-        { "name": "SweepzKings — Facebook", "platform": "meta", "highlight": false, "budget": 0, "spent": 92, "rrBudget": 153, "dailyBudget": 9, "impKpi": 16524, "impMtd": 13441, "impRr": 15022, "productViews": 245, "v2p": 55, "clicksKpi": 201, "clicksMtd": 164, "clicksRr": 183, "ctr": "1%", "regKpi": 0, "regMtd": 15, "regRr": 17, "usersFtp": 0, "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 140.00, "roi": -48 },
-        { "name": "SweepzKings — Instagram", "platform": "instagram", "highlight": false, "budget": 0, "spent": 89, "rrBudget": 119, "dailyBudget": 7, "impKpi": 13453, "impMtd": 10943, "impRr": 12230, "productViews": 193, "v2p": 57, "clicksKpi": 259, "clicksMtd": 210, "clicksRr": 235, "ctr": "2%", "regKpi": 0, "regMtd": 14, "regRr": 16, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -89 },
-        { "name": "XWannnaSee_Sep", "platform": "x", "highlight": false, "budget": 0, "spent": 0, "rrBudget": 0, "dailyBudget": 0, "impKpi": 0, "impMtd": 0, "impRr": 0, "productViews": 0, "v2p": 0, "clicksKpi": 0, "clicksMtd": 0, "clicksRr": 0, "ctr": "0%", "regKpi": "—", "regMtd": 0, "regRr": 0, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": 0 }
-      ]
-    };
-
     let appData = null;
-    let globalFactor = 1.03;
+    let globalFactor = 1.0;
     let chartSignups = null, chartUsers = null;
     let chartMetaBR = null, chartIGBR = null, chartXBR = null;
+    let currentLoadedYear = 2026;
     let currentLoadedMonth = "October";
     
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -782,11 +776,10 @@
       return rr > 0 ? ARGB.textGreen : ARGB.textRed;
     }
 
-    // DISTRIBUCIÓN AUTOMÁTICA Y EQUITATIVA DE KPIS
+    // DISTRIBUCIÓN AUTOMÁTICA DE KPIS BASADA ESTRICTAMENTE EN LAS CAMPAÑAS ACTIVAS DEL JSON
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
       
-      // Campañas activas (Meta, Instagram, y X con gasto o presupuesto > 0)
       const activeCampaigns = appData.campaigns.filter(c => {
         const p = (c.platform || '').toLowerCase();
         if (p === 'meta' || p === 'instagram') return true;
@@ -817,11 +810,22 @@
       });
     }
 
+    // CREACIÓN LIMPIA SIN DATOS HARDCODEADOS
+    function createEmptyMonthData(monthName, year) {
+      const mIdx = fullMonthNames.indexOf(monthName);
+      const days = new Date(year, mIdx + 1, 0).getDate();
+      return {
+        period: `${monthName} 01-${days}, ${year}`,
+        kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+        campaigns: []
+      };
+    }
+
     function addCampaign(platform) {
-      if (!appData) appData = { campaigns: [] };
+      if (!appData) appData = { kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] };
       const newCamp = {
         id: `camp_${platform}_${Date.now()}`,
-        name: `New ${platform.toUpperCase()} Campaign`,
+        name: `New Campaign`,
         platform: platform,
         highlight: false,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0,
@@ -835,7 +839,7 @@
       appData.campaigns.push(newCamp);
       distributeKpisToCampaigns();
       renderDashboard();
-      showSaveToast('Campaign added. KPIs redistributed.');
+      showSaveToast('Campaign added. Click Save to persist.');
     }
 
     function deleteCampaign(campaignId, event) {
@@ -848,7 +852,7 @@
         distributeKpisToCampaigns();
         syncGlobalSummaries();
         renderDashboard();
-        showSaveToast('Campaign deleted. KPIs redistributed.');
+        showSaveToast('Campaign deleted. Click Save to persist.');
       }
     }
 
@@ -863,32 +867,41 @@
       }, 3000);
     }
 
-    function saveDashboardData() {
-      if (!appData) return;
+    function getCleanExportData() {
+      if (!appData) return {};
       distributeKpisToCampaigns();
-      const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
-      localStorage.setItem(key, JSON.stringify(appData));
-      localStorage.setItem('wisekapital_active', JSON.stringify(appData));
-      setLiveBadge('Saved Locally');
-      showSaveToast('✅ Changes saved successfully in this browser.');
-    }
-
-    function openJsonModal() {
-      if (!appData) return;
-      distributeKpisToCampaigns();
-      const cleanData = {
-        period: appData.period || "October 01-28, 2026",
-        kpis: appData.kpis || {},
+      return {
+        period: appData.period,
+        kpis: appData.kpis,
         campaigns: (appData.campaigns || []).map(c => {
           const copy = { ...c };
           delete copy.id;
           return copy;
         })
       };
+    }
+
+    function saveDashboardData() {
+      if (!appData) return;
+      distributeKpisToCampaigns();
+      const key = `wisekapital_${currentLoadedYear}_${currentLoadedMonth.toLowerCase()}`;
+      localStorage.setItem(key, JSON.stringify(appData));
+      localStorage.setItem('wisekapital_active', JSON.stringify(appData));
+      setLiveBadge('Saved Locally');
+      showSaveToast(`✅ Saved locally for ${currentLoadedYear}/${currentLoadedMonth}/`);
+    }
+
+    function openJsonModal() {
+      if (!appData) return;
+      const cleanData = getCleanExportData();
       const jsonStr = JSON.stringify(cleanData, null, 2);
       document.getElementById('jsonModalCode').textContent = jsonStr;
-      document.getElementById('jsonModal').classList.remove('hidden');
       
+      const pathText = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
+      document.getElementById('jsonPathBadge').textContent = pathText;
+      document.getElementById('btnZipText').textContent = `Download ZIP (${currentLoadedYear}/${currentLoadedMonth}/)`;
+
+      document.getElementById('jsonModal').classList.remove('hidden');
       const btnText = document.getElementById('copyBtnText');
       if (btnText) btnText.textContent = "Copy JSON";
       lucide.createIcons();
@@ -923,18 +936,34 @@
       }
     }
 
+    function downloadFolderZip() {
+      if (typeof JSZip === 'undefined') {
+        downloadUpdatedJson();
+        return;
+      }
+      const zip = new JSZip();
+      const year = String(currentLoadedYear);
+      const month = currentLoadedMonth;
+      const cleanData = getCleanExportData();
+
+      const yearFolder = zip.folder(year);
+      const monthFolder = yearFolder.folder(month);
+      monthFolder.file("data.json", JSON.stringify(cleanData, null, 2));
+
+      zip.generateAsync({ type: "blob" }).then(function(content) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = `${year}_${month}_structure.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showSaveToast(`📦 Downloaded ZIP: ${year}/${month}/data.json`);
+      });
+    }
+
     function downloadUpdatedJson() {
       if (!appData) return;
-      distributeKpisToCampaigns();
-      const cleanData = {
-        period: appData.period,
-        kpis: appData.kpis,
-        campaigns: (appData.campaigns || []).map(c => {
-          const copy = { ...c };
-          delete copy.id;
-          return copy;
-        })
-      };
+      const cleanData = getCleanExportData();
       const blob = new Blob([JSON.stringify(cleanData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -942,16 +971,16 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showSaveToast('📥 data.json downloaded successfully.');
+      showSaveToast(`📥 data.json for ${currentLoadedYear}/${currentLoadedMonth}/ downloaded.`);
     }
 
     function reloadFromGit() {
-      if (confirm('Discard local changes in this browser and reload fresh from Git?')) {
-        const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
+      if (confirm(`Discard local changes and reload ${currentLoadedYear}/${currentLoadedMonth}/ directly from Git?`)) {
+        const key = `wisekapital_${currentLoadedYear}_${currentLoadedMonth.toLowerCase()}`;
         localStorage.removeItem(key);
         localStorage.removeItem('wisekapital_active');
         loadDataForRange(fromDate, toDate, true);
-        showSaveToast('🔄 Reloaded from repository.');
+        showSaveToast('🔄 Reloaded from Git.');
       }
     }
 
@@ -980,8 +1009,13 @@
       }
     }
 
-    async function fetchMonthJson(monthName) {
+    // BUSCADOR EN EL REPOSITORIO (ESTRUCTURA DE CARPETAS YYYY/Month/data.json)
+    async function fetchMonthJson(year, monthName) {
       const paths = [
+        `./${year}/${monthName}/data.json`,
+        `${year}/${monthName}/data.json`,
+        `./${year}/${monthName.toLowerCase()}/data.json`,
+        `${year}/${monthName.toLowerCase()}/data.json`,
         `./${monthName}/data.json`,
         `${monthName}/data.json`,
         `./${monthName.toLowerCase()}/data.json`,
@@ -1007,8 +1041,9 @@
 
     function applyLoadedData(raw, sourceLabel) {
       appData = {
-        period: raw.period || "October 01-28, 2026",
-        kpis: raw.kpis || { budget: 800, signups: 250, users: 20, revenue: 3300, profit: 2500 },
+        period: raw.period || `${currentLoadedMonth} ${currentLoadedYear}`,
+        kpis: raw.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+        // ID único generado sobre los datos del JSON para evitar colapsos
         campaigns: (raw.campaigns || []).map((c, idx) => ({
           ...c,
           id: c.id || `camp_${idx}_${(c.name || 'camp').replace(/[^a-zA-Z0-9]/g, '_')}`
@@ -1019,36 +1054,46 @@
 
       document.getElementById('localFileHelper').classList.add('hidden');
       document.getElementById('dateAutoInfo').innerText = appData.period;
+      document.getElementById('headerPathText').innerText = `${currentLoadedYear} / ${currentLoadedMonth} / data.json`;
       setLiveBadge(sourceLabel || 'Synced');
       renderDashboard();
     }
 
     async function loadDataForRange(startObj, endObj, forceGit = false) {
-      const mName = fullMonthNames[startObj.getMonth()] || "October";
-      currentLoadedMonth = mName;
-      const storageKey = `wisekapital_${mName.toLowerCase()}`;
+      const year = startObj.getFullYear();
+      const mIndex = startObj.getMonth();
+      const mName = fullMonthNames[mIndex] || "October";
 
-      // 1. Check local saved data
+      currentLoadedYear = year;
+      currentLoadedMonth = mName;
+
+      const storageKey = `wisekapital_${year}_${mName.toLowerCase()}`;
+
+      // 1. Revisar si hay cambios guardados en localStorage
       if (!forceGit) {
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           try {
             const parsed = JSON.parse(saved);
-            applyLoadedData(parsed, 'Local Saved');
+            applyLoadedData(parsed, `Local Saved (${year}/${mName})`);
             return;
           } catch(e) {}
         }
       }
 
-      // 2. Fetch directly from Git
-      const fetched = await fetchMonthJson(mName);
+      // 2. Fetch directo al archivo data.json en el repositorio
+      const fetched = await fetchMonthJson(year, mName);
       if (fetched) {
-        applyLoadedData(fetched, `${mName} Git`);
+        applyLoadedData(fetched, `Git (${year}/${mName})`);
         return;
       }
 
-      // 3. Fallback
-      applyLoadedData(DEFAULT_DATA, 'Default October');
+      // 3. Si no existe en Git ni en local: plantilla limpia auto-creada (SIN DATOS HARDCODEADOS)
+      console.log(`[WiseKapital] No data.json found for ${year}/${mName}/. Auto-creating empty structure.`);
+      const emptyMonth = createEmptyMonthData(mName, year);
+      applyLoadedData(emptyMonth, `Auto-Created (${year}/${mName})`);
+      localStorage.setItem(storageKey, JSON.stringify(emptyMonth));
+      showSaveToast(`🆕 No data found. Clean structure created for ${year}/${mName}/`);
     }
 
     function onKpiEdit(el, field) {
@@ -1068,7 +1113,6 @@
       document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(appData.kpis.revenue || 0).toLocaleString()}`;
       document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(appData.kpis.profit || 0).toLocaleString()}`;
 
-      // Recalcular y distribuir KPIs a las campañas
       distributeKpisToCampaigns();
       renderDashboard();
     }
