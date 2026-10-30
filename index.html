@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>WiseKapital - Marketing Performance Dashboard</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -10,69 +12,25 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Kalam:wght@700&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Outfit', 'sans-serif'],
-            brand: ['Poppins', 'sans-serif'],
-            script: ['Kalam', 'cursive', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Kalam:wght@700&family=Inter:wght@400;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
     body { background-color: #F8FAFC; color: #0F172A; font-family: 'Inter', sans-serif; }
-    .custom-scrollbar::-webkit-scrollbar { height: 7px; width: 7px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
-    
-    .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04); }
-
-    .master-sheet-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
-    .master-sheet-table th, .master-sheet-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
-    .master-sheet-table thead tr:first-child th { border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800; }
-    .master-sheet-table thead tr:last-child th { font-weight: 700; font-size: 10px; }
-
-    .bg-grp-budget { background-color: #D9D9D9 !important; color: #000; }
-    .bg-grp-views { background-color: #CFE2F3 !important; color: #000; }
-    .bg-grp-product { background-color: #FFF2CC !important; color: #000; }
-    .bg-grp-clicks { background-color: #FCE5CD !important; color: #000; }
-    .bg-grp-regs { background-color: #D9EAD3 !important; color: #000; }
-    .bg-grp-users { background-color: #EAD1DC !important; color: #000; }
-    .bg-grp-perf { background-color: #C9DAF8 !important; color: #000; }
-
-    .bg-sub-budget { background-color: #E8E8E8 !important; }
-    .bg-sub-views { background-color: #DFECF7 !important; }
-    .bg-sub-product { background-color: #FFF6D9 !important; }
-    .bg-sub-clicks { background-color: #FDEFE0 !important; }
-    .bg-sub-regs { background-color: #E5F1E1 !important; }
-    .bg-sub-users { background-color: #F2DFE8 !important; }
-    .bg-sub-perf { background-color: #D9E5FA !important; }
-
-    .col-tint-budget { background-color: #F4F4F4 !important; }
-    .col-tint-views { background-color: #F0F5FA !important; }
-    .col-tint-product { background-color: #FFFBEB !important; }
-    .col-tint-clicks { background-color: #FEF6ED !important; }
-    .col-tint-regs { background-color: #F2F8F1 !important; }
-    .col-tint-users { background-color: #FAF2F6 !important; }
-    .col-tint-perf { background-color: #F3F7FE !important; }
-
-    .campaign-highlight-blue { background-color: #CFE2F3 !important; font-weight: 700; }
+    .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .master-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
+    .master-table th, .master-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
     .sticky-col { position: sticky; left: 0; z-index: 10; border-left: 1px solid #D1D5DB; background: #fff; }
-    .editable-cell { outline: none; cursor: text; transition: filter 0.15s ease; }
-    .editable-cell:hover { filter: brightness(0.94); }
+    .editable-cell { outline: none; cursor: text; }
     .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
-    .readonly-auto { cursor: default; user-select: none; }
+    .col-budget { background-color: #F4F4F4 !important; }
+    .col-views { background-color: #F0F5FA !important; }
+    .col-prod { background-color: #FFFBEB !important; }
+    .col-clicks { background-color: #FEF6ED !important; }
+    .col-regs { background-color: #F2F8F1 !important; }
+    .col-users { background-color: #FAF2F6 !important; }
+    .col-perf { background-color: #F3F7FE !important; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -82,51 +40,33 @@
   <!-- TOAST NOTIFICATION -->
   <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-    <span id="saveToastText">Changes saved successfully</span>
+    <span id="saveToastText">Updated</span>
   </div>
 
   <!-- VIEW JSON MODAL -->
-  <div id="jsonModal" onclick="if(event.target === this) closeJsonModal()" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-200">
+  <div id="jsonModal" onclick="if(event.target === this) closeJsonModal()" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
     <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[88vh]">
-      <!-- Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <i data-lucide="folder-tree" class="w-4 h-4"></i>
-          </div>
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="code" class="w-4 h-4"></i></div>
           <div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold font-display text-slate-900">JSON Data Preview</h3>
-              <span id="jsonPathBadge" class="text-[10px] font-mono font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">2026/October/data.json</span>
-            </div>
-            <p class="text-[11px] text-slate-500 font-medium">Dynamic data read directly from your JSON file.</p>
+            <h3 class="text-sm font-bold font-display text-slate-900">Live JSON Preview</h3>
+            <span id="jsonPathBadge" class="text-[10px] font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">Path</span>
           </div>
         </div>
-        <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center cursor-pointer">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 transition flex items-center justify-center cursor-pointer"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-
-      <!-- Code Box -->
-      <div class="p-5 overflow-y-auto custom-scrollbar bg-[#0B1120] flex-1 relative font-mono text-xs">
+      <div class="p-5 overflow-y-auto custom-scrollbar bg-[#0B1120] flex-1 font-mono text-xs">
         <pre><code id="jsonModalCode" class="text-emerald-400 leading-relaxed block select-all"></code></pre>
       </div>
-
-      <!-- Footer Actions -->
-      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white flex-wrap gap-2">
-        <span class="text-xs text-slate-500 font-medium">Ready for Git commit</span>
-        <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="downloadFolderZip()" title="Downloads a ZIP containing the exact Year/Month folder and data.json inside" class="px-3.5 py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="archive" class="w-3.5 h-3.5"></i>
-            <span id="btnZipText">Download Folder ZIP</span>
+      <div class="flex items-center justify-between px-6 py-3.5 border-t border-slate-200 bg-white">
+        <span class="text-xs text-slate-500 font-medium">Zero cache / Pure live data</span>
+        <div class="flex items-center gap-2">
+          <button onclick="copyJsonToClipboard()" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyBtnText">Copy JSON</span>
           </button>
-          <button onclick="copyJsonToClipboard()" id="btnCopyJsonModal" class="px-4 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span id="copyBtnText">Copy JSON</span>
-          </button>
-          <button onclick="downloadUpdatedJson()" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Download data.json</span>
+          <button onclick="downloadJsonFile()" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>Download data.json</span>
           </button>
         </div>
       </div>
@@ -135,105 +75,77 @@
 
   <!-- TOP HEADER -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
-    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between min-h-[4.2rem] py-2 flex-wrap gap-4">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      <div class="flex items-center justify-between flex-wrap gap-4 min-h-[4rem]">
         
         <!-- LOGO & STATUS -->
         <div class="flex items-center gap-4">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-10 w-auto select-none">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-9 w-auto select-none">
             <text x="4" y="47" font-family="'Poppins', sans-serif" font-weight="700" font-size="47" fill="#111827">WiseKapital</text>
             <text x="112" y="77" font-family="'Kalam', cursive" font-weight="700" font-size="26" fill="#ECA51A">Who Dares Wins!</text>
           </svg>
-          <div class="h-7 w-px bg-slate-200 hidden md:block"></div>
-          <div class="hidden sm:block">
+          <div class="hidden sm:block pl-4 border-l border-slate-200">
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
-              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block animate-pulse"></span> Querying
-              </span>
-              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 flex items-center gap-1">
-                <i data-lucide="folder" class="w-3 h-3 text-slate-400"></i>
-                <span id="headerPathText">Loading path...</span>
-              </span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Loading</span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">Path</span>
             </div>
-            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">Loading data...</p>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">Live Data</p>
           </div>
         </div>
 
-        <!-- ACTIONS & MONTH/YEAR PICKER -->
+        <!-- ACTIONS & MONTH PICKER -->
         <div class="flex items-center gap-2.5 flex-wrap">
 
-          <!-- MONTH PICKER CONTROLS -->
+          <!-- FROM / TO CALENDAR -->
           <div class="flex items-center gap-2 font-bold text-xs">
-            <span class="text-slate-400 tracking-wider">FROM</span>
+            <span class="text-slate-400">FROM</span>
             <div class="relative">
-              <button id="fromBtn" onclick="toggleCal('from', event)" class="flex items-center justify-center w-[105px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 shadow-2xs hover:border-slate-400 transition cursor-pointer">
+              <button id="fromBtn" onclick="toggleCal('from', event)" class="w-[105px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 shadow-2xs hover:border-slate-400 cursor-pointer">
                 <span id="fromDateText">Oct 2026</span>
               </button>
-              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px] select-none">
+              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px]">
                 <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
-                  <button onclick="navCal('from', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-                  </button>
-                  <span id="fromYearLabel" class="font-extrabold text-sm font-display text-slate-900 tracking-wide">2026</span>
-                  <button onclick="navCal('from', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                  </button>
+                  <button onclick="navCal('from', -1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="fromYearLabel" class="font-extrabold text-sm font-display">2026</span>
+                  <button onclick="navCal('from', 1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                 </div>
                 <div id="fromMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
             </div>
 
-            <span class="text-slate-400 tracking-wider ml-1">TO</span>
+            <span class="text-slate-400">TO</span>
             <div class="relative">
-              <button id="toBtn" onclick="toggleCal('to', event)" class="flex items-center justify-center w-[105px] px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 shadow-2xs cursor-pointer">
+              <button id="toBtn" onclick="toggleCal('to', event)" class="w-[105px] px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 shadow-2xs cursor-pointer">
                 <span id="toDateText">Oct 2026</span>
               </button>
-              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px] select-none">
+              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px]">
                 <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
-                  <button onclick="navCal('to', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-                  </button>
-                  <span id="toYearLabel" class="font-extrabold text-sm font-display text-slate-900 tracking-wide">2026</span>
-                  <button onclick="navCal('to', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                  </button>
+                  <button onclick="navCal('to', -1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="toYearLabel" class="font-extrabold text-sm font-display">2026</span>
+                  <button onclick="navCal('to', 1, event)" class="p-1 hover:bg-slate-100 rounded"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                 </div>
                 <div id="toMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
             </div>
           </div>
 
-          <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
-
-          <!-- SAVE BUTTON -->
-          <button onclick="saveDashboardData()" title="Save changes to persist upon page refresh" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+          <!-- ACTIONS -->
+          <button onclick="saveDashboardData()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Directly updates data.json">
             <i data-lucide="save" class="w-3.5 h-3.5"></i><span>Save</span>
           </button>
 
-          <!-- VIEW JSON BUTTON -->
-          <button onclick="openJsonModal()" title="View, copy, or download folder structure" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
+          <button onclick="setupGitHubToken()" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 hover:bg-black text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Enter GitHub Token for automatic commits">
+            <i data-lucide="github" class="w-3.5 h-3.5"></i><span>Git Token</span>
+          </button>
+
+          <button onclick="openJsonModal()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border-2 border-slate-900 text-slate-900 shadow-2xs hover:bg-slate-50 cursor-pointer flex items-center gap-1.5">
             <i data-lucide="code" class="w-3.5 h-3.5"></i><span>View JSON</span>
           </button>
 
-          <!-- RELOAD FROM GIT -->
-          <button onclick="reloadFromGit()" title="Discard local changes and reload fresh from Git" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          <button onclick="exportToExcel()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export</span>
           </button>
-
-          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export Excel</span>
-          </button>
-
-          <div class="relative">
-            <i data-lucide="filter" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <select id="platformFilter" onchange="filterPlatform()" class="pl-8 pr-7 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer focus:ring-2 focus:ring-emerald-500 outline-none">
-              <option value="all">All Platforms</option>
-              <option value="meta">Meta Ads</option>
-              <option value="instagram">Instagram Ads</option>
-              <option value="x">X Campaigns</option>
-            </select>
-          </div>
         </div>
 
       </div>
@@ -241,19 +153,7 @@
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
-
-    <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-      <div>
-        <span class="font-bold text-sm block mb-0.5">📁 Local File Mode</span>
-        <p class="text-amber-800">Browser restricts local file reading. Select your <code>data.json</code> manually:</p>
-      </div>
-      <div>
-        <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-          <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>Import data.json</span>
-        </button>
-      </div>
-    </div>
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
     <!-- TEAM PERFORMANCE TABLE -->
     <div class="space-y-2">
@@ -306,336 +206,69 @@
     <!-- KPI CARDS -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider">BUDGET</span>
-          <i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i>
-        </div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">BUDGET</span><i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">—</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetBudget">KPI: —</span>
-          <span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
-        </div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: —</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: —</span></div>
       </div>
-
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider">Signups</span>
-          <i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i>
-        </div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Signups</span><i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiSignups">—</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetSignups">KPI: —</span>
-          <span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
-        </div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetSignups">KPI: —</span><span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: —</span></div>
       </div>
-
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-purple-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider">Users (FTD)</span>
-          <i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i>
-        </div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Users (FTD)</span><i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiFtd">—</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetUsers">KPI: —</span>
-          <span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
-        </div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetUsers">KPI: —</span><span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: —</span></div>
       </div>
-
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider">Revenue</span>
-          <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i>
-        </div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Revenue</span><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiRevenue">—</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetRevenue">KPI: —</span>
-          <span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
-        </div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetRevenue">KPI: —</span><span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: —</span></div>
       </div>
-
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-teal-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1">
-          <span class="text-xs font-bold uppercase tracking-wider">Profit</span>
-          <i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i>
-        </div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Profit</span><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">—</div>
-        <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          <span class="text-[11px] font-extrabold text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md" id="kpiTargetProfit">KPI: —</span>
-          <span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded-md border">RR: —</span>
-        </div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetProfit">KPI: —</span><span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: —</span></div>
       </div>
     </div>
 
-    <!-- PLATFORM TABLES -->
-    <div class="space-y-8">
-
-      <!-- 1. META TABLE -->
-      <div id="sectionMetaTable" class="space-y-2">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-lg bg-[#0081FB] text-white flex items-center justify-center shadow-xs">
-              <svg class="w-4 h-4 fill-white" viewBox="0 0 640 512" aria-label="Meta Logo">
-                <path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/>
-              </svg>
-            </span>
-            <h2 class="text-base font-bold font-display text-slate-900">Meta (Facebook Ads)</h2>
-          </div>
-          <div class="flex items-center gap-2 text-xs font-bold">
-            <span id="metaBadgeBudget" class="text-slate-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-200">Budget: $0</span>
-            <span id="metaBadgeSpent" class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $0</span>
-            <button onclick="addCampaign('meta')" class="px-2.5 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition flex items-center gap-1 cursor-pointer">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="glass-card rounded-xl overflow-hidden">
-          <div class="overflow-x-auto custom-scrollbar">
-            <table class="master-sheet-table min-w-[1360px]">
-              <thead>
-                <tr>
-                  <th rowspan="2" class="bg-white text-slate-900 sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
-                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
-                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
-                  <th colspan="2" class="bg-grp-product">Product Views</th>
-                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
-                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
-                  <th colspan="3" class="bg-grp-users">USERS</th>
-                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
-                </tr>
-                <tr>
-                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
-                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
-                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
-                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
-                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
-                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
-                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
-                </tr>
-              </thead>
-              <tbody id="metaTableBody"></tbody>
-              <tfoot id="metaTableFoot"></tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. INSTAGRAM TABLE -->
-      <div id="sectionInstagramTable" class="space-y-2">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shadow-xs">
-              <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24" aria-label="Instagram Logo">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </span>
-            <h2 class="text-base font-bold font-display text-slate-900">Instagram Ads</h2>
-          </div>
-          <div class="flex items-center gap-2 text-xs font-bold">
-            <span id="igBadgeBudget" class="text-slate-600 bg-pink-50 px-2 py-1 rounded-md border border-pink-200">Budget: $0</span>
-            <span id="igBadgeSpent" class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-200">Spent: $0</span>
-            <button onclick="addCampaign('instagram')" class="px-2.5 py-1 rounded-md bg-pink-600 hover:bg-pink-700 text-white transition flex items-center gap-1 cursor-pointer">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="glass-card rounded-xl overflow-hidden">
-          <div class="overflow-x-auto custom-scrollbar">
-            <table class="master-sheet-table min-w-[1360px]">
-              <thead>
-                <tr>
-                  <th rowspan="2" class="bg-white text-slate-900 sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
-                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
-                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
-                  <th colspan="2" class="bg-grp-product">Product Views</th>
-                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
-                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
-                  <th colspan="3" class="bg-grp-users">USERS</th>
-                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
-                </tr>
-                <tr>
-                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
-                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
-                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
-                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
-                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
-                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
-                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
-                </tr>
-              </thead>
-              <tbody id="igTableBody"></tbody>
-              <tfoot id="igTableFoot"></tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. X TABLE -->
-      <div id="sectionXTable" class="space-y-2">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-lg bg-black text-white flex items-center justify-center shadow-xs">
-              <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" aria-label="X Logo">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </span>
-            <h2 class="text-base font-bold font-display text-slate-900">X Campaigns</h2>
-          </div>
-          <div class="flex items-center gap-2 text-xs font-bold">
-            <span id="xBadgeBudget" class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Budget: $0</span>
-            <span id="xBadgeSpent" class="text-slate-600 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">Spent: $0</span>
-            <button onclick="addCampaign('x')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-900 text-white transition flex items-center gap-1 cursor-pointer">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="glass-card rounded-xl overflow-hidden">
-          <div class="overflow-x-auto custom-scrollbar">
-            <table class="master-sheet-table min-w-[1360px]">
-              <thead>
-                <tr>
-                  <th rowspan="2" class="bg-white text-slate-900 border border-slate-300 text-center px-3 py-2 font-bold sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
-                  <th colspan="4" class="bg-grp-budget">BUDGET</th>
-                  <th colspan="3" class="bg-grp-views">META VIEWS</th>
-                  <th colspan="2" class="bg-grp-product">Product Views</th>
-                  <th colspan="4" class="bg-grp-clicks">CLICKS</th>
-                  <th colspan="3" class="bg-grp-regs">REGISTRATIONS</th>
-                  <th colspan="3" class="bg-grp-users">USERS</th>
-                  <th colspan="3" class="bg-grp-perf">PERFORMANCE</th>
-                </tr>
-                <tr>
-                  <th class="bg-sub-budget">Budget (KPI)</th><th class="bg-sub-budget">Spent</th><th class="bg-sub-budget font-bold">RR</th><th class="bg-sub-budget">Daily Budget</th>
-                  <th class="bg-sub-views">Imp. (KPI)</th><th class="bg-sub-views">MTD</th><th class="bg-sub-views font-bold">RR</th>
-                  <th class="bg-sub-product">Product Views</th><th class="bg-sub-product">V2P</th>
-                  <th class="bg-sub-clicks">Clicks (KPI)</th><th class="bg-sub-clicks">MTD</th><th class="bg-sub-clicks font-bold">RR</th><th class="bg-sub-clicks">CTR</th>
-                  <th class="bg-sub-regs">Reg (KPI)</th><th class="bg-sub-regs">MTD</th><th class="bg-sub-regs font-bold">RR</th>
-                  <th class="bg-sub-users">Users (KPI)</th><th class="bg-sub-users">MTD</th><th class="bg-sub-users font-bold">RR</th>
-                  <th class="bg-sub-perf font-bold">S2P</th><th class="bg-sub-perf">Revenue</th><th class="bg-sub-perf">ROI</th>
-                </tr>
-              </thead>
-              <tbody id="xTableBody"></tbody>
-              <tfoot id="xTableFoot"></tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <!-- DYNAMIC PLATFORM TABLES CONTAINER -->
+    <div id="platformsContainer" class="space-y-8"></div>
 
     <!-- SECTION 2: CHARTS (DOUGHNUTS & MINI BARS BY PLATFORM) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="text-base sm:text-lg font-bold font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block shadow-xs"></span>
-            Platform Performance: Meta, Instagram &amp; X
-          </h2>
-          <p class="text-xs text-slate-500 mt-0.5">
-            Registrations and users distribution across platforms with individual Spent vs. Revenue comparison.
-          </p>
-        </div>
-      </div>
-
+      <h2 class="text-base font-bold font-display text-slate-900">Platform Performance: Meta, Instagram &amp; X</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-sm font-bold font-display text-slate-900">Signups by Platform</h3>
-              <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
-                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
-              </div>
-            </div>
-            <p class="text-xs text-slate-500 mb-3" id="lblSignupsDist">Total Signups distribution</p>
-          </div>
-          <div class="relative h-56 flex items-center justify-center">
-            <canvas id="signupsPieChart"></canvas>
-          </div>
-          <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
-            <div class="p-2 rounded-lg bg-blue-50 border border-blue-200">
-              <span class="text-blue-700 block text-[10px] uppercase font-bold">Meta</span>
-              <span id="pieMetaSignups" class="font-mono font-bold text-blue-900 text-xs sm:text-sm">0 (0%)</span>
-            </div>
-            <div class="p-2 rounded-lg bg-pink-50 border border-pink-200">
-              <span class="text-pink-700 block text-[10px] uppercase font-bold">Instagram</span>
-              <span id="pieIGSignups" class="font-mono font-bold text-pink-900 text-xs sm:text-sm">0 (0%)</span>
-            </div>
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Signups by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="signupsPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaSignups">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGSignups">0</span></div>
           </div>
         </div>
-
         <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="text-sm font-bold font-display text-slate-900">Users (FTD) by Platform</h3>
-              <div class="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shadow-xs">
-                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
-              </div>
-            </div>
-            <p class="text-xs text-slate-500 mb-3">Total Users (FTDs) distribution</p>
-          </div>
-          <div class="relative h-56 flex items-center justify-center">
-            <canvas id="usersPieChart"></canvas>
-          </div>
-          <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
-            <div class="p-2 rounded-lg bg-blue-50 border border-blue-200">
-              <span class="text-blue-700 block text-[10px] uppercase font-bold">Meta</span>
-              <span id="pieMetaUsers" class="font-mono font-bold text-blue-900 text-xs sm:text-sm">0 (0%)</span>
-            </div>
-            <div class="p-2 rounded-lg bg-pink-50 border border-pink-200">
-              <span class="text-pink-700 block text-[10px] uppercase font-bold">Instagram</span>
-              <span id="pieIGUsers" class="font-mono font-bold text-pink-900 text-xs sm:text-sm">0 (0%)</span>
-            </div>
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Users (FTD) by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="usersPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaUsers">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGUsers">0</span></div>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-blue-600">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded bg-[#0081FB] flex items-center justify-center text-white shadow-xs">
-                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 640 512">
-                    <path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/>
-                  </svg>
-                </div>
-                <div><h3 class="text-sm font-bold text-slate-900">Meta</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
-              </div>
-              <span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
-            </div>
-            <div class="relative h-52 w-full mt-1"><canvas id="metaBudgetRevenueChart"></canvas></div>
-          </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-blue-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Meta</h3><span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="metaBudgetRevenueChart"></canvas></div>
         </div>
-
-        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-pink-600">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-xs">
-                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </div>
-            <div class="relative h-52 w-full mt-1"><canvas id="instagramBudgetRevenueChart"></canvas></div>
-          </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-pink-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Instagram</h3><span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="instagramBudgetRevenueChart"></canvas></div>
         </div>
-
-        <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-slate-900">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded bg-black flex items-center justify-center text-white shadow-xs">
-                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                </div>
-                <div><h3 class="text-sm font-bold text-slate-900">X</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
-              </div>
-              <span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
-            </div>
-            <div class="relative h-52 w-full mt-1"><canvas id="xBudgetRevenueChart"></canvas></div>
-          </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-slate-900">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">X</h3><span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="xBudgetRevenueChart"></canvas></div>
         </div>
       </div>
     </div>
@@ -643,32 +276,33 @@
   </main>
 
   <script>
+    const GH_REPO = "JonathanBaquero01/Social-Management-Report";
+    let githubToken = ""; 
     let appData = null;
     let globalFactor = 1.0;
-    let chartSignups = null, chartUsers = null;
-    let chartMetaBR = null, chartIGBR = null, chartXBR = null;
-    let currentLoadedYear = 2026;
-    let currentLoadedMonth = "October";
-    
+    let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
+    let currentLoadedYear = 2026, currentLoadedMonth = "October";
+    let activeFileHandle = null;
+
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    function getSystemToday() {
-      const now = new Date();
-      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    }
+    const PLATFORMS = [
+      { key: 'meta', title: 'Meta (Facebook Ads)', color: '#0081FB', bg: 'bg-[#0081FB]', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 640 512"><path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/></svg>` },
+      { key: 'instagram', title: 'Instagram Ads', color: '#E1306C', bg: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
+      { key: 'x', title: 'X Campaigns', color: '#000000', bg: 'bg-black', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` }
+    ];
 
+    function getSystemToday() { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
     const sysToday = getSystemToday();
-    const maxSelectableYear = Math.max(sysToday.getFullYear(), 2026);
-    const maxSelectableMonth = (sysToday.getFullYear() > 2026) ? sysToday.getMonth() : Math.max(sysToday.getMonth(), 9);
-
     let fromDate = new Date(2026, 9, 1);
     let toDate = (sysToday.getFullYear() === 2026 && sysToday.getMonth() === 9) ? new Date(sysToday) : new Date(2026, 9, 28);
-
-    let fromViewYear = fromDate.getFullYear();
-    let toViewYear = toDate.getFullYear();
+    let fromViewYear = fromDate.getFullYear(), toViewYear = toDate.getFullYear();
 
     const fmtMonthYear = d => `${shortMonthNames[d.getMonth()]} ${d.getFullYear()}`;
+    const toNum = val => { if (!val || val === '—' || val === '-') return 0; const n = parseFloat(String(val).replace(/[$,%]/g, '')); return isNaN(n) ? 0 : n; };
+    function calculateAutoRR(val) { const n = toNum(val); return n <= 0 ? 0 : Math.round(n * globalFactor); }
+    function getRrColorClass(rr, kpi) { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; }
 
     function updateDatesUI() {
       document.getElementById('fromDateText').textContent = fmtMonthYear(fromDate);
@@ -681,21 +315,17 @@
       const pop = document.getElementById(t + 'Pop');
       pop.classList.toggle('hidden');
       if (!pop.classList.contains('hidden')) {
-        const active = (t === 'from') ? fromDate : toDate;
-        if (t === 'from') fromViewYear = active.getFullYear();
-        else toViewYear = active.getFullYear();
+        const a = (t === 'from') ? fromDate : toDate;
+        if (t === 'from') fromViewYear = a.getFullYear(); else toViewYear = a.getFullYear();
         renderMonthGrid(t);
       }
     }
 
     function navCal(t, s, e) {
       e?.stopPropagation();
-      const isFrom = (t === 'from');
-      let y = isFrom ? fromViewYear : toViewYear;
-      y += s;
-      if (y < 2026 || y > maxSelectableYear) return;
-      if (isFrom) fromViewYear = y;
-      else toViewYear = y;
+      if (t === 'from') fromViewYear += s; else toViewYear += s;
+      if (fromViewYear < 2026) fromViewYear = 2026;
+      if (toViewYear < 2026) toViewYear = 2026;
       renderMonthGrid(t);
     }
 
@@ -703,35 +333,24 @@
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
       document.getElementById(t + 'YearLabel').textContent = y;
-      const grid = document.getElementById(t + 'MonthsGrid'); 
-      grid.innerHTML = '';
-      
+      const grid = document.getElementById(t + 'MonthsGrid'); grid.innerHTML = '';
       const active = isFrom ? fromDate : toDate;
 
       shortMonthNames.forEach((name, m) => {
         const cell = document.createElement('div');
         cell.textContent = name;
-        
-        const isBeforeMin = (y < 2026 || (y === 2026 && m < 9));
-        const isAfterMax = (y > maxSelectableYear || (y === maxSelectableYear && m > maxSelectableMonth));
-        const isDisabled = isBeforeMin || isAfterMax;
+        const isDisabled = (y < 2026 || (y === 2026 && m < 9));
         const isSelected = (active.getFullYear() === y && active.getMonth() === m);
-
         if (isDisabled) {
-          cell.className = 'py-2 px-1 select-none text-slate-300 font-semibold cursor-not-allowed text-center';
+          cell.className = 'py-2 select-none text-slate-300 font-semibold cursor-not-allowed';
         } else if (isSelected) {
-          cell.className = 'py-2 px-1 select-none cursor-pointer bg-emerald-500 text-white rounded-xl font-extrabold shadow-xs text-center transition';
+          cell.className = 'py-2 select-none cursor-pointer bg-emerald-500 text-white rounded-xl font-extrabold';
         } else {
-          cell.className = 'py-2 px-1 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold text-center transition';
+          cell.className = 'py-2 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold';
           cell.onclick = (e) => {
             e.stopPropagation();
-            if (isFrom) {
-              fromDate = new Date(y, m, 1);
-              if (fromDate > toDate) toDate = new Date(y, m + 1, 0);
-            } else {
-              toDate = new Date(y, m + 1, 0);
-              if (toDate < fromDate) fromDate = new Date(y, m, 1);
-            }
+            if (isFrom) { fromDate = new Date(y, m, 1); if (fromDate > toDate) toDate = new Date(y, m + 1, 0); }
+            else { toDate = new Date(y, m + 1, 0); if (toDate < fromDate) fromDate = new Date(y, m, 1); }
             document.getElementById(t + 'Pop').classList.add('hidden');
             updateDatesUI();
             loadDataForRange(fromDate, toDate);
@@ -746,901 +365,417 @@
       if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
     });
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeJsonModal();
-    });
-
-    const toNum = val => {
-      if (val === undefined || val === null || val === '—' || val === '' || val === '-') return 0;
-      const n = parseFloat(String(val).replace(/[$,%]/g, ''));
-      return isNaN(n) ? 0 : n;
-    };
-
-    function calculateAutoRR(val) {
-      const num = toNum(val);
-      if (num <= 0) return 0;
-      return Math.round(num * globalFactor);
-    }
-
-    function getRrColorClass(rrVal, kpiVal) {
-      const rr = toNum(rrVal);
-      const kpi = toNum(kpiVal);
-      if (kpi > 0) return rr >= kpi ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
-      return rr > 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
-    }
-
-    function getRrColorArgb(rrVal, kpiVal, ARGB) {
-      const rr = toNum(rrVal);
-      const kpi = toNum(kpiVal);
-      if (kpi > 0) return rr >= kpi ? ARGB.textGreen : ARGB.textRed;
-      return rr > 0 ? ARGB.textGreen : ARGB.textRed;
-    }
-
-    // DISTRIBUCIÓN AUTOMÁTICA DE KPIS BASADA ESTRICTAMENTE EN LAS CAMPAÑAS ACTIVAS DEL JSON
+    // DISTRIBUTE KPIS AUTOMATICALLY
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
-      
-      const activeCampaigns = appData.campaigns.filter(c => {
+      const active = appData.campaigns.filter(c => {
         const p = (c.platform || '').toLowerCase();
-        if (p === 'meta' || p === 'instagram') return true;
-        return toNum(c.spent) > 0 || toNum(c.budget) > 0;
+        return p === 'meta' || p === 'instagram' || (toNum(c.spent) > 0 || toNum(c.budget) > 0);
       });
-
-      const count = activeCampaigns.length || 1;
-      const totalBudget = toNum(appData.kpis.budget);
-      const totalSignups = toNum(appData.kpis.signups);
-      const totalUsers = toNum(appData.kpis.users);
-
-      const budgetPerCamp = Math.round(totalBudget / count);
-      const signupsPerCamp = Math.round(totalSignups / count);
-      const usersPerCamp = Math.round(totalUsers / count);
+      const count = active.length || 1;
+      const bPer = Math.round(toNum(appData.kpis.budget) / count);
+      const sPer = Math.round(toNum(appData.kpis.signups) / count);
+      const uPer = Math.round(toNum(appData.kpis.users) / count);
 
       appData.campaigns.forEach(c => {
         const p = (c.platform || '').toLowerCase();
-        const isActive = (p === 'meta' || p === 'instagram') || (toNum(c.spent) > 0 || toNum(c.budget) > 0);
-        if (isActive) {
-          c.budget = budgetPerCamp;
-          c.regKpi = signupsPerCamp;
-          c.usersFtp = usersPerCamp;
+        if (p === 'meta' || p === 'instagram' || (toNum(c.spent) > 0 || toNum(c.budget) > 0)) {
+          c.budget = bPer; c.regKpi = sPer; c.usersFtp = uPer;
         } else {
-          c.budget = 0;
-          c.regKpi = "—";
-          c.usersFtp = "—";
+          c.budget = 0; c.regKpi = "—"; c.usersFtp = "—";
         }
       });
     }
 
-    // CREACIÓN LIMPIA SIN DATOS HARDCODEADOS
-    function createEmptyMonthData(monthName, year) {
-      const mIdx = fullMonthNames.indexOf(monthName);
-      const days = new Date(year, mIdx + 1, 0).getDate();
-      return {
-        period: `${monthName} 01-${days}, ${year}`,
-        kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
-        campaigns: []
-      };
+    function createEmptyMonth(mName, year) {
+      const d = new Date(year, fullMonthNames.indexOf(mName) + 1, 0).getDate();
+      return { period: `${mName} 01-${d}, ${year}`, kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] };
     }
 
     function addCampaign(platform) {
-      if (!appData) appData = { kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] };
-      const newCamp = {
-        id: `camp_${platform}_${Date.now()}`,
-        name: `New Campaign`,
-        platform: platform,
-        highlight: false,
-        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0,
-        impKpi: 0, impMtd: 0, impRr: 0,
-        productViews: 0, v2p: 0,
-        clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
-        regKpi: 0, regMtd: 0, regRr: 0,
-        usersFtp: 0, usersMtd: 0, usersRr: "—",
-        s2p: "—", revenue: 0, roi: 0
-      };
-      appData.campaigns.push(newCamp);
+      if (!appData) appData = createEmptyMonth(currentLoadedMonth, currentLoadedYear);
+      appData.campaigns.push({
+        id: `camp_${Date.now()}`, name: `New Campaign`, platform,
+        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
+        productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: "—", s2p: "—", revenue: 0, roi: 0
+      });
       distributeKpisToCampaigns();
       renderDashboard();
-      showSaveToast('Campaign added. Click Save to persist.');
     }
 
-    function deleteCampaign(campaignId, event) {
-      if (event) event.stopPropagation();
-      const campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
-      if (!campaign) return;
-
-      if (confirm(`Delete campaign "${campaign.name}"?`)) {
-        appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
-        distributeKpisToCampaigns();
-        syncGlobalSummaries();
-        renderDashboard();
-        showSaveToast('Campaign deleted. Click Save to persist.');
-      }
+    function deleteCampaign(id, e) {
+      e?.stopPropagation();
+      if (!confirm("Delete campaign?")) return;
+      appData.campaigns = (appData.campaigns || []).filter(c => String(c.id) !== String(id));
+      distributeKpisToCampaigns();
+      syncGlobalSummaries();
+      renderDashboard();
     }
 
-    function showSaveToast(msg) {
-      const toast = document.getElementById('saveToast');
-      const text = document.getElementById('saveToastText');
-      if (!toast || !text) return;
-      text.textContent = msg;
-      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-      setTimeout(() => {
-        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
-      }, 3000);
+    function showSaveToast(text) {
+      const t = document.getElementById('saveToast');
+      document.getElementById('saveToastText').textContent = text;
+      t.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => t.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 3500);
     }
 
-    function getCleanExportData() {
-      if (!appData) return {};
+    function getCleanData() {
       distributeKpisToCampaigns();
       return {
-        period: appData.period,
-        kpis: appData.kpis,
-        campaigns: (appData.campaigns || []).map(c => {
-          const copy = { ...c };
-          delete copy.id;
-          return copy;
-        })
+        period: appData.period, kpis: appData.kpis,
+        campaigns: (appData.campaigns || []).map(c => { const o = { ...c }; delete o.id; return o; })
       };
     }
 
-    function saveDashboardData() {
+    function setupGitHubToken() {
+      const t = prompt("Enter your GitHub Personal Access Token (PAT with repo scope) to save commits directly to GitHub:", githubToken);
+      if (t !== null) { githubToken = t.trim(); showSaveToast(githubToken ? "GitHub Token saved in session." : "GitHub Token cleared."); }
+    }
+
+    // SAVE DIRECTLY: VIA GITHUB API OR NATIVE FILE SYSTEM
+    async function saveDashboardData() {
       if (!appData) return;
-      distributeKpisToCampaigns();
-      const key = `wisekapital_${currentLoadedYear}_${currentLoadedMonth.toLowerCase()}`;
-      localStorage.setItem(key, JSON.stringify(appData));
-      localStorage.setItem('wisekapital_active', JSON.stringify(appData));
-      setLiveBadge('Saved Locally');
-      showSaveToast(`✅ Saved locally for ${currentLoadedYear}/${currentLoadedMonth}/`);
+      const cleanData = getCleanData();
+      const jsonStr = JSON.stringify(cleanData, null, 2);
+      const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
+
+      // 1. DIRECT GITHUB COMMIT IF TOKEN ENTERED
+      if (githubToken) {
+        try {
+          const apiGet = `https://api.github.com/repos/${GH_REPO}/contents/${relPath}`;
+          let sha = "";
+          const getRes = await fetch(apiGet, { headers: { 'Authorization': `Bearer ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' } });
+          if (getRes.ok) { const j = await getRes.json(); sha = j.sha; }
+
+          const putRes = await fetch(apiGet, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${githubToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Update ${relPath} via Dashboard`, content: btoa(unescape(encodeURIComponent(jsonStr))), sha: sha || undefined })
+          });
+
+          if (putRes.ok) {
+            showSaveToast(`✅ Committed directly to GitHub: ${relPath}`);
+            setLiveBadge('Git Committed');
+            return;
+          } else {
+            const err = await putRes.json();
+            alert(`GitHub API Error: ${err.message}`);
+          }
+        } catch(e) { console.error(e); }
+      }
+
+      // 2. NATIVE FILE SYSTEM OVERWRITE (CHROME/EDGE DISK OVERWRITE)
+      if (window.showSaveFilePicker || activeFileHandle) {
+        try {
+          if (!activeFileHandle) {
+            activeFileHandle = await window.showSaveFilePicker({ suggestedName: 'data.json', types: [{ description: 'JSON File', accept: { 'application/json': ['.json'] } }] });
+          }
+          const w = await activeFileHandle.createWritable();
+          await w.write(jsonStr);
+          await w.close();
+          showSaveToast(`✅ Overwritten directly to data.json`);
+          setLiveBadge('File Updated');
+          return;
+        } catch(err) { if (err.name === 'AbortError') return; }
+      }
+
+      // 3. FALLBACK DOWNLOAD
+      downloadJsonFile();
+    }
+
+    function downloadJsonFile() {
+      const blob = new Blob([JSON.stringify(getCleanData(), null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      showSaveToast(`Downloaded data.json for ${currentLoadedYear}/${currentLoadedMonth}/`);
     }
 
     function openJsonModal() {
       if (!appData) return;
-      const cleanData = getCleanExportData();
-      const jsonStr = JSON.stringify(cleanData, null, 2);
-      document.getElementById('jsonModalCode').textContent = jsonStr;
-      
-      const pathText = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
-      document.getElementById('jsonPathBadge').textContent = pathText;
-      document.getElementById('btnZipText').textContent = `Download ZIP (${currentLoadedYear}/${currentLoadedMonth}/)`;
-
+      document.getElementById('jsonModalCode').textContent = JSON.stringify(getCleanData(), null, 2);
+      document.getElementById('jsonPathBadge').textContent = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
       document.getElementById('jsonModal').classList.remove('hidden');
-      const btnText = document.getElementById('copyBtnText');
-      if (btnText) btnText.textContent = "Copy JSON";
       lucide.createIcons();
     }
-
-    function closeJsonModal() {
-      document.getElementById('jsonModal').classList.add('hidden');
-    }
+    function closeJsonModal() { document.getElementById('jsonModal').classList.add('hidden'); }
 
     async function copyJsonToClipboard() {
-      const codeEl = document.getElementById('jsonModalCode');
-      if (!codeEl) return;
-      const text = codeEl.textContent;
-      try {
-        await navigator.clipboard.writeText(text);
-        const btnText = document.getElementById('copyBtnText');
-        if (btnText) btnText.textContent = "Copied!";
-        showSaveToast('✅ JSON copied to clipboard!');
-        setTimeout(() => {
-          if (btnText) btnText.textContent = "Copy JSON";
-        }, 2500);
-      } catch (err) {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-        const btnText = document.getElementById('copyBtnText');
-        if (btnText) btnText.textContent = "Copied!";
-        showSaveToast('✅ JSON copied to clipboard!');
-      }
-    }
-
-    function downloadFolderZip() {
-      if (typeof JSZip === 'undefined') {
-        downloadUpdatedJson();
-        return;
-      }
-      const zip = new JSZip();
-      const year = String(currentLoadedYear);
-      const month = currentLoadedMonth;
-      const cleanData = getCleanExportData();
-
-      const yearFolder = zip.folder(year);
-      const monthFolder = yearFolder.folder(month);
-      monthFolder.file("data.json", JSON.stringify(cleanData, null, 2));
-
-      zip.generateAsync({ type: "blob" }).then(function(content) {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(content);
-        a.download = `${year}_${month}_structure.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        showSaveToast(`📦 Downloaded ZIP: ${year}/${month}/data.json`);
-      });
-    }
-
-    function downloadUpdatedJson() {
-      if (!appData) return;
-      const cleanData = getCleanExportData();
-      const blob = new Blob([JSON.stringify(cleanData, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'data.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      showSaveToast(`📥 data.json for ${currentLoadedYear}/${currentLoadedMonth}/ downloaded.`);
-    }
-
-    function reloadFromGit() {
-      if (confirm(`Discard local changes and reload ${currentLoadedYear}/${currentLoadedMonth}/ directly from Git?`)) {
-        const key = `wisekapital_${currentLoadedYear}_${currentLoadedMonth.toLowerCase()}`;
-        localStorage.removeItem(key);
-        localStorage.removeItem('wisekapital_active');
-        loadDataForRange(fromDate, toDate, true);
-        showSaveToast('🔄 Reloaded from Git.');
-      }
-    }
-
-    function loadLocalFile(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const raw = JSON.parse(e.target.result);
-          applyLoadedData(raw, 'Local File');
-          showSaveToast('data.json loaded from local file.');
-        } catch (err) {
-          alert("Error parsing JSON: " + err.message);
-        }
-      };
-      reader.readAsText(file);
+      await navigator.clipboard.writeText(document.getElementById('jsonModalCode').textContent);
+      document.getElementById('copyBtnText').textContent = "Copied!";
+      showSaveToast("✅ JSON copied to clipboard!");
+      setTimeout(() => document.getElementById('copyBtnText').textContent = "Copy JSON", 2000);
     }
 
     function setLiveBadge(label) {
-      const badge = document.getElementById('liveStatusBadge');
-      if (badge) {
-        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
-      }
+      const b = document.getElementById('liveStatusBadge');
+      if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
     }
 
-    // BUSCADOR EN EL REPOSITORIO (ESTRUCTURA DE CARPETAS YYYY/Month/data.json)
-    async function fetchMonthJson(year, monthName) {
-      const paths = [
-        `./${year}/${monthName}/data.json`,
-        `${year}/${monthName}/data.json`,
-        `./${year}/${monthName.toLowerCase()}/data.json`,
-        `${year}/${monthName.toLowerCase()}/data.json`,
-        `./${monthName}/data.json`,
-        `${monthName}/data.json`,
-        `./${monthName.toLowerCase()}/data.json`,
-        `${monthName.toLowerCase()}/data.json`,
-        `./data.json`,
-        `data.json`
-      ];
-
+    // PURE 0% CACHE FETCH ENGINE
+    async function fetchFreshJson(year, mName) {
+      const paths = [`./${year}/${mName}/data.json`, `./${year}/${mName.toLowerCase()}/data.json`, `./${mName}/data.json`, `./data.json`];
       for (const p of paths) {
         try {
-          const res = await fetch(`${p}?v=${Date.now()}`, { cache: 'no-store' });
+          const res = await fetch(`${p}?nocache=${Date.now()}`, { cache: 'no-store', headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' } });
           if (res.ok) {
             const data = await res.json();
-            if (data && (data.campaigns || data.kpis)) {
-              console.log(`[WiseKapital] Successfully loaded JSON from: ${p}`);
-              return data;
-            }
+            if (data && (data.campaigns || data.kpis)) return data;
           }
-        } catch (err) {}
+        } catch(e) {}
       }
       return null;
     }
 
-    function applyLoadedData(raw, sourceLabel) {
-      appData = {
-        period: raw.period || `${currentLoadedMonth} ${currentLoadedYear}`,
-        kpis: raw.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
-        // ID único generado sobre los datos del JSON para evitar colapsos
-        campaigns: (raw.campaigns || []).map((c, idx) => ({
-          ...c,
-          id: c.id || `camp_${idx}_${(c.name || 'camp').replace(/[^a-zA-Z0-9]/g, '_')}`
-        }))
-      };
+    async function loadDataForRange(startObj, endObj) {
+      const year = startObj.getFullYear();
+      const mName = fullMonthNames[startObj.getMonth()] || "October";
+      currentLoadedYear = year; currentLoadedMonth = mName;
+
+      const fetched = await fetchFreshJson(year, mName);
+      if (fetched) {
+        appData = {
+          period: fetched.period || `${mName} ${year}`,
+          kpis: fetched.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+          campaigns: (fetched.campaigns || []).map((c, i) => ({ ...c, id: c.id || `c_${i}` }))
+        };
+        setLiveBadge(`Live (${mName})`);
+      } else {
+        appData = createEmptyMonth(mName, year);
+        setLiveBadge(`New (${mName})`);
+      }
 
       distributeKpisToCampaigns();
-
-      document.getElementById('localFileHelper').classList.add('hidden');
       document.getElementById('dateAutoInfo').innerText = appData.period;
-      document.getElementById('headerPathText').innerText = `${currentLoadedYear} / ${currentLoadedMonth} / data.json`;
-      setLiveBadge(sourceLabel || 'Synced');
+      document.getElementById('headerPathText').innerText = `${year} / ${mName} / data.json`;
       renderDashboard();
-    }
-
-    async function loadDataForRange(startObj, endObj, forceGit = false) {
-      const year = startObj.getFullYear();
-      const mIndex = startObj.getMonth();
-      const mName = fullMonthNames[mIndex] || "October";
-
-      currentLoadedYear = year;
-      currentLoadedMonth = mName;
-
-      const storageKey = `wisekapital_${year}_${mName.toLowerCase()}`;
-
-      // 1. Revisar si hay cambios guardados en localStorage
-      if (!forceGit) {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            applyLoadedData(parsed, `Local Saved (${year}/${mName})`);
-            return;
-          } catch(e) {}
-        }
-      }
-
-      // 2. Fetch directo al archivo data.json en el repositorio
-      const fetched = await fetchMonthJson(year, mName);
-      if (fetched) {
-        applyLoadedData(fetched, `Git (${year}/${mName})`);
-        return;
-      }
-
-      // 3. Si no existe en Git ni en local: plantilla limpia auto-creada (SIN DATOS HARDCODEADOS)
-      console.log(`[WiseKapital] No data.json found for ${year}/${mName}/. Auto-creating empty structure.`);
-      const emptyMonth = createEmptyMonthData(mName, year);
-      applyLoadedData(emptyMonth, `Auto-Created (${year}/${mName})`);
-      localStorage.setItem(storageKey, JSON.stringify(emptyMonth));
-      showSaveToast(`🆕 No data found. Clean structure created for ${year}/${mName}/`);
     }
 
     function onKpiEdit(el, field) {
       if (!appData) return;
-      if (!appData.kpis) appData.kpis = {};
-
-      let numVal = toNum(el.innerText);
-      appData.kpis[field] = numVal;
-
-      el.innerText = (field === 'budget' || field === 'revenue' || field === 'profit') 
-        ? `$${Number(appData.kpis[field]).toLocaleString()}` 
-        : Number(appData.kpis[field]).toLocaleString();
-
-      document.getElementById('kpiTargetBudget').innerText = `KPI: $${appData.kpis.budget}`;
-      document.getElementById('kpiTargetSignups').innerText = `KPI: ${appData.kpis.signups}`;
-      document.getElementById('kpiTargetUsers').innerText = `KPI: ${appData.kpis.users}`;
-      document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(appData.kpis.revenue || 0).toLocaleString()}`;
-      document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(appData.kpis.profit || 0).toLocaleString()}`;
-
+      appData.kpis[field] = toNum(el.innerText);
       distributeKpisToCampaigns();
       renderDashboard();
     }
 
-    function handleCellInputOrBlur(el, campaignId, field, isBlur = false) {
-      let numVal = toNum(el.innerText);
-      let campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
-      if (!campaign) return;
+    function handleCellInputOrBlur(el, id, field, isBlur) {
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+      if (['name', 'ctr', 's2p', 'usersRr'].includes(field)) c[field] = el.innerText.trim();
+      else c[field] = toNum(el.innerText);
 
-      if (field === 'name' || field === 'ctr' || field === 's2p' || field === 'usersRr') {
-        campaign[field] = el.innerText.trim();
-      } else {
-        campaign[field] = numVal;
-      }
+      c.rrBudget = calculateAutoRR(c.spent);
+      c.impRr = calculateAutoRR(c.impMtd);
+      c.clicksRr = calculateAutoRR(c.clicksMtd);
+      c.regRr = calculateAutoRR(c.regMtd);
+      c.roi = toNum(c.revenue) - toNum(c.spent);
 
-      campaign.rrBudget = calculateAutoRR(campaign.spent);
-      campaign.impRr = calculateAutoRR(campaign.impMtd);
-      campaign.clicksRr = calculateAutoRR(campaign.clicksMtd);
-      campaign.regRr = calculateAutoRR(campaign.regMtd);
-      campaign.roi = (toNum(campaign.revenue) || 0) - (toNum(campaign.spent) || 0);
-
-      const pKey = campaign.platform ? campaign.platform.toLowerCase() : 'meta';
-      updateTableFooter(pKey);
       syncGlobalSummaries();
-
       if (isBlur) updateCharts();
     }
 
-    function onKeyDownCell(e, el) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } }
-
     function renderDashboard() {
       if (!appData) return;
+      const k = appData.kpis || {};
+      const setV = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
 
-      if (appData.kpis) {
-        const k = appData.kpis;
-        const setVal = (id, val) => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.innerText = val; };
-        setVal('tpKpiBudget', `$${Number(k.budget || 0).toLocaleString()}`);
-        setVal('tpKpiSignups', Number(k.signups || 0).toLocaleString());
-        setVal('tpKpiUsers', Number(k.users || 0).toLocaleString());
-        setVal('tpKpiRevenue', `$${Number(k.revenue || 0).toLocaleString()}`);
-        setVal('tpKpiProfit', `$${Number(k.profit || 0).toLocaleString()}`);
+      setV('tpKpiBudget', `$${toNum(k.budget).toLocaleString()}`);
+      setV('tpKpiSignups', toNum(k.signups).toLocaleString());
+      setV('tpKpiUsers', toNum(k.users).toLocaleString());
+      setV('tpKpiRevenue', `$${toNum(k.revenue).toLocaleString()}`);
+      setV('tpKpiProfit', `$${toNum(k.profit).toLocaleString()}`);
 
-        document.getElementById('kpiTargetBudget').innerText = `KPI: $${k.budget}`;
-        document.getElementById('kpiTargetSignups').innerText = `KPI: ${k.signups}`;
-        document.getElementById('kpiTargetUsers').innerText = `KPI: ${k.users}`;
-        document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(k.revenue || 0).toLocaleString()}`;
-        document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(k.profit || 0).toLocaleString()}`;
-      }
+      setV('kpiTargetBudget', `KPI: $${toNum(k.budget)}`);
+      setV('kpiTargetSignups', `KPI: ${toNum(k.signups)}`);
+      setV('kpiTargetUsers', `KPI: ${toNum(k.users)}`);
+      setV('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
+      setV('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
 
-      renderPlatformTable('meta', 'metaTableBody');
-      renderPlatformTable('instagram', 'igTableBody');
-      renderPlatformTable('x', 'xTableBody');
-
-      updateTableFooter('meta');
-      updateTableFooter('instagram');
-      updateTableFooter('x');
-
+      renderAllTables();
       syncGlobalSummaries();
       updateCharts();
       lucide.createIcons();
     }
 
-    function renderPlatformTable(platformName, tbodyId) {
-      const tbody = document.getElementById(tbodyId);
-      const campaigns = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === platformName);
+    // COMPACT DYNAMIC TABLE BUILDER FOR META, INSTAGRAM & X
+    function renderAllTables() {
+      const container = document.getElementById('platformsContainer');
+      container.innerHTML = '';
 
-      tbody.innerHTML = '';
-      if (campaigns.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>`;
-        return;
-      }
+      PLATFORMS.forEach(p => {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        const totB = sum('budget'), totS = sum('spent'), totRRB = sum('rrBudget'), totDB = sum('dailyBudget');
+        const totImpK = sum('impKpi'), totImpM = sum('impMtd'), totImpR = sum('impRr');
+        const totPV = sum('productViews'), totV2P = sum('v2p');
+        const totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
+        const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr');
+        const totUK = sum('usersFtp'), totUM = sum('usersMtd');
+        const totRev = sum('revenue'), totRoi = sum('roi');
 
-      campaigns.forEach(c => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:brightness-95 transition';
-        const nameBg = c.highlight ? 'campaign-highlight-blue' : 'bg-white';
-
-        const dispBudget = toNum(c.budget) > 0 ? `$${c.budget}` : (c.budget === 0 ? '$0' : (c.budget || '—'));
-        const dispRegKpi = toNum(c.regKpi) > 0 ? c.regKpi : (c.regKpi === 0 ? '0' : (c.regKpi || '—'));
-        const dispUsersKpi = toNum(c.usersFtp) > 0 ? c.usersFtp : (c.usersFtp === 0 ? '0' : (c.usersFtp || '—'));
-
-        const dispUsersRr = c.usersRr !== undefined && c.usersRr !== null && c.usersRr !== '' ? c.usersRr : '—';
-        const dispS2P = c.s2p !== undefined && c.s2p !== null && c.s2p !== '' ? c.s2p : '—';
-
-        tr.innerHTML = `
-          <td class="font-bold text-slate-900 sticky-col ${nameBg} p-1">
-            <div class="relative flex items-center justify-center min-h-[28px] group">
-              <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
-              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center" aria-label="Delete campaign">
-                <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 6h18"/>
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                  <line x1="10" y1="11" x2="10" y2="17"/>
-                  <line x1="14" y1="11" x2="14" y2="17"/>
-                </svg>
-              </button>
+        const card = document.createElement('div');
+        card.id = `section_${p.key}`;
+        card.className = 'space-y-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center">${p.icon}</span>
+              <h2 class="text-base font-bold font-display text-slate-900">${p.title}</h2>
             </div>
-          </td>
-          
-          <td class="text-center font-mono font-bold readonly-auto col-tint-budget" title="Auto-calculated: Total Budget KPI / Active Campaigns">${dispBudget}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'spent')" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)">$${c.spent}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'rrBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'rrBudget', true)">$${c.rrBudget}</td>
-          <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)">$${c.dailyBudget}</td>
-          
-          <td class="text-center font-mono editable-cell cell-imp-kpi col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)">${Number(c.impKpi || 0).toLocaleString()}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)">${Number(c.impMtd || 0).toLocaleString()}</td>
-          <td class="text-center font-mono editable-cell col-tint-views ${getRrColorClass(c.impRr, c.impKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impRr', true)">${Number(c.impRr || 0).toLocaleString()}</td>
-          
-          <td class="text-center font-mono font-bold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'productViews')" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)">${c.productViews}</td>
-          <td class="text-center font-mono font-extrabold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'v2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)">${c.v2p}</td>
-          
-          <td class="text-center font-mono editable-cell cell-clicks-kpi col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)">${c.clicksKpi}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)">${c.clicksMtd}</td>
-          <td class="text-center font-mono editable-cell col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksRr', true)">${toNum(c.clicksRr).toLocaleString()}</td>
-          <td class="text-center font-mono font-extrabold editable-cell cell-ctr col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'ctr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)">${c.ctr}</td>
-          
-          <td class="text-center font-mono font-bold readonly-auto col-tint-regs" title="Auto-calculated: Total Signups KPI / Active Campaigns">${dispRegKpi}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)">${c.regMtd}</td>
-          <td class="text-center font-mono editable-cell col-tint-regs ${getRrColorClass(c.regRr, c.regKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regRr', true)">${toNum(c.regRr).toLocaleString()}</td>
-          
-          <td class="text-center font-mono font-bold readonly-auto col-tint-users" title="Auto-calculated: Total Users KPI / Active Campaigns">${dispUsersKpi}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)">${c.usersMtd}</td>
-          <td class="text-center font-mono editable-cell col-tint-users ${getRrColorClass(c.usersRr, c.usersFtp)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersRr', true)">${dispUsersRr}</td>
-          
-          <td class="text-center font-mono font-bold editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 's2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 's2p', true)">${dispS2P}</td>
-          
-          <td class="text-center font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'revenue')" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)">
-            ${toNum(c.revenue) > 0 ? '$ ' + toNum(c.revenue).toFixed(2) : '$-'}
-          </td>
-          <td class="text-center font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'roi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'roi', true)">
-            ${toNum(c.roi) < 0 ? '-$ ' + Math.abs(toNum(c.roi)) : '$ ' + toNum(c.roi)}
-          </td>
+            <div class="flex items-center gap-2 text-xs font-bold">
+              <span class="text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">Budget: $${totB.toFixed(2)}</span>
+              <span class="text-indigo-700 bg-indigo-50 px-2 py-1 rounded border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
+              <button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-black text-white flex items-center gap-1 cursor-pointer"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add</span></button>
+            </div>
+          </div>
+          <div class="glass-card rounded-xl overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="master-table min-w-[1360px]">
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="bg-white sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                    <th colspan="4" class="bg-[#D9D9D9]">BUDGET</th>
+                    <th colspan="3" class="bg-[#CFE2F3]">META VIEWS</th>
+                    <th colspan="2" class="bg-[#FFF2CC]">Product Views</th>
+                    <th colspan="4" class="bg-[#FCE5CD]">CLICKS</th>
+                    <th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th>
+                    <th colspan="3" class="bg-[#EAD1DC]">USERS</th>
+                    <th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
+                  </tr>
+                  <tr class="text-[10px] font-bold">
+                    <th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily</th>
+                    <th class="bg-[#DFECF7]">Imp. (KPI)</th><th class="bg-[#DFECF7]">MTD</th><th class="bg-[#DFECF7]">RR</th>
+                    <th class="bg-[#FFF6D9]">Views</th><th class="bg-[#FFF6D9]">V2P</th>
+                    <th class="bg-[#FDEFE0]">Clicks (KPI)</th><th class="bg-[#FDEFE0]">MTD</th><th class="bg-[#FDEFE0]">RR</th><th class="bg-[#FDEFE0]">CTR</th>
+                    <th class="bg-[#E5F1E1]">Reg (KPI)</th><th class="bg-[#E5F1E1]">MTD</th><th class="bg-[#E5F1E1]">RR</th>
+                    <th class="bg-[#F2DFE8]">Users (KPI)</th><th class="bg-[#F2DFE8]">MTD</th><th class="bg-[#F2DFE8]">RR</th>
+                    <th class="bg-[#D9E5FA]">S2P</th><th class="bg-[#D9E5FA]">Revenue</th><th class="bg-[#D9E5FA]">ROI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${camps.length === 0 ? `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns found for ${p.title}</td></tr>` : camps.map(c => `
+                    <tr class="hover:brightness-95">
+                      <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
+                        <div class="relative flex items-center justify-center min-h-[26px]">
+                          <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)">${c.name}</span>
+                          <button onclick="deleteCampaign('${c.id}', event)" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                      </td>
+                      <td class="col-budget font-mono font-bold">$${c.budget}</td>
+                      <td class="col-budget font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)">$${c.spent}</td>
+                      <td class="col-budget font-mono font-bold ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
+                      <td class="col-budget font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)">$${c.dailyBudget}</td>
+                      <td class="col-views font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)">${toNum(c.impKpi).toLocaleString()}</td>
+                      <td class="col-views font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)">${toNum(c.impMtd).toLocaleString()}</td>
+                      <td class="col-views font-mono ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
+                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)">${c.productViews}</td>
+                      <td class="col-prod font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)">${c.v2p}</td>
+                      <td class="col-clicks font-mono editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)">${c.clicksKpi}</td>
+                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)">${c.clicksMtd}</td>
+                      <td class="col-clicks font-mono ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
+                      <td class="col-clicks font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)">${c.ctr}</td>
+                      <td class="col-regs font-mono font-bold">${c.regKpi || '—'}</td>
+                      <td class="col-regs font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)">${c.regMtd}</td>
+                      <td class="col-regs font-mono ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
+                      <td class="col-users font-mono font-bold">${c.usersFtp || '—'}</td>
+                      <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)">${c.usersMtd}</td>
+                      <td class="col-users font-mono ${getRrColorClass(c.usersRr, c.usersFtp)}">${c.usersRr || '—'}</td>
+                      <td class="col-perf font-mono font-bold">${c.s2p || '0.0%'}</td>
+                      <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)">$${toNum(c.revenue).toFixed(2)}</td>
+                      <td class="col-perf font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot>
+                  <tr class="font-black font-mono">
+                    <td class="text-center sticky-col bg-white">TOTAL ${p.key.toUpperCase()}</td>
+                    <td class="col-budget">$${totB}</td><td class="col-budget">$${totS}</td><td class="col-budget ${getRrColorClass(totRRB, totB)}">$${totRRB}</td><td class="col-budget">$${totDB}</td>
+                    <td class="col-views">${totImpK.toLocaleString()}</td><td class="col-views">${totImpM.toLocaleString()}</td><td class="col-views">${totImpR.toLocaleString()}</td>
+                    <td class="col-prod">${totPV}</td><td class="col-prod">${totV2P}</td>
+                    <td class="col-clicks">${totCK.toFixed(1)}</td><td class="col-clicks">${totCM}</td><td class="col-clicks">${totCR}</td>
+                    <td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0%'}</td>
+                    <td class="col-regs">${totRK > 0 ? totRK : '—'}</td><td class="col-regs">${totRM}</td><td class="col-regs">${totRR}</td>
+                    <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users">—</td>
+                    <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0%'}</td>
+                    <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
+                    <td class="col-perf ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'}">${totRoi < 0 ? '-$' + Math.abs(totRoi) : '$' + totRoi}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         `;
-        tbody.appendChild(tr);
+        container.appendChild(card);
       });
-    }
-
-    function updateTableFooter(pName) {
-      const tfoot = document.getElementById(pName === 'meta' ? 'metaTableFoot' : pName === 'instagram' ? 'igTableFoot' : 'xTableFoot');
-      const filtered = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === pName);
-
-      const sum = f => filtered.reduce((s, c) => s + toNum(c[f]), 0);
-      const totBudget = sum('budget'), totSpent = sum('spent'), totRrBudget = sum('rrBudget'), totDailyBudget = sum('dailyBudget');
-      const totImpKpi = sum('impKpi'), totImpMtd = sum('impMtd'), totImpRr = sum('impRr');
-      const totProdViews = sum('productViews'), totV2p = sum('v2p'), totClicksKpi = sum('clicksKpi'), totClicksMtd = sum('clicksMtd'), totClicksRr = sum('clicksRr');
-      const totRegKpi = sum('regKpi');
-      const totRegMtd = sum('regMtd'), totRegRr = sum('regRr');
-      const totUsersKpi = sum('usersFtp');
-      const totUsersMtd = sum('usersMtd');
-      const totRevenue = sum('revenue'), totRoi = sum('roi');
-
-      const bBudget = document.getElementById(`${pName === 'instagram' ? 'ig' : pName}BadgeBudget`);
-      const bSpent = document.getElementById(`${pName === 'instagram' ? 'ig' : pName}BadgeSpent`);
-      if (bBudget) bBudget.innerText = `Budget: $${totBudget.toFixed(2)}`;
-      if (bSpent) bSpent.innerText = `Spent: $${totSpent.toFixed(2)}`;
-
-      const totCtr = totImpMtd > 0 ? ((totClicksMtd / totImpMtd) * 100).toFixed(1) + '%' : '0%';
-      const totS2p = totRegMtd > 0 ? ((totUsersMtd / totRegMtd) * 100).toFixed(1) + '%' : '0.0%';
-
-      tfoot.innerHTML = `
-        <tr>
-          <td class="text-center font-black sticky-col bg-white">TOTAL ${pName.toUpperCase()}</td>
-          <td class="font-mono font-black col-tint-budget">$${totBudget}</td>
-          <td class="font-mono font-black col-tint-budget">$${totSpent}</td>
-          <td class="font-mono font-black col-tint-budget ${getRrColorClass(totRrBudget, totBudget)}">$${totRrBudget}</td>
-          <td class="font-mono font-black col-tint-budget">$${totDailyBudget}</td>
-          <td class="font-mono font-black col-tint-views">${totImpKpi.toLocaleString()}</td>
-          <td class="font-mono font-black col-tint-views">${totImpMtd.toLocaleString()}</td>
-          <td class="font-mono font-black col-tint-views ${getRrColorClass(totImpRr, totImpKpi)}">${totImpRr.toLocaleString()}</td>
-          <td class="font-mono font-black col-tint-product">${totProdViews}</td>
-          <td class="font-mono font-black col-tint-product">${totV2p}</td>
-          <td class="font-mono font-black col-tint-clicks">${totClicksKpi.toFixed(1)}</td>
-          <td class="font-mono font-black col-tint-clicks">${totClicksMtd}</td>
-          <td class="font-mono font-black col-tint-clicks ${getRrColorClass(totClicksRr, totClicksKpi)}">${totClicksRr}</td>
-          <td class="font-mono font-black col-tint-clicks">${totCtr}</td>
-          <td class="font-mono font-black col-tint-regs">${totRegKpi > 0 ? totRegKpi : '—'}</td>
-          <td class="font-mono font-black text-slate-900 col-tint-regs">${totRegMtd}</td>
-          <td class="font-mono font-black col-tint-regs">${totRegRr}</td>
-          <td class="font-mono font-black col-tint-users">${totUsersKpi > 0 ? totUsersKpi : '—'}</td>
-          <td class="font-mono font-black text-slate-900 col-tint-users">${totUsersMtd}</td>
-          <td class="font-mono font-black text-slate-400 col-tint-users">—</td>
-          <td class="font-mono font-black col-tint-perf">${totS2p}</td>
-          <td class="font-mono font-black text-emerald-700 col-tint-perf">$ ${totRevenue.toFixed(2)}</td>
-          <td class="font-mono font-black ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'} col-tint-perf">${totRoi < 0 ? '-$ ' + Math.abs(totRoi) : '$ ' + totRoi}</td>
-        </tr>
-      `;
     }
 
     function syncGlobalSummaries() {
       const all = appData.campaigns || [];
       const sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
-      const totSpent = sum('spent'), totRrBudget = sum('rrBudget');
-      const totSignups = sum('regMtd'), totRrSignups = sum('regRr');
-      const totUsers = sum('usersMtd'), totRevenue = sum('revenue'), totProfit = sum('roi');
-
+      const totSpent = sum('spent'), totRRB = sum('rrBudget'), totSign = sum('regMtd'), totRRSign = sum('regRr'), totUsers = sum('usersMtd'), totRev = sum('revenue'), totProf = sum('roi');
       const k = appData.kpis || {};
-      const targetB = toNum(k.budget);
-      const targetS = toNum(k.signups);
-      const targetU = toNum(k.users);
-      const targetR = toNum(k.revenue);
-      const targetP = toNum(k.profit);
+      const setV = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
 
-      const setTpColor = (id, rrVal, kpiVal) => {
+      setV('tpMtdBudget', `$${totSpent}`); setV('tpMtdSignups', totSign); setV('tpMtdUsers', totUsers); setV('tpMtdRevenue', `$${totRev.toFixed(0)}`); setV('tpMtdProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
+      setV('tpRrBudget', `$${totRRB}`); setV('tpRrSignups', totRRSign); setV('tpRrUsers', totUsers || 1); setV('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setV('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
+
+      setV('kpiBudget', `$${totSpent}`); setV('kpiSignups', totSign); setV('kpiFtd', totUsers); setV('kpiRevenue', `$${totRev.toFixed(0)}`); setV('kpiProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
+      
+      const badge = (id, v, target, p='') => {
         const el = document.getElementById(id);
-        if (el) el.className = `py-3 px-2 font-extrabold text-[13px] ${getRrColorClass(rrVal, kpiVal)}`;
+        if (el) { el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${(toNum(v) >= toNum(target) && toNum(target) > 0) ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`; el.innerText = `RR: ${p}${v}`; }
       };
-
-      setTpColor('tpRrBudget', totRrBudget, targetB);
-      setTpColor('tpRrSignups', totRrSignups, targetS);
-      setTpColor('tpRrUsers', totUsers, targetU);
-      setTpColor('tpRrRevenue', calculateAutoRR(totRevenue), targetR);
-      setTpColor('tpRrProfit', calculateAutoRR(totProfit), targetP);
-
-      document.getElementById('tpMtdBudget').innerText = `$${totSpent}`;
-      document.getElementById('tpMtdSignups').innerText = totSignups;
-      document.getElementById('tpMtdUsers').innerText = totUsers;
-      document.getElementById('tpMtdRevenue').innerText = `$${totRevenue.toFixed(0)}`;
-      document.getElementById('tpMtdProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(totProfit)}`;
-
-      document.getElementById('tpRrBudget').innerText = `$${totRrBudget}`;
-      document.getElementById('tpRrSignups').innerText = totRrSignups;
-      document.getElementById('tpRrUsers').innerText = totUsers || 1;
-      document.getElementById('tpRrRevenue').innerText = `$${calculateAutoRR(totRevenue)}`;
-      document.getElementById('tpRrProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProfit))}`;
-      document.getElementById('tpRoiRatio').innerText = `1:0.4`;
-
-      const updateCardBadge = (id, rrVal, kpiVal, prefix = '') => {
-        const el = document.getElementById(id);
-        if (el) {
-          const isGreen = (toNum(rrVal) >= toNum(kpiVal)) && toNum(kpiVal) > 0;
-          el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded-md border ${isGreen ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
-          el.innerText = `RR: ${prefix}${rrVal}`;
-        }
-      };
-
-      document.getElementById('kpiBudget').innerText = `$${totSpent}`;
-      updateCardBadge('rrBudget', totRrBudget, targetB, '$');
-
-      document.getElementById('kpiSignups').innerText = totSignups;
-      updateCardBadge('rrSignups', totRrSignups, targetS);
-
-      document.getElementById('kpiFtd').innerText = totUsers;
-      updateCardBadge('rrFtd', totUsers || 1, targetU);
-
-      document.getElementById('kpiRevenue').innerText = `$${totRevenue.toFixed(0)}`;
-      updateCardBadge('rrRevenue', calculateAutoRR(totRevenue), targetR, '$');
-
-      document.getElementById('kpiProfit').innerText = `${totProfit < 0 ? '-$' : '$'}${Math.abs(totProfit)}`;
-      updateCardBadge('rrProfit', calculateAutoRR(totProfit), targetP, '$');
+      badge('rrBudget', totRRB, k.budget, '$'); badge('rrSignups', totRRSign, k.signups); badge('rrFtd', totUsers || 1, k.users); badge('rrRevenue', calculateAutoRR(totRev), k.revenue, '$'); badge('rrProfit', calculateAutoRR(totProf), k.profit, '$');
     }
 
     function updateCharts() {
       const all = appData.campaigns || [];
-      const fBy = p => all.filter(c => c.platform && c.platform.toLowerCase() === p);
-      const meta = fBy('meta'), ig = fBy('instagram'), x = fBy('x');
+      const sumP = (p, f) => all.filter(c => (c.platform || '').toLowerCase() === p).reduce((s, c) => s + toNum(c[f]), 0);
+      const mS = sumP('meta', 'spent'), mR = sumP('meta', 'revenue'), iS = sumP('instagram', 'spent'), iR = sumP('instagram', 'revenue'), xS = sumP('x', 'spent'), xR = sumP('x', 'revenue');
+      const mSign = sumP('meta', 'regMtd'), iSign = sumP('instagram', 'regMtd'), mUsr = sumP('meta', 'usersMtd'), iUsr = sumP('instagram', 'usersMtd');
 
-      const sum = (arr, f) => arr.reduce((s, c) => s + toNum(c[f]), 0);
-      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue');
-      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue');
-      const xS = sum(x, 'spent'), xR = sum(x, 'revenue');
+      document.getElementById('pieMetaSignups').innerText = mSign; document.getElementById('pieIGSignups').innerText = iSign;
+      document.getElementById('pieMetaUsers').innerText = mUsr; document.getElementById('pieIGUsers').innerText = iUsr;
+      document.getElementById('badgeRoiMeta').innerText = `ROI: ${mS > 0 ? (((mR - mS) / mS) * 100).toFixed(1) : 0}%`;
+      document.getElementById('badgeRoiIG').innerText = `ROI: ${iS > 0 ? (((iR - iS) / iS) * 100).toFixed(1) : 0}%`;
+      document.getElementById('badgeRoiX').innerText = `ROI: ${xS > 0 ? (((xR - xS) / xS) * 100).toFixed(1) : 0}%`;
 
-      const mSignups = sum(meta, 'regMtd');
-      const iSignups = sum(ig, 'regMtd');
-      const totSignups = mSignups + iSignups || 1;
-      const mPct = ((mSignups / totSignups) * 100).toFixed(1);
-      const iPct = ((iSignups / totSignups) * 100).toFixed(1);
+      if (chartSignups) chartSignups.destroy();
+      chartSignups = new Chart(document.getElementById('signupsPieChart').getContext('2d'), {
+        type: 'doughnut', data: { labels: ['Meta', 'Instagram'], datasets: [{ data: [mSign, iSign], backgroundColor: ['#0081FB', '#E1306C'] }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      });
 
-      const mUsers = sum(meta, 'usersMtd');
-      const iUsers = sum(ig, 'usersMtd');
-      const totUsers = mUsers + iUsers || 1;
-      const mUPct = ((mUsers / totUsers) * 100).toFixed(1);
-      const iUPct = ((iUsers / totUsers) * 100).toFixed(1);
+      if (chartUsers) chartUsers.destroy();
+      chartUsers = new Chart(document.getElementById('usersPieChart').getContext('2d'), {
+        type: 'doughnut', data: { labels: ['Meta', 'Instagram'], datasets: [{ data: [mUsr, iUsr], backgroundColor: ['#0081FB', '#E1306C'] }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      });
 
-      const pMSignups = document.getElementById('pieMetaSignups');
-      if (pMSignups) pMSignups.innerText = `${mSignups} (${mPct}%)`;
-      const pISignups = document.getElementById('pieIGSignups');
-      if (pISignups) pISignups.innerText = `${iSignups} (${iPct}%)`;
-
-      const pMUsers = document.getElementById('pieMetaUsers');
-      if (pMUsers) pMUsers.innerText = `${mUsers} (${mUsers ? mUPct + '%' : '0%'})`;
-      const pIUsers = document.getElementById('pieIGUsers');
-      if (pIUsers) pIUsers.innerText = `${iUsers} (${iUsers ? iUPct + '%' : '0%'})`;
-
-      const mRoi = mS > 0 ? (((mR - mS) / mS) * 100).toFixed(2) : "0.00";
-      const iRoi = iS > 0 ? (((iR - iS) / iS) * 100).toFixed(2) : "-100.00";
-      const xRoi = xS > 0 ? (((xR - xS) / xS) * 100).toFixed(2) : "0.00";
-
-      const bM = document.getElementById('badgeRoiMeta'); if (bM) bM.innerText = `ROI: ${mRoi}%`;
-      const bI = document.getElementById('badgeRoiIG'); if (bI) bI.innerText = `ROI: ${iRoi}%`;
-      const bX = document.getElementById('badgeRoiX'); if (bX) bX.innerText = `ROI: ${xRoi}%`;
-
-      const sDist = document.getElementById('lblSignupsDist');
-      if (sDist) sDist.innerText = `Total Signups distribution across Meta (${mSignups}) and Instagram (${iSignups})`;
-
-      const pieCanvasS = document.getElementById('signupsPieChart');
-      if (pieCanvasS) {
-        if (chartSignups) chartSignups.destroy();
-        chartSignups = new Chart(pieCanvasS.getContext('2d'), {
-          type: 'doughnut',
-          data: {
-            labels: ['Meta', 'Instagram'],
-            datasets: [{ data: [mSignups, iSignups], backgroundColor: ['#0081FB', '#E1306C'], borderWidth: 2, borderColor: '#fff' }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      const miniBar = (id, s, r, ch) => {
+        if (ch) ch.destroy();
+        return new Chart(document.getElementById(id).getContext('2d'), {
+          type: 'bar', data: { labels: ['Spent', 'Revenue'], datasets: [{ data: [s, r], backgroundColor: ['#6366F1', '#10B981'], borderRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '$' + v } } } }
         });
-      }
-
-      const pieCanvasU = document.getElementById('usersPieChart');
-      if (pieCanvasU) {
-        if (chartUsers) chartUsers.destroy();
-        chartUsers = new Chart(pieCanvasU.getContext('2d'), {
-          type: 'doughnut',
-          data: {
-            labels: ['Meta', 'Instagram'],
-            datasets: [{ data: [mUsers, iUsers], backgroundColor: ['#0081FB', '#E1306C'], borderWidth: 2, borderColor: '#fff' }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
-        });
-      }
-
-      function renderMiniBR(canvasId, spent, rev) {
-        const c = document.getElementById(canvasId);
-        if (!c) return null;
-        return new Chart(c.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: ['Spent', 'Revenue'],
-            datasets: [{ data: [spent, rev], backgroundColor: ['#6366F1', '#10B981'], borderRadius: 4 }]
-          },
-          options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => '$' + v } } }
-          }
-        });
-      }
-
-      if (chartMetaBR) chartMetaBR.destroy();
-      chartMetaBR = renderMiniBR('metaBudgetRevenueChart', mS, mR);
-
-      if (chartIGBR) chartIGBR.destroy();
-      chartIGBR = renderMiniBR('instagramBudgetRevenueChart', iS, iR);
-
-      if (chartXBR) chartXBR.destroy();
-      chartXBR = renderMiniBR('xBudgetRevenueChart', xS, xR);
+      };
+      chartMetaBR = miniBar('metaBudgetRevenueChart', mS, mR, chartMetaBR);
+      chartIGBR = miniBar('instagramBudgetRevenueChart', iS, iR, chartIGBR);
+      chartXBR = miniBar('xBudgetRevenueChart', xS, xR, chartXBR);
     }
 
     async function exportToExcel() {
-      if (!appData || !appData.campaigns) return;
-      distributeKpisToCampaigns();
-
-      const ARGB = {
-        border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D',
-        highlightBlue: 'FFCFE2F3', white: 'FFFFFFFF',
-        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD',
-        grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
-        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0',
-        subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
-        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED',
-        tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
-      };
-
-      const thinBorder = {
-        top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } },
-        bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } }
-      };
-
-      function setCell(cell, value, bg, bold = false, color = ARGB.textDark) {
-        cell.value = value;
-        if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
-        cell.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
-        cell.alignment = { vertical: 'middle', horizontal: 'center' };
-        cell.border = thinBorder;
-      }
-
-      function mergeRange(ws, r1, c1, r2, c2, val, bg, bold = false, color = ARGB.textDark) {
-        ws.mergeCells(r1, c1, r2, c2);
-        for (let r = r1; r <= r2; r++) {
-          for (let c = c1; c <= c2; c++) {
-            const cell = ws.getCell(r, c);
-            if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
-            cell.border = thinBorder;
-          }
-        }
-        const master = ws.getCell(r1, c1);
-        master.value = val;
-        master.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
-        master.alignment = { vertical: 'middle', horizontal: 'center' };
-      }
-
+      if (!appData) return;
       const wb = new ExcelJS.Workbook();
-      wb.creator = 'WiseKapital';
-
-      function makeSheet(ws, pKey, title, startRow = 1) {
-        const camps = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === pKey);
-        if (camps.length === 0 && startRow > 1) return startRow;
-
-        ws.columns = [
-          { width: 26 }, { width: 14 }, { width: 12 }, { width: 12 }, { width: 14 },
-          { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 10 },
-          { width: 14 }, { width: 12 }, { width: 12 }, { width: 10 }, { width: 14 },
-          { width: 12 }, { width: 12 }, { width: 14 }, { width: 12 }, { width: 12 },
-          { width: 10 }, { width: 16 }, { width: 16 }
-        ];
-
-        let r = startRow;
-        ws.mergeCells(r, 1, r, 23);
-        const tc = ws.getCell(r, 1);
-        tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
-        tc.font = { name: 'Calibri', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
-        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: pKey === 'meta' ? 'FF0081FB' : pKey === 'instagram' ? 'FFE1306C' : 'FF1E293B' } };
-        tc.alignment = { vertical: 'middle', horizontal: 'center' };
-        ws.getRow(r).height = 24;
-        r++;
-
-        const h1 = r, h2 = r + 1;
-        mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
-        mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
-        mergeRange(ws, h1, 6, h1, 8, 'META VIEWS', ARGB.grpViews, true);
-        mergeRange(ws, h1, 9, h1, 10, 'Product Views', ARGB.grpProduct, true);
-        mergeRange(ws, h1, 11, h1, 14, 'CLICKS', ARGB.grpClicks, true);
-        mergeRange(ws, h1, 15, h1, 17, 'REGISTRATIONS', ARGB.grpRegs, true);
-        mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
-        mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
-
-        const subs = [
-          { c: 2, t: 'Budget (KPI)', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget, color: ARGB.textDark }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
-          { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews, color: ARGB.textDark },
-          { c: 9, t: 'Product Views', bg: ARGB.subProduct }, { c: 10, t: 'V2P', bg: ARGB.subProduct },
-          { c: 11, t: 'Clicks (KPI)', bg: ARGB.subClicks }, { c: 12, t: 'MTD', bg: ARGB.subClicks }, { c: 13, t: 'RR', bg: ARGB.subClicks, color: ARGB.textDark }, { c: 14, t: 'CTR', bg: ARGB.subClicks },
-          { c: 15, t: 'Reg (KPI)', bg: ARGB.subRegs }, { c: 16, t: 'MTD', bg: ARGB.subRegs }, { c: 17, t: 'RR', bg: ARGB.subRegs, color: ARGB.textDark },
-          { c: 18, t: 'Users (KPI)', bg: ARGB.subUsers }, { c: 19, t: 'MTD', bg: ARGB.subUsers }, { c: 20, t: 'RR', bg: ARGB.subUsers, color: ARGB.textDark },
-          { c: 21, t: 'S2P', bg: ARGB.subPerf }, { c: 22, t: 'Revenue', bg: ARGB.subPerf }, { c: 23, t: 'ROI', bg: ARGB.subPerf }
-        ];
-
-        subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true, s.color || ARGB.textDark));
-        r += 2;
-
-        camps.forEach(c => {
-          const row = ws.getRow(r);
-          row.height = 19;
-          setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
-          setCell(row.getCell(2), `$${c.budget}`, ARGB.tintBudget, true);
-          setCell(row.getCell(3), `$${c.spent}`, ARGB.tintBudget, true);
-          setCell(row.getCell(4), `$${c.rrBudget}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget, ARGB));
-          setCell(row.getCell(5), `$${c.dailyBudget}`, ARGB.tintBudget);
-          setCell(row.getCell(6), Number(c.impKpi || 0).toLocaleString(), ARGB.tintViews);
-          setCell(row.getCell(7), Number(c.impMtd || 0).toLocaleString(), ARGB.tintViews, true);
-          setCell(row.getCell(8), Number(c.impRr || 0).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi, ARGB));
-          setCell(row.getCell(9), c.productViews, ARGB.tintProduct, true);
-          setCell(row.getCell(10), c.v2p, ARGB.tintProduct, true);
-          setCell(row.getCell(11), c.clicksKpi, ARGB.tintClicks);
-          setCell(row.getCell(12), c.clicksMtd, ARGB.tintClicks, true);
-          setCell(row.getCell(13), c.clicksRr, ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi, ARGB));
-          setCell(row.getCell(14), c.ctr, ARGB.tintClicks, true);
-          setCell(row.getCell(15), c.regKpi || '—', ARGB.tintRegs, true);
-          setCell(row.getCell(16), c.regMtd, ARGB.tintRegs, true);
-          setCell(row.getCell(17), c.regRr, ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi, ARGB));
-          setCell(row.getCell(18), c.usersFtp || '—', ARGB.tintUsers, true);
-          setCell(row.getCell(19), c.usersMtd, ARGB.tintUsers, true);
-          setCell(row.getCell(20), c.usersRr > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp, ARGB));
-          setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
-          setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
-          setCell(row.getCell(23), toNum(c.roi) < 0 ? `-$${Math.abs(toNum(c.roi))}` : `$${toNum(c.roi)}`, ARGB.tintPerf, true, toNum(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
-          r++;
-        });
-
-        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
-        const fRow = ws.getRow(r);
-        fRow.height = 20;
-        setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
-        setCell(fRow.getCell(2), `$${sum('budget')}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(3), `$${sum('spent')}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(4), `${sum('rrBudget')}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget'), ARGB));
-        setCell(fRow.getCell(5), `$${sum('dailyBudget')}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(6), sum('impKpi').toLocaleString(), ARGB.tintViews, true);
-        setCell(fRow.getCell(7), sum('impMtd').toLocaleString(), ARGB.tintViews, true);
-        setCell(fRow.getCell(8), sum('impRr').toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi'), ARGB));
-        setCell(fRow.getCell(9), sum('productViews'), ARGB.tintProduct, true);
-        setCell(fRow.getCell(10), sum('v2p'), ARGB.tintProduct, true);
-        setCell(fRow.getCell(11), sum('clicksKpi').toFixed(1), ARGB.tintClicks, true);
-        setCell(fRow.getCell(12), sum('clicksMtd'), ARGB.tintClicks, true);
-        setCell(fRow.getCell(13), sum('clicksRr'), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi'), ARGB));
-        setCell(fRow.getCell(14), '2%', ARGB.tintClicks, true);
-        setCell(fRow.getCell(15), sum('regKpi') > 0 ? sum('regKpi') : '—', ARGB.tintRegs, true);
-        setCell(fRow.getCell(16), sum('regMtd'), ARGB.tintRegs, true);
-        setCell(fRow.getCell(17), sum('regRr'), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi'), ARGB));
-        setCell(fRow.getCell(18), sum('usersFtp') > 0 ? sum('usersFtp') : '—', ARGB.tintUsers, true);
-        setCell(fRow.getCell(19), sum('usersMtd'), ARGB.tintUsers, true);
-        setCell(fRow.getCell(20), '—', ARGB.tintUsers);
-        
-        const totRegs = sum('regMtd'), totUsrs = sum('usersMtd');
-        const s2pTotal = totRegs > 0 ? ((totUsrs / totRegs) * 100).toFixed(1) + '%' : '0.0%';
-        setCell(fRow.getCell(21), s2pTotal, ARGB.tintPerf, true);
-        setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
-        const tRoi = sum('roi');
-        setCell(fRow.getCell(23), tRoi < 0 ? `-$ ${Math.abs(tRoi)}` : `$ ${tRoi}`, ARGB.tintPerf, true, tRoi < 0 ? ARGB.textRed : ARGB.textGreen);
-        r++;
-        return r;
-      }
-
-      const sAll = wb.addWorksheet('All Platforms', { views: [{ showGridLines: true }] });
-      let nR = 1;
-      nR = makeSheet(sAll, 'meta', 'Meta (Facebook Ads)', nR); nR++;
-      nR = makeSheet(sAll, 'instagram', 'Instagram Ads', nR); nR++;
-      nR = makeSheet(sAll, 'x', 'X Campaigns', nR);
-
-      makeSheet(wb.addWorksheet('Meta Ads', { views: [{ showGridLines: true }] }), 'meta', 'Meta (Facebook Ads)');
-      makeSheet(wb.addWorksheet('Instagram Ads', { views: [{ showGridLines: true }] }), 'instagram', 'Instagram Ads');
-      makeSheet(wb.addWorksheet('X Campaigns', { views: [{ showGridLines: true }] }), 'x', 'X Campaigns');
-
+      const ws = wb.addWorksheet('Social Report');
+      ws.addRow(['WISEKAPITAL SOCIAL REPORT', appData.period]);
+      ws.addRow(['Team', 'Budget KPI', 'Spent', 'Signups KPI', 'Signups MTD', 'Revenue MTD', 'Profit']);
+      ws.addRow(['SOCIAL', appData.kpis.budget, document.getElementById('tpMtdBudget').innerText, appData.kpis.signups, document.getElementById('tpMtdSignups').innerText, document.getElementById('tpMtdRevenue').innerText, document.getElementById('tpMtdProfit').innerText]);
+      ws.addRow([]);
+      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'Clicks', 'Signups', 'Users', 'Revenue', 'ROI']);
+      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.clicksMtd, c.regMtd, c.usersMtd, c.revenue, c.roi]));
       const buf = await wb.xlsx.writeBuffer();
-      const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `WiseKapital_Social_Report_${new Date().getTime()}.xlsx`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-
-    function filterPlatform() {
-      const val = document.getElementById('platformFilter').value;
-      const setD = (id, show) => { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; };
-      setD('sectionMetaTable', val === 'all' || val === 'meta');
-      setD('sectionInstagramTable', val === 'all' || val === 'instagram');
-      setD('sectionXTable', val === 'all' || val === 'x');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `Report_${Date.now()}.xlsx`; a.click(); a.remove();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
