@@ -71,6 +71,7 @@
     .editable-cell { outline: none; cursor: text; transition: filter 0.15s ease; }
     .editable-cell:hover { filter: brightness(0.94); }
     .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
+    .readonly-auto { cursor: default; user-select: none; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -94,7 +95,7 @@
           </div>
           <div>
             <h3 class="text-sm font-bold font-display text-slate-900">JSON Data Preview</h3>
-            <p class="text-[11px] text-slate-500 font-medium">Ready to copy and paste directly into your <code>data.json</code></p>
+            <p class="text-[11px] text-slate-500 font-medium">Auto-distributed KPIs ready to copy into your <code>data.json</code></p>
           </div>
         </div>
         <button onclick="closeJsonModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition flex items-center justify-center cursor-pointer">
@@ -634,17 +635,17 @@
   </main>
 
   <script>
-    // EMBEDDED DEFAULT DATA (IDENTICAL TO YOUR JSON)
+    // EMBEDDED DEFAULT DATA (OCTOBER 2026)
     const DEFAULT_DATA = {
       "period": "October 01-28, 2026",
       "kpis": { "budget": 800, "signups": 250, "users": 20, "revenue": 3300, "profit": 2500 },
       "campaigns": [
-        { "name": "V1 Imperial Sweeps - FB", "platform": "meta", "highlight": true, "budget": 133, "spent": 15, "rrBudget": 25, "dailyBudget": 7, "impKpi": 1417, "impMtd": 773, "impRr": 1288, "productViews": 80, "v2p": 10, "clicksKpi": 128.7, "clicksMtd": 70, "clicksRr": 117, "ctr": "10%", "regKpi": "—", "regMtd": 2, "regRr": 3, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -15 },
-        { "name": "Imperial Sweeps — Facebook", "platform": "meta", "highlight": false, "budget": 133, "spent": 88, "rrBudget": 153, "dailyBudget": 9, "impKpi": 9240, "impMtd": 7516, "impRr": 8400, "productViews": 390, "v2p": 19, "clicksKpi": 541.2, "clicksMtd": 440, "clicksRr": 492, "ctr": "5%", "regKpi": "—", "regMtd": 28, "regRr": 31, "usersFtp": "—", "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 0.00, "roi": -52 },
-        { "name": "Imperial Sweeps — Instagram", "platform": "instagram", "highlight": false, "budget": 133, "spent": 90, "rrBudget": 119, "dailyBudget": 7, "impKpi": 6816, "impMtd": 5544, "impRr": 7717, "productViews": 153, "v2p": 36, "clicksKpi": 211, "clicksMtd": 172, "clicksRr": 192, "ctr": "2%", "regKpi": "—", "regMtd": 2, "regRr": 2, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -90 },
-        { "name": "V2 SweepzKings - FB", "platform": "meta", "highlight": true, "budget": 133, "spent": 12, "rrBudget": 20, "dailyBudget": 7, "impKpi": 1164, "impMtd": 635, "impRr": 1058, "productViews": 25, "v2p": 25, "clicksKpi": 52, "clicksMtd": 28, "clicksRr": 47, "ctr": "3%", "regKpi": "—", "regMtd": 2, "regRr": 3, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -12 },
-        { "name": "SweepzKings — Facebook", "platform": "meta", "highlight": false, "budget": 133, "spent": 92, "rrBudget": 153, "dailyBudget": 9, "impKpi": 16524, "impMtd": 13441, "impRr": 15022, "productViews": 245, "v2p": 55, "clicksKpi": 201, "clicksMtd": 164, "clicksRr": 183, "ctr": "1%", "regKpi": "—", "regMtd": 15, "regRr": 17, "usersFtp": 0, "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 140.00, "roi": -48 },
-        { "name": "SweepzKings — Instagram", "platform": "instagram", "highlight": false, "budget": 133, "spent": 89, "rrBudget": 119, "dailyBudget": 7, "impKpi": 13453, "impMtd": 10943, "impRr": 12230, "productViews": 193, "v2p": 57, "clicksKpi": 259, "clicksMtd": 210, "clicksRr": 235, "ctr": "2%", "regKpi": "—", "regMtd": 14, "regRr": 16, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -89 },
+        { "name": "V1 Imperial Sweeps - FB", "platform": "meta", "highlight": true, "budget": 0, "spent": 15, "rrBudget": 25, "dailyBudget": 7, "impKpi": 1417, "impMtd": 773, "impRr": 1288, "productViews": 80, "v2p": 10, "clicksKpi": 128.7, "clicksMtd": 70, "clicksRr": 117, "ctr": "10%", "regKpi": 0, "regMtd": 2, "regRr": 3, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -15 },
+        { "name": "Imperial Sweeps — Facebook", "platform": "meta", "highlight": false, "budget": 0, "spent": 88, "rrBudget": 153, "dailyBudget": 9, "impKpi": 9240, "impMtd": 7516, "impRr": 8400, "productViews": 390, "v2p": 19, "clicksKpi": 541.2, "clicksMtd": 440, "clicksRr": 492, "ctr": "5%", "regKpi": 0, "regMtd": 28, "regRr": 31, "usersFtp": 0, "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 0.00, "roi": -52 },
+        { "name": "Imperial Sweeps — Instagram", "platform": "instagram", "highlight": false, "budget": 0, "spent": 90, "rrBudget": 119, "dailyBudget": 7, "impKpi": 6816, "impMtd": 5544, "impRr": 7717, "productViews": 153, "v2p": 36, "clicksKpi": 211, "clicksMtd": 172, "clicksRr": 192, "ctr": "2%", "regKpi": 0, "regMtd": 2, "regRr": 2, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -90 },
+        { "name": "V2 SweepzKings - FB", "platform": "meta", "highlight": true, "budget": 0, "spent": 12, "rrBudget": 20, "dailyBudget": 7, "impKpi": 1164, "impMtd": 635, "impRr": 1058, "productViews": 25, "v2p": 25, "clicksKpi": 52, "clicksMtd": 28, "clicksRr": 47, "ctr": "3%", "regKpi": 0, "regMtd": 2, "regRr": 3, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": "—", "revenue": 0.00, "roi": -12 },
+        { "name": "SweepzKings — Facebook", "platform": "meta", "highlight": false, "budget": 0, "spent": 92, "rrBudget": 153, "dailyBudget": 9, "impKpi": 16524, "impMtd": 13441, "impRr": 15022, "productViews": 245, "v2p": 55, "clicksKpi": 201, "clicksMtd": 164, "clicksRr": 183, "ctr": "1%", "regKpi": 0, "regMtd": 15, "regRr": 17, "usersFtp": 0, "usersMtd": 0, "usersRr": 1, "s2p": 1, "revenue": 140.00, "roi": -48 },
+        { "name": "SweepzKings — Instagram", "platform": "instagram", "highlight": false, "budget": 0, "spent": 89, "rrBudget": 119, "dailyBudget": 7, "impKpi": 13453, "impMtd": 10943, "impRr": 12230, "productViews": 193, "v2p": 57, "clicksKpi": 259, "clicksMtd": 210, "clicksRr": 235, "ctr": "2%", "regKpi": 0, "regMtd": 14, "regRr": 16, "usersFtp": 0, "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": -89 },
         { "name": "XWannnaSee_Sep", "platform": "x", "highlight": false, "budget": 0, "spent": 0, "rrBudget": 0, "dailyBudget": 0, "impKpi": 0, "impMtd": 0, "impRr": 0, "productViews": 0, "v2p": 0, "clicksKpi": 0, "clicksMtd": 0, "clicksRr": 0, "ctr": "0%", "regKpi": "—", "regMtd": 0, "regRr": 0, "usersFtp": "—", "usersMtd": 0, "usersRr": "—", "s2p": 0, "revenue": 0.00, "roi": 0 }
       ]
     };
@@ -655,7 +656,6 @@
     let chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedMonth = "October";
     
-    // STANDARD 12-MONTH ORDER
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
@@ -782,6 +782,41 @@
       return rr > 0 ? ARGB.textGreen : ARGB.textRed;
     }
 
+    // DISTRIBUCIÓN AUTOMÁTICA Y EQUITATIVA DE KPIS
+    function distributeKpisToCampaigns() {
+      if (!appData || !appData.campaigns || !appData.kpis) return;
+      
+      // Campañas activas (Meta, Instagram, y X con gasto o presupuesto > 0)
+      const activeCampaigns = appData.campaigns.filter(c => {
+        const p = (c.platform || '').toLowerCase();
+        if (p === 'meta' || p === 'instagram') return true;
+        return toNum(c.spent) > 0 || toNum(c.budget) > 0;
+      });
+
+      const count = activeCampaigns.length || 1;
+      const totalBudget = toNum(appData.kpis.budget);
+      const totalSignups = toNum(appData.kpis.signups);
+      const totalUsers = toNum(appData.kpis.users);
+
+      const budgetPerCamp = Math.round(totalBudget / count);
+      const signupsPerCamp = Math.round(totalSignups / count);
+      const usersPerCamp = Math.round(totalUsers / count);
+
+      appData.campaigns.forEach(c => {
+        const p = (c.platform || '').toLowerCase();
+        const isActive = (p === 'meta' || p === 'instagram') || (toNum(c.spent) > 0 || toNum(c.budget) > 0);
+        if (isActive) {
+          c.budget = budgetPerCamp;
+          c.regKpi = signupsPerCamp;
+          c.usersFtp = usersPerCamp;
+        } else {
+          c.budget = 0;
+          c.regKpi = "—";
+          c.usersFtp = "—";
+        }
+      });
+    }
+
     function addCampaign(platform) {
       if (!appData) appData = { campaigns: [] };
       const newCamp = {
@@ -793,13 +828,14 @@
         impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0,
         clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
-        regKpi: "—", regMtd: 0, regRr: 0,
-        usersFtp: "—", usersMtd: 0, usersRr: "—",
+        regKpi: 0, regMtd: 0, regRr: 0,
+        usersFtp: 0, usersMtd: 0, usersRr: "—",
         s2p: "—", revenue: 0, roi: 0
       };
       appData.campaigns.push(newCamp);
+      distributeKpisToCampaigns();
       renderDashboard();
-      showSaveToast('Campaign added. Click "Save" to keep changes.');
+      showSaveToast('Campaign added. KPIs redistributed.');
     }
 
     function deleteCampaign(campaignId, event) {
@@ -809,9 +845,10 @@
 
       if (confirm(`Delete campaign "${campaign.name}"?`)) {
         appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
+        distributeKpisToCampaigns();
         syncGlobalSummaries();
         renderDashboard();
-        showSaveToast('Campaign deleted. Click "Save" to keep changes.');
+        showSaveToast('Campaign deleted. KPIs redistributed.');
       }
     }
 
@@ -826,9 +863,9 @@
       }, 3000);
     }
 
-    // PERSIST IN LOCALSTORAGE (SURVIVES PAGE REFRESH)
     function saveDashboardData() {
       if (!appData) return;
+      distributeKpisToCampaigns();
       const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
       localStorage.setItem(key, JSON.stringify(appData));
       localStorage.setItem('wisekapital_active', JSON.stringify(appData));
@@ -836,9 +873,9 @@
       showSaveToast('✅ Changes saved successfully in this browser.');
     }
 
-    // VIEW JSON MODAL HANDLERS
     function openJsonModal() {
       if (!appData) return;
+      distributeKpisToCampaigns();
       const cleanData = {
         period: appData.period || "October 01-28, 2026",
         kpis: appData.kpis || {},
@@ -886,9 +923,9 @@
       }
     }
 
-    // DOWNLOAD UPDATED JSON FILE
     function downloadUpdatedJson() {
       if (!appData) return;
+      distributeKpisToCampaigns();
       const cleanData = {
         period: appData.period,
         kpis: appData.kpis,
@@ -908,7 +945,6 @@
       showSaveToast('📥 data.json downloaded successfully.');
     }
 
-    // RELOAD FRESH FROM GIT DISCARDING LOCAL EDITS
     function reloadFromGit() {
       if (confirm('Discard local changes in this browser and reload fresh from Git?')) {
         const key = `wisekapital_${currentLoadedMonth.toLowerCase()}`;
@@ -979,6 +1015,8 @@
         }))
       };
 
+      distributeKpisToCampaigns();
+
       document.getElementById('localFileHelper').classList.add('hidden');
       document.getElementById('dateAutoInfo').innerText = appData.period;
       setLiveBadge(sourceLabel || 'Synced');
@@ -990,7 +1028,7 @@
       currentLoadedMonth = mName;
       const storageKey = `wisekapital_${mName.toLowerCase()}`;
 
-      // 1. Check if user has previously saved changes
+      // 1. Check local saved data
       if (!forceGit) {
         const saved = localStorage.getItem(storageKey);
         if (saved) {
@@ -1002,14 +1040,14 @@
         }
       }
 
-      // 2. Fetch directly from repository
+      // 2. Fetch directly from Git
       const fetched = await fetchMonthJson(mName);
       if (fetched) {
         applyLoadedData(fetched, `${mName} Git`);
         return;
       }
 
-      // 3. Robust Fallback (Guaranteed to render)
+      // 3. Fallback
       applyLoadedData(DEFAULT_DATA, 'Default October');
     }
 
@@ -1030,8 +1068,9 @@
       document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(appData.kpis.revenue || 0).toLocaleString()}`;
       document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(appData.kpis.profit || 0).toLocaleString()}`;
 
-      syncGlobalSummaries();
-      updateCharts();
+      // Recalcular y distribuir KPIs a las campañas
+      distributeKpisToCampaigns();
+      renderDashboard();
     }
 
     function handleCellInputOrBlur(el, campaignId, field, isBlur = false) {
@@ -1039,7 +1078,7 @@
       let campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
       if (!campaign) return;
 
-      if (field === 'name' || field === 'ctr' || field === 'regKpi' || field === 'usersFtp' || field === 's2p' || field === 'usersRr') {
+      if (field === 'name' || field === 'ctr' || field === 's2p' || field === 'usersRr') {
         campaign[field] = el.innerText.trim();
       } else {
         campaign[field] = numVal;
@@ -1107,8 +1146,10 @@
         tr.className = 'hover:brightness-95 transition';
         const nameBg = c.highlight ? 'campaign-highlight-blue' : 'bg-white';
 
-        const dispRegKpi = c.regKpi !== undefined && c.regKpi !== null && c.regKpi !== '' ? c.regKpi : '—';
-        const dispUsersKpi = c.usersFtp !== undefined && c.usersFtp !== null && c.usersFtp !== '' ? c.usersFtp : '—';
+        const dispBudget = toNum(c.budget) > 0 ? `$${c.budget}` : (c.budget === 0 ? '$0' : (c.budget || '—'));
+        const dispRegKpi = toNum(c.regKpi) > 0 ? c.regKpi : (c.regKpi === 0 ? '0' : (c.regKpi || '—'));
+        const dispUsersKpi = toNum(c.usersFtp) > 0 ? c.usersFtp : (c.usersFtp === 0 ? '0' : (c.usersFtp || '—'));
+
         const dispUsersRr = c.usersRr !== undefined && c.usersRr !== null && c.usersRr !== '' ? c.usersRr : '—';
         const dispS2P = c.s2p !== undefined && c.s2p !== null && c.s2p !== '' ? c.s2p : '—';
 
@@ -1128,7 +1169,7 @@
             </div>
           </td>
           
-          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'budget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'budget', true)">$${c.budget}</td>
+          <td class="text-center font-mono font-bold readonly-auto col-tint-budget" title="Auto-calculated: Total Budget KPI / Active Campaigns">${dispBudget}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'spent')" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)">$${c.spent}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'rrBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'rrBudget', true)">$${c.rrBudget}</td>
           <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)">$${c.dailyBudget}</td>
@@ -1145,11 +1186,11 @@
           <td class="text-center font-mono editable-cell col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksRr', true)">${toNum(c.clicksRr).toLocaleString()}</td>
           <td class="text-center font-mono font-extrabold editable-cell cell-ctr col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'ctr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)">${c.ctr}</td>
           
-          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regKpi', true)">${dispRegKpi}</td>
+          <td class="text-center font-mono font-bold readonly-auto col-tint-regs" title="Auto-calculated: Total Signups KPI / Active Campaigns">${dispRegKpi}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)">${c.regMtd}</td>
           <td class="text-center font-mono editable-cell col-tint-regs ${getRrColorClass(c.regRr, c.regKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regRr', true)">${toNum(c.regRr).toLocaleString()}</td>
           
-          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersFtp')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersFtp', true)">${dispUsersKpi}</td>
+          <td class="text-center font-mono font-bold readonly-auto col-tint-users" title="Auto-calculated: Total Users KPI / Active Campaigns">${dispUsersKpi}</td>
           <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)">${c.usersMtd}</td>
           <td class="text-center font-mono editable-cell col-tint-users ${getRrColorClass(c.usersRr, c.usersFtp)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersRr', true)">${dispUsersRr}</td>
           
@@ -1174,7 +1215,9 @@
       const totBudget = sum('budget'), totSpent = sum('spent'), totRrBudget = sum('rrBudget'), totDailyBudget = sum('dailyBudget');
       const totImpKpi = sum('impKpi'), totImpMtd = sum('impMtd'), totImpRr = sum('impRr');
       const totProdViews = sum('productViews'), totV2p = sum('v2p'), totClicksKpi = sum('clicksKpi'), totClicksMtd = sum('clicksMtd'), totClicksRr = sum('clicksRr');
+      const totRegKpi = sum('regKpi');
       const totRegMtd = sum('regMtd'), totRegRr = sum('regRr');
+      const totUsersKpi = sum('usersFtp');
       const totUsersMtd = sum('usersMtd');
       const totRevenue = sum('revenue'), totRoi = sum('roi');
 
@@ -1202,10 +1245,10 @@
           <td class="font-mono font-black col-tint-clicks">${totClicksMtd}</td>
           <td class="font-mono font-black col-tint-clicks ${getRrColorClass(totClicksRr, totClicksKpi)}">${totClicksRr}</td>
           <td class="font-mono font-black col-tint-clicks">${totCtr}</td>
-          <td class="font-mono font-black col-tint-regs">—</td>
+          <td class="font-mono font-black col-tint-regs">${totRegKpi > 0 ? totRegKpi : '—'}</td>
           <td class="font-mono font-black text-slate-900 col-tint-regs">${totRegMtd}</td>
           <td class="font-mono font-black col-tint-regs">${totRegRr}</td>
-          <td class="font-mono font-black col-tint-users">—</td>
+          <td class="font-mono font-black col-tint-users">${totUsersKpi > 0 ? totUsersKpi : '—'}</td>
           <td class="font-mono font-black text-slate-900 col-tint-users">${totUsersMtd}</td>
           <td class="font-mono font-black text-slate-400 col-tint-users">—</td>
           <td class="font-mono font-black col-tint-perf">${totS2p}</td>
@@ -1376,6 +1419,7 @@
 
     async function exportToExcel() {
       if (!appData || !appData.campaigns) return;
+      distributeKpisToCampaigns();
 
       const ARGB = {
         border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D',
@@ -1510,10 +1554,10 @@
         setCell(fRow.getCell(12), sum('clicksMtd'), ARGB.tintClicks, true);
         setCell(fRow.getCell(13), sum('clicksRr'), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi'), ARGB));
         setCell(fRow.getCell(14), '2%', ARGB.tintClicks, true);
-        setCell(fRow.getCell(15), '—', ARGB.tintRegs, true);
+        setCell(fRow.getCell(15), sum('regKpi') > 0 ? sum('regKpi') : '—', ARGB.tintRegs, true);
         setCell(fRow.getCell(16), sum('regMtd'), ARGB.tintRegs, true);
         setCell(fRow.getCell(17), sum('regRr'), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi'), ARGB));
-        setCell(fRow.getCell(18), '—', ARGB.tintUsers, true);
+        setCell(fRow.getCell(18), sum('usersFtp') > 0 ? sum('usersFtp') : '—', ARGB.tintUsers, true);
         setCell(fRow.getCell(19), sum('usersMtd'), ARGB.tintUsers, true);
         setCell(fRow.getCell(20), '—', ARGB.tintUsers);
         
