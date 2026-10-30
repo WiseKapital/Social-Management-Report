@@ -194,7 +194,7 @@
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrUsers">0</td>
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrRevenue">$0</td>
                 <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrProfit">$0</td>
-                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">1:0.4</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">0.0%</td>
               </tr>
             </tbody>
           </table>
@@ -281,7 +281,6 @@
     let GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
 
     let appData = null;
-    let globalFactor = 1.0;
     let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
     let currentLoadedYear = 2026, currentLoadedMonth = "October";
 
@@ -299,11 +298,73 @@
     const utf8ToB64 = str => { const bytes = new TextEncoder().encode(str); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
     const b64ToUtf8 = b64 => { const bin = atob(b64.replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); };
     const cellEnter = (e, el) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
-    const calculateAutoRR = val => { const n = toNum(val); return n <= 0 ? 0 : Math.round(n * globalFactor); };
     const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
 
+    // CÁLCULO DINÁMICO DEL RUN-RATE BASADO EN EL DÍA ACTUAL DEL SISTEMA
+    function getDynamicRunRateFactor(year, monthIdx) {
+      const today = new Date();
+      const sysYear = today.getFullYear();
+      const sysMonth = today.getMonth();
+      const sysDay = today.getDate();
+      const totalDays = new Date(year, monthIdx + 1, 0).getDate();
+
+      if (year === sysYear && monthIdx === sysMonth) {
+        // Mes actual en curso: se divide por los días transcurridos hasta hoy
+        const elapsed = Math.max(1, sysDay);
+        return totalDays / elapsed;
+      } else if (year < sysYear || (year === sysYear && monthIdx < sysMonth)) {
+        // Mes que ya cerró: factor 1.0 (RR = MTD)
+        return 1.0;
+      }
+      return 1.0;
+    }
+
+    function calculateAutoRR(val) {
+      const n = toNum(val);
+      if (n <= 0) return 0;
+      const mIdx = fullMonthNames.indexOf(currentLoadedMonth);
+      const factor = getDynamicRunRateFactor(currentLoadedYear, mIdx >= 0 ? mIdx : 9);
+      return Math.round(n * factor);
+    }
+
+    // FORMATEO DINÁMICO DE FECHA SEGÚN EL DÍA ACTUAL (EJ: October 01-30, 2026)
+    function getDynamicPeriodString(year, monthIdx) {
+      const today = new Date();
+      const mName = fullMonthNames[monthIdx];
+      const totalDays = new Date(year, monthIdx + 1, 0).getDate();
+      let lastDay = totalDays;
+      if (year === today.getFullYear() && monthIdx === today.getMonth()) {
+        lastDay = Math.min(totalDays, today.getDate());
+      }
+      const dayStr = String(lastDay).padStart(2, '0');
+      return `${mName} 01-${dayStr}, ${year}`;
+    }
+
+    // CÁLCULO Y FORMATEO DE ROI EN PORCENTAJE (%)
+    function calculateRoi(revenue, spent) {
+      const sp = toNum(spent);
+      const rev = toNum(revenue);
+      if (sp <= 0) {
+        return rev > 0 ? '+100.0%' : '0.0%';
+      }
+      const roiPercent = ((rev - sp) / sp) * 100;
+      const sign = roiPercent > 0 ? '+' : '';
+      return `${sign}${roiPercent.toFixed(1)}%`;
+    }
+
+    function getRoiColorClass(revenue, spent) {
+      const sp = toNum(spent);
+      const rev = toNum(revenue);
+      if (sp <= 0) return rev > 0 ? 'text-emerald-700 font-extrabold' : 'text-slate-400 font-extrabold';
+      const roiPercent = ((rev - sp) / sp) * 100;
+      if (roiPercent > 0) return 'text-emerald-700 font-extrabold';
+      if (roiPercent < 0) return 'text-rose-600 font-extrabold';
+      return 'text-slate-500 font-extrabold';
+    }
+
+    const sysToday = new Date();
     let fromDate = new Date(2026, 9, 1);
-    let toDate = new Date(2026, 9, 31);
+    let toDate = new Date(2026, 9, sysToday.getDate());
     let fromViewYear = 2026, toViewYear = 2026;
     const fmtMonthYear = d => `${shortMonthNames[d.getMonth()]} ${d.getFullYear()}`;
 
@@ -331,6 +392,7 @@
       renderMonthGrid(t);
     }
 
+    // CALENDARIO CON SELECCIÓN INDEPENDIENTE
     function renderMonthGrid(t) {
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
@@ -389,6 +451,7 @@
       return list;
     }
 
+    // DISTRIBUCIÓN EQUITATIVA Y AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (META, INSTAGRAM, X)
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
       const allCamps = appData.campaigns;
@@ -410,8 +473,12 @@
     }
 
     function createEmptyMonth(mName, year) {
-      const d = new Date(year, fullMonthNames.indexOf(mName) + 1, 0).getDate();
-      return { period: `${mName} 01-${d}, ${year}`, kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] };
+      const mIdx = fullMonthNames.indexOf(mName);
+      return { 
+        period: getDynamicPeriodString(year, mIdx >= 0 ? mIdx : 9), 
+        kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, 
+        campaigns: [] 
+      };
     }
 
     function addCampaign(platform) {
@@ -421,7 +488,7 @@
         name: `New Campaign`, platform, highlight: false,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
-        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%"
       });
       distributeKpisToCampaigns();
       renderDashboard();
@@ -529,7 +596,7 @@
       try {
         const parsed = JSON.parse(document.getElementById('jsonModalCode').value);
         appData = {
-          period: parsed.period || `${currentLoadedMonth} ${currentLoadedYear}`,
+          period: parsed.period || getDynamicPeriodString(currentLoadedYear, fullMonthNames.indexOf(currentLoadedMonth)),
           kpis: parsed.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
           campaigns: (parsed.campaigns || []).map((c, i) => ({ ...c, id: `c_${i}_${Date.now()}` }))
         };
@@ -586,7 +653,7 @@
       const months = getMonthsInRange(startObj, endObj);
 
       if (months.length === 1) {
-        const { year, monthName } = months[0];
+        const { year, monthName, monthIndex } = months[0];
         currentLoadedYear = year;
         currentLoadedMonth = monthName;
         setTxt('headerPathBadge', `${year}/${monthName}/data.json`);
@@ -594,7 +661,7 @@
         const result = await fetchFreshJson(year, monthName);
         if (result.status === 'found' && result.data) {
           appData = {
-            period: result.data.period || `${monthName} ${year}`,
+            period: getDynamicPeriodString(year, monthIndex),
             kpis: result.data.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
             campaigns: (result.data.campaigns || []).map((c, i) => {
               const r = toNum(c.regMtd), u = toNum(c.usersMtd);
@@ -658,7 +725,7 @@
           c.clicksRr = calculateAutoRR(c.clicksMtd);
           c.regRr = calculateAutoRR(c.regMtd);
           c.usersRr = calculateAutoRR(c.usersMtd);
-          c.roi = toNum(c.revenue) - toNum(c.spent);
+          c.roi = calculateRoi(c.revenue, c.spent);
           c.ctr = toNum(c.impMtd) > 0 ? ((toNum(c.clicksMtd) / toNum(c.impMtd)) * 100).toFixed(1) + '%' : '0%';
           const r = toNum(c.regMtd), u = toNum(c.usersMtd);
           c.s2p = r > 0 ? ((u / r) * 100).toFixed(1) + '%' : '0.0%';
@@ -695,7 +762,6 @@
       c.clicksRr = calculateAutoRR(c.clicksMtd);
       c.regRr = calculateAutoRR(c.regMtd);
       c.usersRr = calculateAutoRR(c.usersMtd);
-      c.roi = toNum(c.revenue) - toNum(c.spent);
 
       const reg = toNum(c.regMtd);
       const usr = toNum(c.usersMtd);
@@ -748,7 +814,7 @@
         const totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
         const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr');
         const totUK = sum('usersFtp'), totUM = sum('usersMtd'), totUR = sum('usersRr');
-        const totRev = sum('revenue'), totRoi = sum('roi');
+        const totRev = sum('revenue');
 
         const card = document.createElement('div');
         card.id = `section_${p.key}`;
@@ -821,7 +887,8 @@
                       <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : 0}</td>
                       <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
-                      <td class="col-perf font-mono font-extrabold readonly-cell ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
+                      <!-- ROI EN FORMATO PORCENTAJE (%) Y NO EDITABLE -->
+                      <td class="col-perf font-mono font-extrabold readonly-cell ${getRoiColorClass(c.revenue, c.spent)}">${calculateRoi(c.revenue, c.spent)}</td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -837,7 +904,8 @@
                     <td class="col-users">${totUK > 0 ? totUK : '—'}</td><td class="col-users">${totUM}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR}</td>
                     <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
                     <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
-                    <td class="col-perf ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'}">${totRoi < 0 ? '-$' + Math.abs(totRoi) : '$' + totRoi}</td>
+                    <!-- TOTAL ROI EN PORCENTAJE (%) -->
+                    <td class="col-perf ${getRoiColorClass(totRev, totS)}">${calculateRoi(totRev, totS)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -856,6 +924,10 @@
 
       setTxt('tpMtdBudget', `$${totSpent}`); setTxt('tpMtdSignups', totSign); setTxt('tpMtdUsers', totUsers); setTxt('tpMtdRevenue', `$${totRev.toFixed(0)}`); setTxt('tpMtdProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       setTxt('tpRrBudget', `$${totRRB}`); setTxt('tpRrSignups', totRRSign); setTxt('tpRrUsers', totRRUsers); setTxt('tpRrRevenue', `$${calculateAutoRR(totRev)}`); setTxt('tpRrProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(calculateAutoRR(totProf))}`);
+      
+      // TEAM ROI EN PORCENTAJE (%)
+      const teamRoi = calculateRoi(totRev, totSpent);
+      setTxt('tpRoiRatio', teamRoi);
 
       setTxt('kpiBudget', `$${totSpent}`); setTxt('kpiSignups', totSign); setTxt('kpiFtd', totUsers); setTxt('kpiRevenue', `$${totRev.toFixed(0)}`); setTxt('kpiProfit', `${totProf < 0 ? '-$' : '$'}${Math.abs(totProf)}`);
       
@@ -874,9 +946,9 @@
 
       setTxt('pieMetaSignups', mSign); setTxt('pieIGSignups', iSign);
       setTxt('pieMetaUsers', mUsr); setTxt('pieIGUsers', iUsr);
-      setTxt('badgeRoiMeta', `ROI: ${mS > 0 ? (((mR - mS) / mS) * 100).toFixed(1) : 0}%`);
-      setTxt('badgeRoiIG', `ROI: ${iS > 0 ? (((iR - iS) / iS) * 100).toFixed(1) : 0}%`);
-      setTxt('badgeRoiX', `ROI: ${xS > 0 ? (((xR - xS) / xS) * 100).toFixed(1) : 0}%`);
+      setTxt('badgeRoiMeta', `ROI: ${calculateRoi(mR, mS)}`);
+      setTxt('badgeRoiIG', `ROI: ${calculateRoi(iR, iS)}`);
+      setTxt('badgeRoiX', `ROI: ${calculateRoi(xR, xS)}`);
 
       if (chartSignups) chartSignups.destroy();
       chartSignups = new Chart(document.getElementById('signupsPieChart').getContext('2d'), {
@@ -902,7 +974,7 @@
       chartXBR = miniBar('xBudgetRevenueChart', xS, xR, chartXBR);
     }
 
-    // EXPORTACIÓN A EXCEL IDÉNTICA A LA CAPTURA (COLORES, GRUPOS Y FORMATO PERFECTO)
+    // EXPORTACIÓN A EXCEL CON ROI EN % Y FORMATO ESTILIZADO
     async function exportToExcel() {
       if (!appData || !appData.campaigns) return;
       distributeKpisToCampaigns();
@@ -951,6 +1023,12 @@
         return (kpi > 0 ? rr >= kpi : rr > 0) ? ARGB.textGreen : ARGB.textRed;
       }
 
+      function getRoiArgb(rev, sp) {
+        const s = toNum(sp), r = toNum(rev);
+        if (s <= 0) return r > 0 ? ARGB.textGreen : ARGB.textDark;
+        return ((r - s) / s) >= 0 ? ARGB.textGreen : ARGB.textRed;
+      }
+
       const wb = new ExcelJS.Workbook();
       wb.creator = 'WiseKapital';
       const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
@@ -967,7 +1045,6 @@
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
         let r = startRow;
 
-        // BANNER
         ws.mergeCells(r, 1, r, 23);
         const tc = ws.getCell(r, 1);
         tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
@@ -977,7 +1054,6 @@
         ws.getRow(r).height = 24;
         r++;
 
-        // CABECERA NIVEL 1
         const h1 = r, h2 = r + 1;
         mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
         mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
@@ -988,7 +1064,6 @@
         mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
         mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
 
-        // CABECERA NIVEL 2
         const subs = [
           { c: 2, t: 'Budget', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
           { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews },
@@ -1001,7 +1076,6 @@
         subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true));
         r += 2;
 
-        // FILAS DE CAMPAÑAS
         camps.forEach(c => {
           const row = ws.getRow(r);
           row.height = 19;
@@ -1027,11 +1101,11 @@
           setCell(row.getCell(20), toNum(c.usersRr) > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
           setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
           setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
-          setCell(row.getCell(23), toNum(c.roi) < 0 ? `-$${Math.abs(toNum(c.roi))}` : `$${toNum(c.roi)}`, ARGB.tintPerf, true, toNum(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
+          // EXCEL ROI EN FORMATO %
+          setCell(row.getCell(23), calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, getRoiArgb(c.revenue, c.spent));
           r++;
         });
 
-        // FILA DE TOTAL
         const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
         const fRow = ws.getRow(r);
         fRow.height = 20;
@@ -1057,11 +1131,11 @@
         setCell(fRow.getCell(20), sum('usersRr') > 0 ? sum('usersRr') : '—', ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
         setCell(fRow.getCell(21), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
         setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
-        const tRoi = sum('roi');
-        setCell(fRow.getCell(23), tRoi < 0 ? `-$ ${Math.abs(tRoi)}` : `$ ${tRoi}`, ARGB.tintPerf, true, tRoi < 0 ? ARGB.textRed : ARGB.textGreen);
+        // EXCEL TOTAL ROI EN FORMATO %
+        setCell(fRow.getCell(23), calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, getRoiArgb(sum('revenue'), sum('spent')));
         r++;
 
-        return r + 1; // Espacio entre tablas
+        return r + 1;
       }
 
       let currentRow = 1;
@@ -1076,7 +1150,7 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      showSaveToast("📊 Excel exported successfully with full design!");
+      showSaveToast("📊 Excel exported successfully!");
     }
 
     document.addEventListener("DOMContentLoaded", () => {
