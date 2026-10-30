@@ -1,18 +1,18 @@
 {
   "period": "October 01-31, 2026",
   "kpis": {
-    "budget": 0,
-    "signups": 0,
-    "users": 0,
-    "revenue": 0,
-    "profit": 0
+    "budget": 800,
+    "signups": 208,
+    "users": 16,
+    "revenue": 2400,
+    "profit": 1600
   },
   "campaigns": [
     {
       "name": "New Campaign",
       "platform": "meta",
       "highlight": false,
-      "budget": 0,
+      "budget": 800,
       "spent": 0,
       "rrBudget": 0,
       "dailyBudget": 0,
@@ -25,10 +25,10 @@
       "clicksMtd": 0,
       "clicksRr": 0,
       "ctr": "0%",
-      "regKpi": 0,
+      "regKpi": 208,
       "regMtd": 0,
       "regRr": 0,
-      "usersFtp": 0,
+      "usersFtp": 16,
       "usersMtd": 0,
       "usersRr": "—",
       "s2p": "—",
