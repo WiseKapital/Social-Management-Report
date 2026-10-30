@@ -93,18 +93,18 @@
           <div class="hidden sm:block">
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
-              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 inline-block animate-pulse"></span> Querying
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> Live Sync
               </span>
             </div>
-            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">Loading dates...</p>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium flex items-center gap-1 mt-0.5">Loading data...</p>
           </div>
         </div>
 
-        <!-- ACTIONS & MONTH/YEAR PICKER (STYLE IMAGE 2) -->
+        <!-- ACTIONS & MONTH/YEAR PICKER -->
         <div class="flex items-center gap-3 flex-wrap">
 
-          <!-- CALENDARIO ESTILO SELECTOR DE MESES -->
+          <!-- CALENDARIO SELECTOR DE MESES -->
           <div class="flex items-center gap-2 font-bold text-xs">
             <span class="text-slate-400 tracking-wider">FROM</span>
             <div class="relative">
@@ -148,7 +148,7 @@
           <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
 
           <button id="headerImportJsonBtn" onclick="document.getElementById('localFileInput').click()" class="hidden px-3.5 py-1.5 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>Import</span>
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>Import JSON</span>
           </button>
 
           <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
@@ -176,7 +176,7 @@
     <div id="localFileHelper" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
       <div>
         <span class="font-bold text-sm block mb-0.5">📁 Local File Mode Detected</span>
-        <p class="text-amber-800">Browser restricts local file reading. Select your <code>data.json</code> manually to load stats:</p>
+        <p class="text-amber-800">El navegador restringe lecturas locales directas por seguridad. Selecciona tu <code>data.json</code> manualmente:</p>
       </div>
       <div>
         <button onclick="document.getElementById('localFileInput').click()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
@@ -582,9 +582,8 @@
     let chartSignups = null, chartUsers = null;
     let chartMetaBR = null, chartIGBR = null, chartXBR = null;
     
-    // NOMBRES DE MESES (CORTO Y LARGO)
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const fullMonthNames = ["October", "November", "December", "January", "February", "March", "April", "May", "June", "July", "August", "September"];
     
     function getSystemToday() {
       const now = new Date();
@@ -592,18 +591,12 @@
     }
 
     const MIN_SYSTEM_DATE = new Date(2026, 9, 1); // Octubre 1, 2026
-
-    let today = getSystemToday();
-    
-    // Límites del sistema
     const sysToday = getSystemToday();
     const maxSelectableYear = Math.max(sysToday.getFullYear(), 2026);
     const maxSelectableMonth = (sysToday.getFullYear() > 2026) ? sysToday.getMonth() : Math.max(sysToday.getMonth(), 9);
 
-    let fromDate = new Date(2026, 9, 1); // Octubre 2026 mínimo
-    let toDate = (sysToday.getFullYear() === 2026 && sysToday.getMonth() === 9) 
-      ? new Date(sysToday) 
-      : new Date(2026, 9, 31);
+    let fromDate = new Date(2026, 9, 1);
+    let toDate = (sysToday.getFullYear() === 2026 && sysToday.getMonth() === 9) ? new Date(sysToday) : new Date(2026, 9, 28);
 
     let fromViewYear = fromDate.getFullYear();
     let toViewYear = toDate.getFullYear();
@@ -634,9 +627,7 @@
       const isFrom = (t === 'from');
       let y = isFrom ? fromViewYear : toViewYear;
       y += s;
-      
       if (y < 2026 || y > maxSelectableYear) return;
-
       if (isFrom) fromViewYear = y;
       else toViewYear = y;
       renderMonthGrid(t);
@@ -658,7 +649,6 @@
         const isBeforeMin = (y < 2026 || (y === 2026 && m < 9));
         const isAfterMax = (y > maxSelectableYear || (y === maxSelectableYear && m > maxSelectableMonth));
         const isDisabled = isBeforeMin || isAfterMax;
-
         const isSelected = (active.getFullYear() === y && active.getMonth() === m);
 
         if (isDisabled) {
@@ -671,22 +661,10 @@
             e.stopPropagation();
             if (isFrom) {
               fromDate = new Date(y, m, 1);
-              if (fromDate > toDate) {
-                if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
-                  toDate = new Date(sysToday);
-                } else {
-                  toDate = new Date(y, m + 1, 0);
-                }
-              }
+              if (fromDate > toDate) toDate = new Date(y, m + 1, 0);
             } else {
-              if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
-                toDate = new Date(sysToday);
-              } else {
-                toDate = new Date(y, m + 1, 0);
-              }
-              if (toDate < fromDate) {
-                fromDate = new Date(y, m, 1);
-              }
+              toDate = new Date(y, m + 1, 0);
+              if (toDate < fromDate) fromDate = new Date(y, m, 1);
             }
             document.getElementById(t + 'Pop').classList.add('hidden');
             updateDatesUI();
@@ -701,125 +679,69 @@
       if (!e.target.closest('#fromPop') && !e.target.closest('#fromBtn')) document.getElementById('fromPop').classList.add('hidden');
       if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
     });
-    
-    // MATHEMATICS & UI LOGIC
+
+    const toNum = val => {
+      if (val === undefined || val === null || val === '—' || val === '' || val === '-') return 0;
+      const n = parseFloat(String(val).replace(/[$,%]/g, ''));
+      return isNaN(n) ? 0 : n;
+    };
+
     function calculateAutoRR(val) {
-      if (val === undefined || val === null || val === '' || val === '—') return 0;
-      const num = parseFloat(String(val).replace(/[$,%]/g, ''));
-      if (isNaN(num) || num <= 0) return 0;
+      const num = toNum(val);
+      if (num <= 0) return 0;
       return Math.round(num * globalFactor);
     }
 
     function getRrColorClass(rrVal, kpiVal) {
-      const rr = parseFloat(String(rrVal).replace(/[$,%]/g, '')) || 0;
-      const kpi = parseFloat(String(kpiVal).replace(/[$,%]/g, '')) || 0;
-      if (kpi > 0) { return rr >= kpi ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; }
+      const rr = toNum(rrVal);
+      const kpi = toNum(kpiVal);
+      if (kpi > 0) return rr >= kpi ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
       return rr > 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold';
     }
 
     function getRrColorArgb(rrVal, kpiVal, ARGB) {
-      const rr = parseFloat(String(rrVal).replace(/[$,%]/g, '')) || 0;
-      const kpi = parseFloat(String(kpiVal).replace(/[$,%]/g, '')) || 0;
-      if (kpi > 0) { return rr >= kpi ? ARGB.textGreen : ARGB.textRed; }
+      const rr = toNum(rrVal);
+      const kpi = toNum(kpiVal);
+      if (kpi > 0) return rr >= kpi ? ARGB.textGreen : ARGB.textRed;
       return rr > 0 ? ARGB.textGreen : ARGB.textRed;
     }
 
     function calculateAutoS2P(regVal, userVal) {
-      const reg = parseFloat(String(regVal).replace(/[$,%]/g, '')) || 0;
-      const users = parseFloat(String(userVal).replace(/[$,%]/g, '')) || 0;
+      const reg = toNum(regVal);
+      const users = toNum(userVal);
       if (reg <= 0 || users <= 0) return '0.0%';
       return ((users / reg) * 100).toFixed(1) + '%';
     }
 
-    function ensureCampaignIds() {
-      if (!appData || !appData.campaigns) return;
-      appData.campaigns.forEach((c, idx) => { if (!c.id) c.id = 'camp_' + idx; });
-    }
-
-    function distributeKpisToCampaigns() {
-      if (!appData || !appData.campaigns || !appData.kpis) return;
-      const active = appData.campaigns.filter(c => {
-        const p = (c.platform || '').toLowerCase();
-        return p === 'meta' || p === 'instagram' || (p === 'x' && (Number(c.budget) > 0 || Number(c.spent) > 0));
-      });
-
-      const n = active.length || 1;
-      const bKpi = Math.round((Number(appData.kpis.budget) || 0) / n);
-      const sKpi = Math.round((Number(appData.kpis.signups) || 0) / n);
-      const uKpi = Math.round((Number(appData.kpis.users) || 0) / n);
-
-      appData.campaigns.forEach(c => {
-        const p = (c.platform || '').toLowerCase();
-        const isActive = p === 'meta' || p === 'instagram' || (p === 'x' && (Number(c.budget) > 0 || Number(c.spent) > 0));
-        if (isActive) {
-          c.budget = bKpi; c.regKpi = sKpi; c.usersFtp = uKpi;
-        } else {
-          c.budget = 0; c.regKpi = 0; c.usersFtp = 0;
-        }
-      });
-    }
-
-    function createDefaultBase(platform, num) {
-      const names = {
-        meta: ["V1 Imperial Sweeps - FB", "Imperial Sweeps — Facebook", "V2 SweepzKings - FB", "SweepzKings — Facebook"],
-        instagram: ["Imperial Sweeps — Instagram", "SweepzKings — Instagram"],
-        x: ["XWannnaSee_Sep"]
-      };
-      return {
-        id: `camp_${platform}_${num}`, name: names[platform][num] || `New ${platform}`, platform: platform,
-        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0, productViews: 0, v2p: 0,
-        clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%", regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: 0
-      };
-    }
-
-    function createDefaultMonthData(monthName, year) {
-      return {
-        period: `${monthName} ${year}`,
-        kpis: { budget: 800, signups: 250, users: 18, revenue: 1200, profit: 400 },
-        campaigns: [
-          {...createDefaultBase('meta', 0), highlight: true, impKpi: 1400, clicksKpi: 120},
-          {...createDefaultBase('meta', 1), impKpi: 9000, clicksKpi: 500},
-          {...createDefaultBase('meta', 2), highlight: true, impKpi: 1100, clicksKpi: 50},
-          {...createDefaultBase('meta', 3), impKpi: 16000, clicksKpi: 200},
-          {...createDefaultBase('instagram', 0), impKpi: 6800, clicksKpi: 210},
-          {...createDefaultBase('instagram', 1), impKpi: 13000, clicksKpi: 250},
-          {...createDefaultBase('x', 0)}
-        ]
-      };
-    }
-
     function addCampaign(platform) {
-      ensureCampaignIds();
-      appData.campaigns.push(createDefaultBase(platform, Date.now()));
-      distributeKpisToCampaigns();
-      recalcAll();
+      if (!appData) appData = { campaigns: [] };
+      const newCamp = {
+        id: `camp_${platform}_${Date.now()}`,
+        name: `New ${platform.toUpperCase()} Campaign`,
+        platform: platform,
+        highlight: false,
+        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0,
+        impKpi: 0, impMtd: 0, impRr: 0,
+        productViews: 0, v2p: 0,
+        clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0%",
+        regKpi: "—", regMtd: 0, regRr: 0,
+        usersFtp: "—", usersMtd: 0, usersRr: "—",
+        s2p: "—", revenue: 0, roi: 0
+      };
+      appData.campaigns.push(newCamp);
       renderDashboard();
     }
 
     function deleteCampaign(campaignId, event) {
       if (event) event.stopPropagation();
-      ensureCampaignIds();
       const campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
       if (!campaign) return;
 
       if (confirm(`¿Eliminar la campaña "${campaign.name}"?`)) {
         appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
-        distributeKpisToCampaigns();
-        recalcAll();
+        syncGlobalSummaries();
         renderDashboard();
       }
-    }
-
-    function recalcAll() {
-      (appData.campaigns || []).forEach(c => {
-        c.rrBudget = calculateAutoRR(c.spent);
-        c.impRr = calculateAutoRR(c.impMtd);
-        c.clicksRr = calculateAutoRR(c.clicksMtd);
-        c.regRr = calculateAutoRR(c.regMtd);
-        c.usersRr = calculateAutoRR(c.usersMtd);
-        c.s2p = calculateAutoS2P(c.regMtd, c.usersMtd);
-        c.roi = (Number(c.revenue) || 0) - (Number(c.spent) || 0);
-      });
     }
 
     function loadLocalFile(event) {
@@ -829,18 +751,8 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
-          appData = JSON.parse(e.target.result);
-          document.getElementById('localFileHelper').classList.add('hidden');
-          setLiveBadge('local', 'Local Loaded');
-          ensureCampaignIds();
-          distributeKpisToCampaigns();
-          
-          const endDateObj = getSystemToday();
-          const targetDays = new Date(endDateObj.getFullYear(), endDateObj.getMonth() + 1, 0).getDate();
-          globalFactor = targetDays / (endDateObj.getDate() || 1);
-          
-          recalcAll();
-          renderDashboard();
+          const raw = JSON.parse(e.target.result);
+          applyLoadedData(raw, 'Local File');
         } catch (err) {
           alert("Error parsing JSON: " + err.message);
         }
@@ -848,140 +760,83 @@
       reader.readAsText(file);
     }
 
-    function setLiveBadge(type, label) {
+    function setLiveBadge(label) {
       const badge = document.getElementById('liveStatusBadge');
-      if (!badge) return;
-      if (type === 'server') {
+      if (badge) {
         badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
-      } else if (type === 'auto') {
-        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1 inline-block animate-pulse"></span> Auto Generated`;
-      } else if (type === 'local') {
-        badge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1 inline-block"></span> ${label}`;
       }
     }
 
-    function getMonthsInRange(startObj, endObj) {
-      const months = [];
-      let curr = new Date(startObj.getFullYear(), startObj.getMonth(), 1);
-      while (curr <= endObj) {
-        months.push({ monthIndex: curr.getMonth(), monthName: fullMonthNames[curr.getMonth()], year: curr.getFullYear() });
-        curr.setMonth(curr.getMonth() + 1);
+    async function fetchMonthJson(monthName) {
+      const paths = [
+        `./${monthName}/data.json`,
+        `${monthName}/data.json`,
+        `./${monthName.toLowerCase()}/data.json`,
+        `${monthName.toLowerCase()}/data.json`,
+        `./data.json`,
+        `data.json`
+      ];
+
+      for (const p of paths) {
+        try {
+          const res = await fetch(`${p}?v=${Date.now()}`, { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && (data.campaigns || data.kpis)) {
+              console.log(`[WiseKapital] JSON cargado exitosamente desde: ${p}`);
+              return data;
+            }
+          }
+        } catch (err) {}
       }
-      return months;
+      return null;
+    }
+
+    function applyLoadedData(raw, sourceLabel) {
+      appData = {
+        period: raw.period || "October 2026",
+        kpis: raw.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+        // Asignar ID único basado en índice y nombre para que NUNCA se colapsen
+        campaigns: (raw.campaigns || []).map((c, idx) => ({
+          ...c,
+          id: c.id || `camp_${idx}_${(c.name || 'camp').replace(/[^a-zA-Z0-9]/g, '_')}`
+        }))
+      };
+
+      document.getElementById('localFileHelper').classList.add('hidden');
+      document.getElementById('headerImportJsonBtn').classList.add('hidden');
+      document.getElementById('dateAutoInfo').innerText = appData.period;
+      setLiveBadge(sourceLabel || 'Git Live');
+      renderDashboard();
     }
 
     async function loadDataForRange(startObj, endObj) {
-      const months = getMonthsInRange(startObj, endObj);
       const isLocal = window.location.protocol === 'file:';
+      const mName = fullMonthNames[startObj.getMonth()] || "October";
 
-      let mergedKpis = { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 };
-      let mergedCampaignsMap = new Map();
-      let fetchedAny = false;
-
-      let totalTargetDays = 0;
-      months.forEach(m => {
-        totalTargetDays += new Date(m.year, m.monthIndex + 1, 0).getDate();
-      });
-
-      const msDiff = endObj.getTime() - startObj.getTime();
-      const daysSelected = Math.max(1, Math.ceil(msDiff / (1000 * 3600 * 24)) + 1);
-      
-      globalFactor = daysSelected > 0 ? (totalTargetDays / daysSelected) : 1;
-
-      for (const m of months) {
-        let mData = null;
-
-        try {
-          let path = `./${m.monthName}/data.json?v=${Date.now()}`;
-          let res = await fetch(path, { cache: 'no-store' });
-          if (!res.ok && m.monthName.toLowerCase() === 'october') {
-            res = await fetch('./data.json?v=' + Date.now(), { cache: 'no-store' });
-          }
-          if (res.ok) {
-            mData = await res.json();
-            fetchedAny = true;
-          }
-        } catch(e) {}
-
-        if (!mData) mData = createDefaultMonthData(m.monthName, m.year);
-
-        mergedKpis.budget += Number(mData.kpis.budget) || 0;
-        mergedKpis.signups += Number(mData.kpis.signups) || 0;
-        mergedKpis.users += Number(mData.kpis.users) || 0;
-        mergedKpis.revenue += Number(mData.kpis.revenue) || 0;
-        mergedKpis.profit += Number(mData.kpis.profit) || 0;
-
-        (mData.campaigns || []).forEach(c => {
-          if (!mergedCampaignsMap.has(c.id)) {
-            mergedCampaignsMap.set(c.id, JSON.parse(JSON.stringify(c)));
-          } else {
-            let ex = mergedCampaignsMap.get(c.id);
-            ex.budget += Number(c.budget) || 0;
-            ex.spent += Number(c.spent) || 0;
-            ex.dailyBudget += Number(c.dailyBudget) || 0;
-            ex.impKpi += Number(c.impKpi) || 0;
-            ex.impMtd += Number(c.impMtd) || 0;
-            ex.productViews += Number(c.productViews) || 0;
-            ex.v2p += Number(c.v2p) || 0;
-            ex.clicksKpi += Number(c.clicksKpi) || 0;
-            ex.clicksMtd += Number(c.clicksMtd) || 0;
-            ex.regKpi += Number(c.regKpi) || 0;
-            ex.regMtd += Number(c.regMtd) || 0;
-            ex.usersFtp += Number(c.usersFtp) || 0;
-            ex.usersMtd += Number(c.usersMtd) || 0;
-            ex.revenue += Number(c.revenue) || 0;
-          }
-        });
-      }
-
-      let finalCampaigns = Array.from(mergedCampaignsMap.values());
-      finalCampaigns.forEach(c => {
-        c.rrBudget = Math.round((Number(c.spent) || 0) * globalFactor);
-        c.impRr = Math.round((Number(c.impMtd) || 0) * globalFactor);
-        c.clicksRr = Math.round((Number(c.clicksMtd) || 0) * globalFactor);
-        c.regRr = Math.round((Number(c.regMtd) || 0) * globalFactor);
-        c.usersRr = Math.round((Number(c.usersMtd) || 0) * globalFactor);
-        
-        c.ctr = c.impMtd > 0 ? Math.round((c.clicksMtd / c.impMtd) * 100) + '%' : '0%';
-        c.s2p = calculateAutoS2P(c.regMtd, c.usersMtd);
-        c.roi = c.revenue - c.spent;
-      });
-
-      appData = {
-        period: `${fmtMDY(startObj)} - ${fmtMDY(endObj)}`,
-        kpis: mergedKpis,
-        campaigns: finalCampaigns
-      };
-
-      const monStr = months.length === 1 ? months[0].monthName : 'Multi-Month';
-      document.getElementById('dateAutoInfo').innerText = `Data from ${fmtMonthYear(startObj)} to ${fmtMonthYear(endObj)}`;
-
-      if (fetchedAny && !isLocal) {
-        document.getElementById('localFileHelper').classList.add('hidden');
-        document.getElementById('headerImportJsonBtn').classList.add('hidden');
-        setLiveBadge('server', monStr);
+      const fetched = await fetchMonthJson(mName);
+      if (fetched) {
+        applyLoadedData(fetched, `${mName} Git`);
       } else if (isLocal) {
         document.getElementById('localFileHelper').classList.remove('hidden');
         document.getElementById('headerImportJsonBtn').classList.remove('hidden');
-        setLiveBadge('auto', 'Awaiting Import');
+        document.getElementById('dateAutoInfo').innerText = "Awaiting manual data.json import";
       } else {
-        setLiveBadge('auto', monStr);
+        document.getElementById('dateAutoInfo').innerText = "data.json not found in repository";
       }
-
-      renderDashboard();
     }
 
     function onKpiEdit(el, field) {
       if (!appData) return;
       if (!appData.kpis) appData.kpis = {};
 
-      let numVal = parseFloat(el.innerText.replace(/[$,%]/g, '').trim());
-      appData.kpis[field] = isNaN(numVal) ? 0 : numVal;
+      let numVal = toNum(el.innerText);
+      appData.kpis[field] = numVal;
 
-      el.innerText = (field === 'budget' || field === 'revenue' || field === 'profit') ? `$${Number(appData.kpis[field]).toLocaleString()}` : Number(appData.kpis[field]).toLocaleString();
+      el.innerText = (field === 'budget' || field === 'revenue' || field === 'profit') 
+        ? `$${Number(appData.kpis[field]).toLocaleString()}` 
+        : Number(appData.kpis[field]).toLocaleString();
 
       document.getElementById('kpiTargetBudget').innerText = `KPI: $${appData.kpis.budget}`;
       document.getElementById('kpiTargetSignups').innerText = `KPI: ${appData.kpis.signups}`;
@@ -989,79 +844,26 @@
       document.getElementById('kpiTargetRevenue').innerText = `KPI: $${Number(appData.kpis.revenue || 0).toLocaleString()}`;
       document.getElementById('kpiTargetProfit').innerText = `KPI: $${Number(appData.kpis.profit || 0).toLocaleString()}`;
 
-      distributeKpisToCampaigns();
-      renderDashboard();
+      syncGlobalSummaries();
+      updateCharts();
     }
 
     function handleCellInputOrBlur(el, campaignId, field, isBlur = false) {
-      let numVal = parseFloat(el.innerText.replace(/[$,%]/g, '').trim());
-      ensureCampaignIds();
-
+      let numVal = toNum(el.innerText);
       let campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
       if (!campaign) return;
 
-      if (field === 'name' || field === 'ctr') {
+      if (field === 'name' || field === 'ctr' || field === 'regKpi' || field === 'usersFtp' || field === 's2p' || field === 'usersRr') {
         campaign[field] = el.innerText.trim();
       } else {
-        campaign[field] = isNaN(numVal) ? 0 : numVal;
+        campaign[field] = numVal;
       }
 
       campaign.rrBudget = calculateAutoRR(campaign.spent);
       campaign.impRr = calculateAutoRR(campaign.impMtd);
       campaign.clicksRr = calculateAutoRR(campaign.clicksMtd);
       campaign.regRr = calculateAutoRR(campaign.regMtd);
-      campaign.usersRr = calculateAutoRR(campaign.usersMtd);
-      campaign.s2p = calculateAutoS2P(campaign.regMtd, campaign.usersMtd);
-      campaign.roi = (Number(campaign.revenue) || 0) - (Number(campaign.spent) || 0);
-
-      if (campaign.impMtd > 0 && (field === 'impMtd' || field === 'clicksMtd')) {
-        campaign.ctr = Math.round((campaign.clicksMtd / campaign.impMtd) * 100) + '%';
-      }
-
-      const tr = el.closest('tr');
-      if (tr) {
-        const rrB = tr.querySelector('.cell-rr-budget');
-        if (rrB) {
-          rrB.innerText = `$${campaign.rrBudget}`;
-          rrB.className = `text-center font-mono readonly-auto cell-rr-budget col-tint-budget ${getRrColorClass(campaign.rrBudget, campaign.budget)}`;
-        }
-
-        const rrI = tr.querySelector('.cell-rr-imp');
-        if (rrI) {
-          rrI.innerText = campaign.impRr > 0 ? campaign.impRr.toLocaleString() : '0';
-          rrI.className = `text-center font-mono readonly-auto cell-rr-imp col-tint-views ${getRrColorClass(campaign.impRr, campaign.impKpi)}`;
-        }
-
-        const rrC = tr.querySelector('.cell-rr-clicks');
-        if (rrC) {
-          rrC.innerText = campaign.clicksRr > 0 ? campaign.clicksRr.toLocaleString() : '0';
-          rrC.className = `text-center font-mono readonly-auto cell-rr-clicks col-tint-clicks ${getRrColorClass(campaign.clicksRr, campaign.clicksKpi)}`;
-        }
-
-        const ctr = tr.querySelector('.cell-ctr');
-        if (ctr && campaign.ctr) ctr.innerText = campaign.ctr;
-
-        const rrR = tr.querySelector('.cell-rr-reg');
-        if (rrR) {
-          rrR.innerText = campaign.regRr > 0 ? campaign.regRr.toLocaleString() : '0';
-          rrR.className = `text-center font-mono readonly-auto cell-rr-reg col-tint-regs ${getRrColorClass(campaign.regRr, campaign.regKpi)}`;
-        }
-
-        const rrU = tr.querySelector('.cell-rr-users');
-        if (rrU) {
-          rrU.innerText = campaign.usersRr > 0 ? campaign.usersRr.toLocaleString() : '—';
-          rrU.className = `text-center font-mono readonly-auto cell-rr-users col-tint-users ${getRrColorClass(campaign.usersRr, campaign.usersFtp)}`;
-        }
-
-        const s2p = tr.querySelector('.cell-s2p');
-        if (s2p) s2p.innerText = campaign.s2p;
-
-        const roi = tr.querySelector('.cell-roi');
-        if (roi) {
-          roi.innerText = campaign.roi < 0 ? `-$ ${Math.abs(campaign.roi)}` : `$ ${campaign.roi}`;
-          roi.className = `text-center font-mono font-extrabold cell-roi col-tint-perf ${campaign.roi < 0 ? 'text-rose-600' : 'text-emerald-700'}`;
-        }
-      }
+      campaign.roi = (toNum(campaign.revenue) || 0) - (toNum(campaign.spent) || 0);
 
       const pKey = campaign.platform ? campaign.platform.toLowerCase() : 'meta';
       updateTableFooter(pKey);
@@ -1074,7 +876,6 @@
 
     function renderDashboard() {
       if (!appData) return;
-      ensureCampaignIds();
 
       if (appData.kpis) {
         const k = appData.kpis;
@@ -1120,11 +921,16 @@
         tr.className = 'hover:brightness-95 transition';
         const nameBg = c.highlight ? 'campaign-highlight-blue' : 'bg-white';
 
+        const dispRegKpi = c.regKpi !== undefined && c.regKpi !== null && c.regKpi !== '' ? c.regKpi : '—';
+        const dispUsersKpi = c.usersFtp !== undefined && c.usersFtp !== null && c.usersFtp !== '' ? c.usersFtp : '—';
+        const dispUsersRr = c.usersRr !== undefined && c.usersRr !== null && c.usersRr !== '' ? c.usersRr : '—';
+        const dispS2P = c.s2p !== undefined && c.s2p !== null && c.s2p !== '' ? c.s2p : '—';
+
         tr.innerHTML = `
           <td class="font-bold text-slate-900 sticky-col ${nameBg} p-1">
             <div class="relative flex items-center justify-center min-h-[28px] group">
               <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
-              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Eliminar campaña" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center shadow-2xs" aria-label="Eliminar campaña">
+              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Eliminar campaña" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center" aria-label="Eliminar campaña">
                 <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 6h18"/>
                   <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
@@ -1136,38 +942,38 @@
             </div>
           </td>
           
-          <td class="text-center font-mono font-bold readonly-auto cell-budget-kpi col-tint-budget">$${c.budget}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'spent')" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)" onkeydown="onKeyDownCell(event, this)">$${c.spent}</td>
-          <td class="text-center font-mono readonly-auto cell-rr-budget col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" title="Calculated automatically based on current date">$${c.rrBudget}</td>
-          <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)" onkeydown="onKeyDownCell(event, this)">$${c.dailyBudget}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'budget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'budget', true)">$${c.budget}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'spent')" onblur="handleCellInputOrBlur(this, '${c.id}', 'spent', true)">$${c.spent}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-budget ${getRrColorClass(c.rrBudget, c.budget)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'rrBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'rrBudget', true)">$${c.rrBudget}</td>
+          <td class="text-center font-mono editable-cell col-tint-budget" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget')" onblur="handleCellInputOrBlur(this, '${c.id}', 'dailyBudget', true)">$${c.dailyBudget}</td>
           
-          <td class="text-center font-mono editable-cell cell-imp-kpi col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impKpi || 0).toLocaleString()}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)" onkeydown="onKeyDownCell(event, this)">${Number(c.impMtd || 0).toLocaleString()}</td>
-          <td class="text-center font-mono readonly-auto cell-rr-imp col-tint-views ${getRrColorClass(c.impRr, c.impKpi)}" title="Calculated automatically">${c.impRr > 0 ? Number(c.impRr).toLocaleString() : '0'}</td>
+          <td class="text-center font-mono editable-cell cell-imp-kpi col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impKpi', true)">${Number(c.impKpi || 0).toLocaleString()}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-views" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impMtd', true)">${Number(c.impMtd || 0).toLocaleString()}</td>
+          <td class="text-center font-mono editable-cell col-tint-views ${getRrColorClass(c.impRr, c.impKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'impRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'impRr', true)">${Number(c.impRr || 0).toLocaleString()}</td>
           
-          <td class="text-center font-mono font-bold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'productViews')" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)" onkeydown="onKeyDownCell(event, this)">${c.productViews}</td>
-          <td class="text-center font-mono font-extrabold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'v2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)" onkeydown="onKeyDownCell(event, this)">${c.v2p}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'productViews')" onblur="handleCellInputOrBlur(this, '${c.id}', 'productViews', true)">${c.productViews}</td>
+          <td class="text-center font-mono font-extrabold editable-cell col-tint-product" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'v2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 'v2p', true)">${c.v2p}</td>
           
-          <td class="text-center font-mono editable-cell cell-clicks-kpi col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksKpi}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.clicksMtd}</td>
-          <td class="text-center font-mono readonly-auto cell-rr-clicks col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" title="Calculated automatically">${c.clicksRr > 0 ? c.clicksRr.toLocaleString() : '0'}</td>
-          <td class="text-center font-mono font-extrabold editable-cell cell-ctr col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'ctr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)" onkeydown="onKeyDownCell(event, this)">${c.ctr}</td>
+          <td class="text-center font-mono editable-cell cell-clicks-kpi col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksKpi', true)">${c.clicksKpi}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksMtd', true)">${c.clicksMtd}</td>
+          <td class="text-center font-mono editable-cell col-tint-clicks ${getRrColorClass(c.clicksRr, c.clicksKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'clicksRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'clicksRr', true)">${toNum(c.clicksRr).toLocaleString()}</td>
+          <td class="text-center font-mono font-extrabold editable-cell cell-ctr col-tint-clicks" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'ctr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'ctr', true)">${c.ctr}</td>
           
-          <td class="text-center font-mono font-bold readonly-auto cell-reg-kpi col-tint-regs" title="Calculated automatically: Total Signups KPI / active campaigns">${c.regKpi || '—'}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.regMtd}</td>
-          <td class="text-center font-mono readonly-auto cell-rr-reg col-tint-regs ${getRrColorClass(c.regRr, c.regKpi)}" title="Calculated automatically">${c.regRr > 0 ? c.regRr.toLocaleString() : '0'}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regKpi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regKpi', true)">${dispRegKpi}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-regs" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regMtd', true)">${c.regMtd}</td>
+          <td class="text-center font-mono editable-cell col-tint-regs ${getRrColorClass(c.regRr, c.regKpi)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'regRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'regRr', true)">${toNum(c.regRr).toLocaleString()}</td>
           
-          <td class="text-center font-mono font-bold readonly-auto cell-users-kpi col-tint-users" title="Calculated automatically: Total Users KPI / active campaigns">${c.usersFtp || '—'}</td>
-          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)" onkeydown="onKeyDownCell(event, this)">${c.usersMtd}</td>
-          <td class="text-center font-mono readonly-auto cell-rr-users col-tint-users ${getRrColorClass(c.usersRr, c.usersFtp)}" title="Calculated automatically">${c.usersRr > 0 ? c.usersRr.toLocaleString() : '—'}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersFtp')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersFtp', true)">${dispUsersKpi}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-users" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersMtd')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersMtd', true)">${c.usersMtd}</td>
+          <td class="text-center font-mono editable-cell col-tint-users ${getRrColorClass(c.usersRr, c.usersFtp)}" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'usersRr')" onblur="handleCellInputOrBlur(this, '${c.id}', 'usersRr', true)">${dispUsersRr}</td>
           
-          <td class="text-center font-mono font-bold readonly-auto cell-s2p col-tint-perf" title="Signup to Paid Conversion Rate: (Users MTD / Reg MTD) * 100">${c.s2p || '0.0%'}</td>
+          <td class="text-center font-mono font-bold editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 's2p')" onblur="handleCellInputOrBlur(this, '${c.id}', 's2p', true)">${dispS2P}</td>
           
-          <td class="text-center font-mono font-extrabold ${Number(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'revenue')" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)" onkeydown="onKeyDownCell(event, this)">
-            ${Number(c.revenue) > 0 ? '$ ' + Number(c.revenue).toFixed(2) : '$-'}
+          <td class="text-center font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'revenue')" onblur="handleCellInputOrBlur(this, '${c.id}', 'revenue', true)">
+            ${toNum(c.revenue) > 0 ? '$ ' + toNum(c.revenue).toFixed(2) : '$-'}
           </td>
-          <td class="text-center font-mono font-extrabold ${Number(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'} cell-roi col-tint-perf">
-            ${Number(c.roi) < 0 ? '-$ ' + Math.abs(c.roi) : '$ ' + c.roi}
+          <td class="text-center font-mono font-extrabold ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'} editable-cell col-tint-perf" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'roi')" onblur="handleCellInputOrBlur(this, '${c.id}', 'roi', true)">
+            ${toNum(c.roi) < 0 ? '-$ ' + Math.abs(toNum(c.roi)) : '$ ' + toNum(c.roi)}
           </td>
         `;
         tbody.appendChild(tr);
@@ -1178,14 +984,12 @@
       const tfoot = document.getElementById(pName === 'meta' ? 'metaTableFoot' : pName === 'instagram' ? 'igTableFoot' : 'xTableFoot');
       const filtered = (appData.campaigns || []).filter(c => c.platform && c.platform.toLowerCase() === pName);
 
-      const sum = f => filtered.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const sum = f => filtered.reduce((s, c) => s + toNum(c[f]), 0);
       const totBudget = sum('budget'), totSpent = sum('spent'), totRrBudget = sum('rrBudget'), totDailyBudget = sum('dailyBudget');
       const totImpKpi = sum('impKpi'), totImpMtd = sum('impMtd'), totImpRr = sum('impRr');
       const totProdViews = sum('productViews'), totV2p = sum('v2p'), totClicksKpi = sum('clicksKpi'), totClicksMtd = sum('clicksMtd'), totClicksRr = sum('clicksRr');
-      const totRegKpi = sum('regKpi'), totRegMtd = sum('regMtd'), totRegRr = sum('regRr');
-      const totUsersKpi = sum('usersFtp'), totUsersMtd = sum('usersMtd');
-      
-      const totS2p = totRegMtd > 0 ? ((totUsersMtd / totRegMtd) * 100).toFixed(1) + '%' : '0.0%';
+      const totRegMtd = sum('regMtd'), totRegRr = sum('regRr');
+      const totUsersMtd = sum('usersMtd');
       const totRevenue = sum('revenue'), totRoi = sum('roi');
 
       const bBudget = document.getElementById(`${pName === 'instagram' ? 'ig' : pName}BadgeBudget`);
@@ -1193,12 +997,15 @@
       if (bBudget) bBudget.innerText = `Budget: $${totBudget.toFixed(2)}`;
       if (bSpent) bSpent.innerText = `Spent: $${totSpent.toFixed(2)}`;
 
+      const totCtr = totImpMtd > 0 ? ((totClicksMtd / totImpMtd) * 100).toFixed(1) + '%' : '0%';
+      const totS2p = totRegMtd > 0 ? ((totUsersMtd / totRegMtd) * 100).toFixed(1) + '%' : '0.0%';
+
       tfoot.innerHTML = `
         <tr>
           <td class="text-center font-black sticky-col bg-white">TOTAL ${pName.toUpperCase()}</td>
           <td class="font-mono font-black col-tint-budget">$${totBudget}</td>
           <td class="font-mono font-black col-tint-budget">$${totSpent}</td>
-          <td class="font-mono font-black col-tint-budget ${getRrColorClass(totRrBudget, totBudget)}">${totRrBudget}</td>
+          <td class="font-mono font-black col-tint-budget ${getRrColorClass(totRrBudget, totBudget)}">$${totRrBudget}</td>
           <td class="font-mono font-black col-tint-budget">$${totDailyBudget}</td>
           <td class="font-mono font-black col-tint-views">${totImpKpi.toLocaleString()}</td>
           <td class="font-mono font-black col-tint-views">${totImpMtd.toLocaleString()}</td>
@@ -1208,33 +1015,33 @@
           <td class="font-mono font-black col-tint-clicks">${totClicksKpi.toFixed(1)}</td>
           <td class="font-mono font-black col-tint-clicks">${totClicksMtd}</td>
           <td class="font-mono font-black col-tint-clicks ${getRrColorClass(totClicksRr, totClicksKpi)}">${totClicksRr}</td>
-          <td class="font-mono font-black col-tint-clicks">2%</td>
-          <td class="font-mono font-black col-tint-regs">${totRegKpi || '—'}</td>
+          <td class="font-mono font-black col-tint-clicks">${totCtr}</td>
+          <td class="font-mono font-black col-tint-regs">—</td>
           <td class="font-mono font-black text-slate-900 col-tint-regs">${totRegMtd}</td>
-          <td class="font-mono font-black col-tint-regs ${getRrColorClass(totRegRr, totRegKpi)}">${totRegRr}</td>
-          <td class="font-mono font-black col-tint-users">${totUsersKpi || '—'}</td>
+          <td class="font-mono font-black col-tint-regs">${totRegRr}</td>
+          <td class="font-mono font-black col-tint-users">—</td>
           <td class="font-mono font-black text-slate-900 col-tint-users">${totUsersMtd}</td>
           <td class="font-mono font-black text-slate-400 col-tint-users">—</td>
           <td class="font-mono font-black col-tint-perf">${totS2p}</td>
           <td class="font-mono font-black text-emerald-700 col-tint-perf">$ ${totRevenue.toFixed(2)}</td>
-          <td class="font-mono font-black text-rose-600 col-tint-perf">${totRoi < 0 ? '-$ ' + Math.abs(totRoi) : '$ ' + totRoi}</td>
+          <td class="font-mono font-black ${totRoi < 0 ? 'text-rose-600' : 'text-emerald-700'} col-tint-perf">${totRoi < 0 ? '-$ ' + Math.abs(totRoi) : '$ ' + totRoi}</td>
         </tr>
       `;
     }
 
     function syncGlobalSummaries() {
       const all = appData.campaigns || [];
-      const sum = f => all.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
       const totSpent = sum('spent'), totRrBudget = sum('rrBudget');
       const totSignups = sum('regMtd'), totRrSignups = sum('regRr');
       const totUsers = sum('usersMtd'), totRevenue = sum('revenue'), totProfit = sum('roi');
 
       const k = appData.kpis || {};
-      const targetB = Number(k.budget) || 0;
-      const targetS = Number(k.signups) || 0;
-      const targetU = Number(k.users) || 0;
-      const targetR = Number(k.revenue) || 0;
-      const targetP = Number(k.profit) || 0;
+      const targetB = toNum(k.budget);
+      const targetS = toNum(k.signups);
+      const targetU = toNum(k.users);
+      const targetR = toNum(k.revenue);
+      const targetP = toNum(k.profit);
 
       const setTpColor = (id, rrVal, kpiVal) => {
         const el = document.getElementById(id);
@@ -1263,7 +1070,7 @@
       const updateCardBadge = (id, rrVal, kpiVal, prefix = '') => {
         const el = document.getElementById(id);
         if (el) {
-          const isGreen = (parseFloat(rrVal) || 0) >= (parseFloat(kpiVal) || 0);
+          const isGreen = (toNum(rrVal) >= toNum(kpiVal)) && toNum(kpiVal) > 0;
           el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded-md border ${isGreen ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
           el.innerText = `RR: ${prefix}${rrVal}`;
         }
@@ -1276,7 +1083,7 @@
       updateCardBadge('rrSignups', totRrSignups, targetS);
 
       document.getElementById('kpiFtd').innerText = totUsers;
-      updateCardBadge('rrFtd', 1, targetU);
+      updateCardBadge('rrFtd', totUsers || 1, targetU);
 
       document.getElementById('kpiRevenue').innerText = `$${totRevenue.toFixed(0)}`;
       updateCardBadge('rrRevenue', calculateAutoRR(totRevenue), targetR, '$');
@@ -1290,7 +1097,7 @@
       const fBy = p => all.filter(c => c.platform && c.platform.toLowerCase() === p);
       const meta = fBy('meta'), ig = fBy('instagram'), x = fBy('x');
 
-      const sum = (arr, f) => arr.reduce((s, c) => s + Number(c[f] || 0), 0);
+      const sum = (arr, f) => arr.reduce((s, c) => s + toNum(c[f]), 0);
       const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue');
       const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue');
       const xS = sum(x, 'spent'), xR = sum(x, 'revenue');
@@ -1495,12 +1302,12 @@
           setCell(row.getCell(19), c.usersMtd, ARGB.tintUsers, true);
           setCell(row.getCell(20), c.usersRr > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp, ARGB));
           setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
-          setCell(row.getCell(22), Number(c.revenue) > 0 ? `$${Number(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, Number(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
-          setCell(row.getCell(23), Number(c.roi) < 0 ? `-$${Math.abs(c.roi)}` : `$${c.roi}`, ARGB.tintPerf, true, Number(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
+          setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
+          setCell(row.getCell(23), toNum(c.roi) < 0 ? `-$${Math.abs(toNum(c.roi))}` : `$${toNum(c.roi)}`, ARGB.tintPerf, true, toNum(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
           r++;
         });
 
-        const sum = f => camps.reduce((s, c) => s + Number(c[f] || 0), 0);
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
         const fRow = ws.getRow(r);
         fRow.height = 20;
         setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
@@ -1517,10 +1324,10 @@
         setCell(fRow.getCell(12), sum('clicksMtd'), ARGB.tintClicks, true);
         setCell(fRow.getCell(13), sum('clicksRr'), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi'), ARGB));
         setCell(fRow.getCell(14), '2%', ARGB.tintClicks, true);
-        setCell(fRow.getCell(15), `${sum('regKpi') || '—'}`, ARGB.tintRegs, true);
+        setCell(fRow.getCell(15), '—', ARGB.tintRegs, true);
         setCell(fRow.getCell(16), sum('regMtd'), ARGB.tintRegs, true);
         setCell(fRow.getCell(17), sum('regRr'), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi'), ARGB));
-        setCell(fRow.getCell(18), `${sum('usersFtp') || '—'}`, ARGB.tintUsers, true);
+        setCell(fRow.getCell(18), '—', ARGB.tintUsers, true);
         setCell(fRow.getCell(19), sum('usersMtd'), ARGB.tintUsers, true);
         setCell(fRow.getCell(20), '—', ARGB.tintUsers);
         
