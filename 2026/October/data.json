@@ -7,33 +7,5 @@
     "revenue": 2400,
     "profit": 1600
   },
-  "campaigns": [
-    {
-      "name": "New Campaign",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 800,
-      "spent": 0,
-      "rrBudget": 0,
-      "dailyBudget": 0,
-      "impKpi": 0,
-      "impMtd": 0,
-      "impRr": 0,
-      "productViews": 0,
-      "v2p": 0,
-      "clicksKpi": 0,
-      "clicksMtd": 0,
-      "clicksRr": 0,
-      "ctr": "0%",
-      "regKpi": 208,
-      "regMtd": 0,
-      "regRr": 0,
-      "usersFtp": 16,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": 0
-    }
-  ]
+  "campaigns": []
 }
