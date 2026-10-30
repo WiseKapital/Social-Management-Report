@@ -331,7 +331,6 @@
       renderMonthGrid(t);
     }
 
-    // CALENDARIO INDEPENDIENTE
     function renderMonthGrid(t) {
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
@@ -390,7 +389,6 @@
       return list;
     }
 
-    // DISTRIBUCIÓN AUTOMÁTICA DE KPIS A TODAS LAS CAMPAÑAS (META, INSTAGRAM, X)
     function distributeKpisToCampaigns() {
       if (!appData || !appData.campaigns || !appData.kpis) return;
       const allCamps = appData.campaigns;
@@ -686,7 +684,6 @@
       renderDashboard();
     }
 
-    // ACTUALIZACIÓN AUTOMÁTICA DE USERS RR Y S2P AL EDITAR
     function handleCellBlur(el, id, field) {
       const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
       if (!c) return;
@@ -697,10 +694,9 @@
       c.impRr = calculateAutoRR(c.impMtd);
       c.clicksRr = calculateAutoRR(c.clicksMtd);
       c.regRr = calculateAutoRR(c.regMtd);
-      c.usersRr = calculateAutoRR(c.usersMtd); // Cálculo automático de Users RR
+      c.usersRr = calculateAutoRR(c.usersMtd);
       c.roi = toNum(c.revenue) - toNum(c.spent);
 
-      // Cálculo automático de S2P = (Users MTD / Reg MTD) * 100
       const reg = toNum(c.regMtd);
       const usr = toNum(c.usersMtd);
       c.s2p = reg > 0 ? ((usr / reg) * 100).toFixed(1) + '%' : '0.0%';
@@ -822,9 +818,7 @@
                       <td class="col-regs font-mono readonly-cell ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
                       <td class="col-users font-mono font-bold readonly-cell">${c.usersFtp !== undefined ? c.usersFtp : '—'}</td>
                       <td class="col-users font-mono font-bold editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersMtd')">${c.usersMtd}</td>
-                      <!-- USERS RR: AUTOMÁTICO Y NO EDITABLE -->
                       <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? c.usersRr : 0}</td>
-                      <!-- S2P: AUTOMÁTICO Y NO EDITABLE -->
                       <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} editable-cell" contenteditable="true" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
                       <td class="col-perf font-mono font-extrabold readonly-cell ${toNum(c.roi) < 0 ? 'text-rose-600' : 'text-emerald-700'}">${toNum(c.roi) < 0 ? '-$' + Math.abs(toNum(c.roi)) : '$' + toNum(c.roi)}</td>
@@ -908,15 +902,181 @@
       chartXBR = miniBar('xBudgetRevenueChart', xS, xR, chartXBR);
     }
 
+    // EXPORTACIÓN A EXCEL IDÉNTICA A LA CAPTURA (COLORES, GRUPOS Y FORMATO PERFECTO)
     async function exportToExcel() {
-      if (!appData) return;
+      if (!appData || !appData.campaigns) return;
+      distributeKpisToCampaigns();
+
+      const ARGB = {
+        border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D',
+        white: 'FFFFFFFF', highlightBlue: 'FFCFE2F3',
+        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD',
+        grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
+        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0',
+        subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
+        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED',
+        tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
+      };
+
+      const thinBorder = {
+        top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } },
+        bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } }
+      };
+
+      function setCell(cell, value, bg, bold = false, color = ARGB.textDark) {
+        cell.value = value;
+        if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+        cell.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = thinBorder;
+      }
+
+      function mergeRange(ws, r1, c1, r2, c2, val, bg, bold = true, color = ARGB.textDark) {
+        ws.mergeCells(r1, c1, r2, c2);
+        for (let r = r1; r <= r2; r++) {
+          for (let c = c1; c <= c2; c++) {
+            const cell = ws.getCell(r, c);
+            if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+            cell.border = thinBorder;
+          }
+        }
+        const master = ws.getCell(r1, c1);
+        master.value = val;
+        master.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        master.alignment = { vertical: 'middle', horizontal: 'center' };
+      }
+
+      function getRrColorArgb(rrVal, kpiVal) {
+        const rr = toNum(rrVal), kpi = toNum(kpiVal);
+        return (kpi > 0 ? rr >= kpi : rr > 0) ? ARGB.textGreen : ARGB.textRed;
+      }
+
       const wb = new ExcelJS.Workbook();
-      const ws = wb.addWorksheet('Social Report');
-      ws.addRow(['WISEKAPITAL SOCIAL REPORT', appData.period]);
-      ws.addRow(['Platform', 'Campaign', 'Budget KPI', 'Spent', 'RR Budget', 'Daily', 'Imp KPI', 'Imp MTD', 'Clicks KPI', 'Clicks MTD', 'CTR', 'Reg KPI', 'Reg MTD', 'Users KPI', 'Users MTD', 'Users RR', 'S2P', 'Revenue', 'ROI']);
-      (appData.campaigns || []).forEach(c => ws.addRow([c.platform, c.name, c.budget, c.spent, c.rrBudget, c.dailyBudget, c.impKpi, c.impMtd, c.clicksKpi, c.clicksMtd, c.ctr, c.regKpi, c.regMtd, c.usersFtp, c.usersMtd, c.usersRr, c.s2p, c.revenue, c.roi]));
+      wb.creator = 'WiseKapital';
+      const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
+
+      ws.columns = [
+        { width: 28 }, { width: 14 }, { width: 12 }, { width: 12 }, { width: 14 },
+        { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 10 },
+        { width: 14 }, { width: 12 }, { width: 12 }, { width: 10 }, { width: 14 },
+        { width: 12 }, { width: 12 }, { width: 14 }, { width: 12 }, { width: 12 },
+        { width: 10 }, { width: 16 }, { width: 16 }
+      ];
+
+      function buildPlatformExcelBlock(pKey, title, bannerColor, startRow) {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
+        let r = startRow;
+
+        // BANNER
+        ws.mergeCells(r, 1, r, 23);
+        const tc = ws.getCell(r, 1);
+        tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
+        tc.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bannerColor } };
+        tc.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(r).height = 24;
+        r++;
+
+        // CABECERA NIVEL 1
+        const h1 = r, h2 = r + 1;
+        mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
+        mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
+        mergeRange(ws, h1, 6, h1, 8, 'META VIEWS', ARGB.grpViews, true);
+        mergeRange(ws, h1, 9, h1, 10, 'Product Views', ARGB.grpProduct, true);
+        mergeRange(ws, h1, 11, h1, 14, 'CLICKS', ARGB.grpClicks, true);
+        mergeRange(ws, h1, 15, h1, 17, 'REGISTRATIONS', ARGB.grpRegs, true);
+        mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
+        mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
+
+        // CABECERA NIVEL 2
+        const subs = [
+          { c: 2, t: 'Budget', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
+          { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews },
+          { c: 9, t: 'Product Views', bg: ARGB.subProduct }, { c: 10, t: 'V2P', bg: ARGB.subProduct },
+          { c: 11, t: 'Clicks (KPI)', bg: ARGB.subClicks }, { c: 12, t: 'MTD', bg: ARGB.subClicks }, { c: 13, t: 'RR', bg: ARGB.subClicks }, { c: 14, t: 'CTR', bg: ARGB.subClicks },
+          { c: 15, t: 'Registration', bg: ARGB.subRegs }, { c: 16, t: 'MTD', bg: ARGB.subRegs }, { c: 17, t: 'RR', bg: ARGB.subRegs },
+          { c: 18, t: 'Users (FTP)', bg: ARGB.subUsers }, { c: 19, t: 'MTD', bg: ARGB.subUsers }, { c: 20, t: 'RR', bg: ARGB.subUsers },
+          { c: 21, t: 'S2P', bg: ARGB.subPerf }, { c: 22, t: 'Revenue', bg: ARGB.subPerf }, { c: 23, t: 'ROI', bg: ARGB.subPerf }
+        ];
+        subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true));
+        r += 2;
+
+        // FILAS DE CAMPAÑAS
+        camps.forEach(c => {
+          const row = ws.getRow(r);
+          row.height = 19;
+          setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
+          setCell(row.getCell(2), `$${c.budget}`, ARGB.tintBudget, true);
+          setCell(row.getCell(3), `$${c.spent}`, ARGB.tintBudget, true);
+          setCell(row.getCell(4), `$${c.rrBudget}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget));
+          setCell(row.getCell(5), `$${c.dailyBudget}`, ARGB.tintBudget);
+          setCell(row.getCell(6), Number(c.impKpi || 0).toLocaleString(), ARGB.tintViews);
+          setCell(row.getCell(7), Number(c.impMtd || 0).toLocaleString(), ARGB.tintViews, true);
+          setCell(row.getCell(8), Number(c.impRr || 0).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi));
+          setCell(row.getCell(9), c.productViews, ARGB.tintProduct, true);
+          setCell(row.getCell(10), c.v2p, ARGB.tintProduct, true);
+          setCell(row.getCell(11), c.clicksKpi, ARGB.tintClicks);
+          setCell(row.getCell(12), c.clicksMtd, ARGB.tintClicks, true);
+          setCell(row.getCell(13), c.clicksRr, ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi));
+          setCell(row.getCell(14), c.ctr, ARGB.tintClicks, true);
+          setCell(row.getCell(15), c.regKpi !== undefined ? c.regKpi : '—', ARGB.tintRegs, true);
+          setCell(row.getCell(16), c.regMtd, ARGB.tintRegs, true);
+          setCell(row.getCell(17), c.regRr, ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi));
+          setCell(row.getCell(18), c.usersFtp !== undefined ? c.usersFtp : '—', ARGB.tintUsers, true);
+          setCell(row.getCell(19), c.usersMtd, ARGB.tintUsers, true);
+          setCell(row.getCell(20), toNum(c.usersRr) > 0 ? c.usersRr : '—', ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
+          setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
+          setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
+          setCell(row.getCell(23), toNum(c.roi) < 0 ? `-$${Math.abs(toNum(c.roi))}` : `$${toNum(c.roi)}`, ARGB.tintPerf, true, toNum(c.roi) < 0 ? ARGB.textRed : ARGB.textGreen);
+          r++;
+        });
+
+        // FILA DE TOTAL
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        const fRow = ws.getRow(r);
+        fRow.height = 20;
+        setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
+        setCell(fRow.getCell(2), `$${sum('budget')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(3), `$${sum('spent')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(4), `${sum('rrBudget')}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget')));
+        setCell(fRow.getCell(5), `$${sum('dailyBudget')}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(6), sum('impKpi').toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(7), sum('impMtd').toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(8), sum('impRr').toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi')));
+        setCell(fRow.getCell(9), sum('productViews'), ARGB.tintProduct, true);
+        setCell(fRow.getCell(10), sum('v2p'), ARGB.tintProduct, true);
+        setCell(fRow.getCell(11), sum('clicksKpi').toFixed(1), ARGB.tintClicks, true);
+        setCell(fRow.getCell(12), sum('clicksMtd'), ARGB.tintClicks, true);
+        setCell(fRow.getCell(13), sum('clicksRr'), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi')));
+        setCell(fRow.getCell(14), sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(0) + '%' : '0%', ARGB.tintClicks, true);
+        setCell(fRow.getCell(15), sum('regKpi') > 0 ? sum('regKpi') : '—', ARGB.tintRegs, true);
+        setCell(fRow.getCell(16), sum('regMtd'), ARGB.tintRegs, true);
+        setCell(fRow.getCell(17), sum('regRr'), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi')));
+        setCell(fRow.getCell(18), sum('usersFtp') > 0 ? sum('usersFtp') : '—', ARGB.tintUsers, true);
+        setCell(fRow.getCell(19), sum('usersMtd'), ARGB.tintUsers, true);
+        setCell(fRow.getCell(20), sum('usersRr') > 0 ? sum('usersRr') : '—', ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
+        setCell(fRow.getCell(21), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
+        setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
+        const tRoi = sum('roi');
+        setCell(fRow.getCell(23), tRoi < 0 ? `-$ ${Math.abs(tRoi)}` : `$ ${tRoi}`, ARGB.tintPerf, true, tRoi < 0 ? ARGB.textRed : ARGB.textGreen);
+        r++;
+
+        return r + 1; // Espacio entre tablas
+      }
+
+      let currentRow = 1;
+      currentRow = buildPlatformExcelBlock('meta', 'Meta (Facebook Ads)', 'FF1D63ED', currentRow);
+      currentRow = buildPlatformExcelBlock('instagram', 'Instagram Ads', 'FFE1306C', currentRow);
+      currentRow = buildPlatformExcelBlock('x', 'X Campaigns', 'FF111827', currentRow);
+
       const buf = await wb.xlsx.writeBuffer();
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf])); a.download = `WiseKapital_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`; a.click(); a.remove();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([buf]));
+      a.download = `WiseKapital_Social_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showSaveToast("📊 Excel exported successfully with full design!");
     }
 
     document.addEventListener("DOMContentLoaded", () => {
