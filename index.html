@@ -101,48 +101,46 @@
           </div>
         </div>
 
-        <!-- ACTIONS & CUSTOM DUAL CALENDAR -->
+        <!-- ACTIONS & MONTH/YEAR PICKER (STYLE IMAGE 2) -->
         <div class="flex items-center gap-3 flex-wrap">
 
-          <!-- CALENDARIO DUAL CUSTOM -->
-          <div class="flex items-center gap-1.5 font-bold text-xs">
+          <!-- CALENDARIO ESTILO SELECTOR DE MESES -->
+          <div class="flex items-center gap-2 font-bold text-xs">
             <span class="text-slate-400 tracking-wider">FROM</span>
             <div class="relative">
-              <button id="fromBtn" onclick="toggleCal('from', event)" class="flex items-center justify-between w-[110px] px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 shadow-sm hover:border-slate-400 transition cursor-pointer">
-                <span id="fromDateText"></span><i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500 pointer-events-none"></i>
+              <button id="fromBtn" onclick="toggleCal('from', event)" class="flex items-center justify-center w-[105px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 shadow-2xs hover:border-slate-400 transition cursor-pointer">
+                <span id="fromDateText">Oct 2026</span>
               </button>
-              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px] select-none">
-                <div class="flex items-center justify-between font-black text-[13px] text-slate-900 mb-3">
-                  <button onclick="navCal('from', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px] select-none">
+                <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
+                  <button onclick="navCal('from', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                   </button>
-                  <span id="fromMonthLabel" class="uppercase tracking-wide font-display"></span>
-                  <button onclick="navCal('from', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-slate-100 text-slate-700 transition">
-                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                  <span id="fromYearLabel" class="font-extrabold text-sm font-display text-slate-900 tracking-wide">2026</span>
+                  <button onclick="navCal('from', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                   </button>
                 </div>
-                <div class="grid grid-cols-7 text-center text-[10px] font-black text-slate-500 mb-2"><span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span></div>
-                <div id="fromDaysGrid" class="grid grid-cols-7 text-center text-[13px] font-bold gap-y-1 gap-x-1"></div>
+                <div id="fromMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
             </div>
 
             <span class="text-slate-400 tracking-wider ml-1">TO</span>
             <div class="relative">
-              <button id="toBtn" onclick="toggleCal('to', event)" class="flex items-center justify-between w-[110px] px-2.5 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 shadow-sm cursor-pointer">
-                <span id="toDateText"></span><i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-900 pointer-events-none"></i>
+              <button id="toBtn" onclick="toggleCal('to', event)" class="flex items-center justify-center w-[105px] px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 shadow-2xs cursor-pointer">
+                <span id="toDateText">Oct 2026</span>
               </button>
-              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px] select-none">
-                <div class="flex items-center justify-between font-black text-[13px] text-slate-900 mb-3">
-                  <button onclick="navCal('to', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-slate-100 text-slate-700 transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[260px] select-none">
+                <div class="flex items-center justify-between font-black text-sm text-slate-900 mb-3 px-1">
+                  <button onclick="navCal('to', -1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                   </button>
-                  <span id="toMonthLabel" class="uppercase tracking-wide font-display"></span>
-                  <button onclick="navCal('to', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-md hover:bg-slate-100 text-slate-700 transition">
-                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                  <span id="toYearLabel" class="font-extrabold text-sm font-display text-slate-900 tracking-wide">2026</span>
+                  <button onclick="navCal('to', 1, event)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-700 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                   </button>
                 </div>
-                <div class="grid grid-cols-7 text-center text-[10px] font-black text-slate-500 mb-2"><span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span></div>
-                <div id="toDaysGrid" class="grid grid-cols-7 text-center text-[13px] font-bold gap-y-1 gap-x-1"></div>
+                <div id="toMonthsGrid" class="grid grid-cols-3 gap-2 text-center text-xs font-bold"></div>
               </div>
             </div>
           </div>
@@ -315,8 +313,12 @@
       <!-- 1. META TABLE -->
       <div id="sectionMetaTable" class="space-y-2">
         <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center"><i data-lucide="layers" class="w-3.5 h-3.5"></i></span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-[#0081FB] text-white flex items-center justify-center shadow-xs">
+              <svg class="w-4 h-4 fill-white" viewBox="0 0 640 512" aria-label="Meta Logo">
+                <path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/>
+              </svg>
+            </span>
             <h2 class="text-base font-bold font-display text-slate-900">Meta (Facebook Ads)</h2>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold">
@@ -362,8 +364,12 @@
       <!-- 2. INSTAGRAM TABLE -->
       <div id="sectionInstagramTable" class="space-y-2">
         <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-md bg-pink-600 text-white flex items-center justify-center"><i data-lucide="camera" class="w-3.5 h-3.5"></i></span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shadow-xs">
+              <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24" aria-label="Instagram Logo">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </span>
             <h2 class="text-base font-bold font-display text-slate-900">Instagram Ads</h2>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold">
@@ -409,8 +415,12 @@
       <!-- 3. X TABLE -->
       <div id="sectionXTable" class="space-y-2">
         <div class="flex items-center justify-between flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-md bg-black text-white flex items-center justify-center font-bold text-xs">𝕏</span>
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-lg bg-black text-white flex items-center justify-center shadow-xs">
+              <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24" aria-label="X Logo">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </span>
             <h2 class="text-base font-bold font-display text-slate-900">X Campaigns</h2>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold">
@@ -455,20 +465,26 @@
 
     </div>
 
-    <!-- SECTION 1: CHARTS (SPENT VS REVENUE VS RUN RATE & PROFIT) -->
+    <!-- SECTION 1: CHARTS (PROFIT BY PLATFORM - CLEAN & CENTERED) -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="glass-card rounded-2xl p-5 lg:col-span-2">
-          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Spent vs. Revenue vs. Run Rate ($)</h3>
-          <div class="relative h-72 w-full"><canvas id="budgetCleanBarChart"></canvas></div>
+      <div class="glass-card rounded-2xl p-6 max-w-2xl mx-auto shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold font-display text-slate-900">Profit ($) by Platform</h3>
+          <span class="text-xs font-semibold text-slate-400">Total ROI Analysis</span>
         </div>
-        <div class="glass-card rounded-2xl p-5">
-          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Profit ($) by Platform</h3>
-          <div class="relative h-56 w-full flex items-center justify-center"><canvas id="profitPlatformChart"></canvas></div>
-          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-3 gap-1.5 text-center text-[11px]">
-            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">Meta</span><strong id="chartProfitMeta">$0.00</strong></div>
-            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">IG</span><strong id="chartProfitIG">$0.00</strong></div>
-            <div class="p-1 rounded bg-rose-50 border border-rose-200"><span class="block text-[9px] font-bold text-rose-700">Total</span><strong id="chartProfitTotal">$0.00</strong></div>
+        <div class="relative h-60 w-full flex items-center justify-center"><canvas id="profitPlatformChart"></canvas></div>
+        <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2.5 text-center text-xs">
+          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
+            <span class="block text-[10px] font-bold text-rose-700 uppercase">Meta</span>
+            <strong id="chartProfitMeta" class="text-sm font-mono text-rose-900">$0.00</strong>
+          </div>
+          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
+            <span class="block text-[10px] font-bold text-rose-700 uppercase">Instagram</span>
+            <strong id="chartProfitIG" class="text-sm font-mono text-rose-900">$0.00</strong>
+          </div>
+          <div class="p-2 rounded-xl bg-rose-50 border border-rose-200">
+            <span class="block text-[10px] font-bold text-rose-700 uppercase">Total</span>
+            <strong id="chartProfitTotal" class="text-sm font-mono text-rose-900">$0.00</strong>
           </div>
         </div>
       </div>
@@ -544,8 +560,12 @@
         <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-blue-600">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-1.5">
-                <div class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white"><i data-lucide="layers" class="w-3.5 h-3.5"></i></div>
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-[#0081FB] flex items-center justify-center text-white shadow-xs">
+                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 640 512">
+                    <path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/>
+                  </svg>
+                </div>
                 <div><h3 class="text-sm font-bold text-slate-900">Meta</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
               </div>
               <span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
@@ -557,8 +577,12 @@
         <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-pink-600">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-1.5">
-                <div class="w-6 h-6 rounded bg-pink-600 flex items-center justify-center text-white"><i data-lucide="camera" class="w-3.5 h-3.5"></i></div>
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-xs">
+                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </div>
                 <div><h3 class="text-sm font-bold text-slate-900">Instagram</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
               </div>
               <span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
@@ -570,8 +594,12 @@
         <div class="glass-card rounded-2xl p-4 flex flex-col justify-between border-t-4 border-t-slate-900">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <div class="flex items-center gap-1.5">
-                <div class="w-6 h-6 rounded bg-black flex items-center justify-center text-white font-bold text-xs">𝕏</div>
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-black flex items-center justify-center text-white shadow-xs">
+                  <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </div>
                 <div><h3 class="text-sm font-bold text-slate-900">X</h3><p class="text-[10px] text-slate-500">Spent vs. Revenue</p></div>
               </div>
               <span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 text-slate-600 border border-slate-200">ROI: 0%</span>
@@ -587,30 +615,41 @@
   <script>
     let appData = null;
     let globalFactor = 1.0;
+    let chartProfit = null, chartSignups = null, chartUsers = null;
+    let chartMetaBR = null, chartIGBR = null, chartXBR = null;
     
-    // CUSTOM DUAL CALENDAR STATE
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // NOMBRES DE MESES (CORTO Y LARGO)
+    const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
     function getSystemToday() {
       const now = new Date();
       return new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    const MIN_SYSTEM_DATE = new Date(2026, 9, 1); // Oct 1, 2026
+    const MIN_SYSTEM_DATE = new Date(2026, 9, 1); // Octubre 1, 2026
 
     let today = getSystemToday();
-    let fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    if (fromDate < MIN_SYSTEM_DATE) fromDate = new Date(MIN_SYSTEM_DATE);
     
-    let toDate = new Date(today);
-    let fromViewYear = today.getFullYear(), toViewYear = today.getFullYear();
-    let fromViewMonth = today.getMonth(), toViewMonth = today.getMonth();
+    // Límites del sistema
+    const sysToday = getSystemToday();
+    const maxSelectableYear = Math.max(sysToday.getFullYear(), 2026);
+    const maxSelectableMonth = (sysToday.getFullYear() > 2026) ? sysToday.getMonth() : Math.max(sysToday.getMonth(), 9);
 
+    let fromDate = new Date(2026, 9, 1); // Octubre 2026 mínimo
+    let toDate = (sysToday.getFullYear() === 2026 && sysToday.getMonth() === 9) 
+      ? new Date(sysToday) 
+      : new Date(2026, 9, 31);
+
+    let fromViewYear = fromDate.getFullYear();
+    let toViewYear = toDate.getFullYear();
+
+    const fmtMonthYear = d => `${shortMonthNames[d.getMonth()]} ${d.getFullYear()}`;
     const fmtMDY = d => `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
 
     function updateDatesUI() {
-      document.getElementById('fromDateText').textContent = fmtMDY(fromDate);
-      document.getElementById('toDateText').textContent = fmtMDY(toDate);
+      document.getElementById('fromDateText').textContent = fmtMonthYear(fromDate);
+      document.getElementById('toDateText').textContent = fmtMonthYear(toDate);
     }
 
     function toggleCal(t, e) {
@@ -620,14 +659,9 @@
       pop.classList.toggle('hidden');
       if (!pop.classList.contains('hidden')) {
         const active = (t === 'from') ? fromDate : toDate;
-        if (t === 'from') {
-          fromViewYear = active.getFullYear();
-          fromViewMonth = active.getMonth();
-        } else {
-          toViewYear = active.getFullYear();
-          toViewMonth = active.getMonth();
-        }
-        renderCalGrid(t);
+        if (t === 'from') fromViewYear = active.getFullYear();
+        else toViewYear = active.getFullYear();
+        renderMonthGrid(t);
       }
     }
 
@@ -635,68 +669,72 @@
       e?.stopPropagation();
       const isFrom = (t === 'from');
       let y = isFrom ? fromViewYear : toViewYear;
-      let m = isFrom ? fromViewMonth : toViewMonth;
+      y += s;
       
-      m += s;
-      if (m < 0) { m = 11; y--; }
-      else if (m > 11) { m = 0; y++; }
-      
-      if (y < 2026 || (y === 2026 && m < 9)) return; // No ir antes de Oct 2026
-      if (y > today.getFullYear() || (y === today.getFullYear() && m > today.getMonth())) return; // No ir al futuro
+      // No retroceder antes de 2026 ni superar el año actual
+      if (y < 2026 || y > maxSelectableYear) return;
 
-      if (isFrom) { fromViewYear = y; fromViewMonth = m; }
-      else { toViewYear = y; toViewMonth = m; }
-      renderCalGrid(t);
+      if (isFrom) fromViewYear = y;
+      else toViewYear = y;
+      renderMonthGrid(t);
     }
 
-    function renderCalGrid(t) {
+    function renderMonthGrid(t) {
       const isFrom = (t === 'from');
       const y = isFrom ? fromViewYear : toViewYear;
-      const m = isFrom ? fromViewMonth : toViewMonth;
-      document.getElementById(t + 'MonthLabel').textContent = `${monthNames[m]} ${y}`;
-      const grid = document.getElementById(t + 'DaysGrid'); 
+      document.getElementById(t + 'YearLabel').textContent = y;
+      const grid = document.getElementById(t + 'MonthsGrid'); 
       grid.innerHTML = '';
       
-      const startDay = new Date(y, m, 1).getDay(); 
-      const daysInMonth = new Date(y, m + 1, 0).getDate();
-      
-      for (let i = 0; i < startDay; i++) {
-        const empty = document.createElement('div');
-        grid.appendChild(empty);
-      }
-      
       const active = isFrom ? fromDate : toDate;
-      const max = getSystemToday();
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const cur = new Date(y, m, d);
+      shortMonthNames.forEach((name, m) => {
         const cell = document.createElement('div');
-        cell.className = 'py-1.5 select-none transition rounded-lg text-slate-700 hover:bg-slate-100 flex items-center justify-center'; 
-        cell.textContent = d;
+        cell.textContent = name;
         
-        if (cur.getTime() < MIN_SYSTEM_DATE.getTime() || cur.getTime() > max.getTime()) {
-          cell.className = 'py-1.5 select-none text-slate-300 cursor-not-allowed flex items-center justify-center';
+        // Reglas de negocio: Mínimo Octubre 2026 y máximo hasta el mes actual
+        const isBeforeMin = (y < 2026 || (y === 2026 && m < 9));
+        const isAfterMax = (y > maxSelectableYear || (y === maxSelectableYear && m > maxSelectableMonth));
+        const isDisabled = isBeforeMin || isAfterMax;
+
+        const isSelected = (active.getFullYear() === y && active.getMonth() === m);
+
+        if (isDisabled) {
+          cell.className = 'py-2 px-1 select-none text-slate-300 font-semibold cursor-not-allowed text-center';
+        } else if (isSelected) {
+          cell.className = 'py-2 px-1 select-none cursor-pointer bg-emerald-500 text-white rounded-xl font-extrabold shadow-xs text-center transition';
         } else {
-          cell.classList.add('cursor-pointer');
-          if (cur.getTime() === new Date(active.getFullYear(), active.getMonth(), active.getDate()).getTime()) {
-            cell.className = 'py-1.5 select-none cursor-pointer bg-emerald-500 text-white rounded-lg font-extrabold flex items-center justify-center shadow-xs';
-          }
+          cell.className = 'py-2 px-1 select-none cursor-pointer text-slate-700 hover:bg-slate-100 rounded-xl font-bold text-center transition';
           cell.onclick = (e) => {
             e.stopPropagation();
-            if (isFrom) { 
-              fromDate = cur; 
-              if (fromDate > toDate) toDate = new Date(fromDate); 
-            } else { 
-              toDate = cur; 
-              if (toDate < fromDate) fromDate = new Date(toDate); 
+            if (isFrom) {
+              fromDate = new Date(y, m, 1);
+              if (fromDate > toDate) {
+                // Si el mes de inicio supera el fin, ajustar toDate
+                if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
+                  toDate = new Date(sysToday);
+                } else {
+                  toDate = new Date(y, m + 1, 0);
+                }
+              }
+            } else {
+              // Si se elige el mes actual, limitar exactamente al día actual
+              if (y === sysToday.getFullYear() && m === sysToday.getMonth()) {
+                toDate = new Date(sysToday);
+              } else {
+                toDate = new Date(y, m + 1, 0);
+              }
+              if (toDate < fromDate) {
+                fromDate = new Date(y, m, 1);
+              }
             }
             document.getElementById(t + 'Pop').classList.add('hidden');
-            updateDatesUI(); 
+            updateDatesUI();
             loadDataForRange(fromDate, toDate);
           };
         }
         grid.appendChild(cell);
-      }
+      });
     }
 
     document.addEventListener('click', e => {
@@ -798,12 +836,13 @@
       renderDashboard();
     }
 
-    function deleteCampaign(campaignId) {
+    function deleteCampaign(campaignId, event) {
+      if (event) event.stopPropagation();
       ensureCampaignIds();
       const campaign = (appData.campaigns || []).find(c => String(c.id) === String(campaignId) || c.name === campaignId);
       if (!campaign) return;
 
-      if (confirm(`Delete campaign "${campaign.name}"?`)) {
+      if (confirm(`¿Eliminar la campaña "${campaign.name}"?`)) {
         appData.campaigns = appData.campaigns.filter(c => String(c.id) !== String(campaignId) && c.name !== campaignId);
         distributeKpisToCampaigns();
         recalcAll();
@@ -836,7 +875,6 @@
           ensureCampaignIds();
           distributeKpisToCampaigns();
           
-          // Re-calc global factor relative to today if local file is loaded directly
           const endDateObj = getSystemToday();
           const targetDays = new Date(endDateObj.getFullYear(), endDateObj.getMonth() + 1, 0).getDate();
           globalFactor = targetDays / (endDateObj.getDate() || 1);
@@ -869,13 +907,12 @@
       const months = [];
       let curr = new Date(startObj.getFullYear(), startObj.getMonth(), 1);
       while (curr <= endObj) {
-        months.push({ monthIndex: curr.getMonth(), monthName: monthNames[curr.getMonth()], year: curr.getFullYear() });
+        months.push({ monthIndex: curr.getMonth(), monthName: fullMonthNames[curr.getMonth()], year: curr.getFullYear() });
         curr.setMonth(curr.getMonth() + 1);
       }
       return months;
     }
 
-    // MAIN LOADER FOR RANGE
     async function loadDataForRange(startObj, endObj) {
       const months = getMonthsInRange(startObj, endObj);
       const isLocal = window.location.protocol === 'file:';
@@ -884,22 +921,19 @@
       let mergedCampaignsMap = new Map();
       let fetchedAny = false;
 
-      // 1. Calcular Días Totales de los meses involucrados
       let totalTargetDays = 0;
       months.forEach(m => {
         totalTargetDays += new Date(m.year, m.monthIndex + 1, 0).getDate();
       });
 
-      // 2. Calcular Días Seleccionados
       const msDiff = endObj.getTime() - startObj.getTime();
-      const daysSelected = Math.ceil(msDiff / (1000 * 3600 * 24)) + 1;
+      const daysSelected = Math.max(1, Math.ceil(msDiff / (1000 * 3600 * 24)) + 1);
       
       globalFactor = daysSelected > 0 ? (totalTargetDays / daysSelected) : 1;
 
       for (const m of months) {
         let mData = null;
 
-        // FETCH DIRECTO AL ARCHIVO (NO CACHE)
         try {
           let path = `./${m.monthName}/data.json?v=${Date.now()}`;
           let res = await fetch(path, { cache: 'no-store' });
@@ -966,7 +1000,7 @@
       document.getElementById('lblRrFactor').innerText = `×${globalFactor.toFixed(2)}`;
       
       const monStr = months.length === 1 ? months[0].monthName : 'Multi-Month';
-      document.getElementById('dateAutoInfo').innerText = `Data from ${fmtMDY(startObj)} to ${fmtMDY(endObj)}`;
+      document.getElementById('dateAutoInfo').innerText = `Data from ${fmtMonthYear(startObj)} to ${fmtMonthYear(endObj)}`;
 
       if (fetchedAny && !isLocal) {
         document.getElementById('localFileHelper').classList.add('hidden');
@@ -1130,11 +1164,17 @@
         const nameBg = c.highlight ? 'campaign-highlight-blue' : 'bg-white';
 
         tr.innerHTML = `
-          <td class="font-bold text-slate-900 sticky-col ${nameBg}">
-            <div class="flex items-center justify-between gap-1.5 px-1">
-              <span class="editable-cell flex-1 text-center" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
-              <button type="button" onclick="deleteCampaign('${c.id}')" title="Delete" class="text-slate-300 hover:text-rose-600 p-1 rounded transition cursor-pointer">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <td class="font-bold text-slate-900 sticky-col ${nameBg} p-1">
+            <div class="relative flex items-center justify-center min-h-[28px] group">
+              <span class="editable-cell text-center font-bold px-7 w-full truncate block" contenteditable="true" oninput="handleCellInputOrBlur(this, '${c.id}', 'name')" onblur="handleCellInputOrBlur(this, '${c.id}', 'name', true)" onkeydown="onKeyDownCell(event, this)">${c.name}</span>
+              <button type="button" onclick="deleteCampaign('${c.id}', event)" title="Eliminar campaña" class="absolute right-1 text-rose-500 hover:text-rose-700 hover:bg-rose-100/80 p-1 rounded-md transition cursor-pointer flex items-center justify-center shadow-2xs" aria-label="Eliminar campaña">
+                <svg class="w-3.5 h-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"/>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                  <line x1="10" y1="11" x2="10" y2="17"/>
+                  <line x1="14" y1="11" x2="14" y2="17"/>
+                </svg>
               </button>
             </div>
           </td>
@@ -1294,38 +1334,31 @@
       const meta = fBy('meta'), ig = fBy('instagram'), x = fBy('x');
 
       const sum = (arr, f) => arr.reduce((s, c) => s + Number(c[f] || 0), 0);
-      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue'), mP = sum(meta, 'roi'), mRR = sum(meta, 'rrBudget');
-      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue'), iP = sum(ig, 'roi'), iRR = sum(ig, 'rrBudget');
-      const xS = sum(x, 'spent'), xR = sum(x, 'revenue'), xP = sum(x, 'roi'), xRR = sum(x, 'rrBudget');
+      const mS = sum(meta, 'spent'), mR = sum(meta, 'revenue'), mP = sum(meta, 'roi');
+      const iS = sum(ig, 'spent'), iR = sum(ig, 'revenue'), iP = sum(ig, 'roi');
+      const xS = sum(x, 'spent'), xR = sum(x, 'revenue'), xP = sum(x, 'roi');
 
-      const tS = mS + iS + xS, tR = mR + iR + xR, tP = mP + iP + xP, tRR = mRR + iRR + xRR;
+      const tP = mP + iP + xP;
 
       document.getElementById('chartProfitMeta').innerText = `${mP < 0 ? '-$' : '$'}${Math.abs(mP).toFixed(2)}`;
       document.getElementById('chartProfitIG').innerText = `${iP < 0 ? '-$' : '$'}${Math.abs(iP).toFixed(2)}`;
       document.getElementById('chartProfitTotal').innerText = `${tP < 0 ? '-$' : '$'}${Math.abs(tP).toFixed(2)}`;
-
-      if (chartBar) chartBar.destroy();
-      chartBar = new Chart(document.getElementById('budgetCleanBarChart').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: ['Meta', 'Instagram', 'Total'],
-          datasets: [
-            { label: 'Spent ($)', data: [mS, iS, tS], backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 5 },
-            { label: 'Revenue ($)', data: [mR, iR, tR], backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 5 },
-            { label: 'Run Rate ($)', data: [mRR, iRR, tRR], backgroundColor: 'rgba(245, 158, 11, 0.85)', borderRadius: 5 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
 
       if (chartProfit) chartProfit.destroy();
       chartProfit = new Chart(document.getElementById('profitPlatformChart').getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['Meta', 'Instagram', 'Total'],
-          datasets: [{ label: 'Profit ($)', data: [mP, iP, tP], backgroundColor: 'rgba(239, 68, 68, 0.85)', borderRadius: 5 }]
+          datasets: [{ label: 'Profit ($)', data: [mP, iP, tP], backgroundColor: 'rgba(239, 68, 68, 0.85)', borderRadius: 6 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false, 
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { ticks: { callback: v => '$' + v } }
+          }
+        }
       });
 
       const mSignups = sum(meta, 'regMtd');
@@ -1368,7 +1401,7 @@
           type: 'doughnut',
           data: {
             labels: ['Meta', 'Instagram'],
-            datasets: [{ data: [mSignups, iSignups], backgroundColor: ['#2563EB', '#DB2777'], borderWidth: 2, borderColor: '#fff' }]
+            datasets: [{ data: [mSignups, iSignups], backgroundColor: ['#0081FB', '#E1306C'], borderWidth: 2, borderColor: '#fff' }]
           },
           options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
         });
@@ -1381,7 +1414,7 @@
           type: 'doughnut',
           data: {
             labels: ['Meta', 'Instagram'],
-            datasets: [{ data: [mUsers, iUsers], backgroundColor: ['#2563EB', '#DB2777'], borderWidth: 2, borderColor: '#fff' }]
+            datasets: [{ data: [mUsers, iUsers], backgroundColor: ['#0081FB', '#E1306C'], borderWidth: 2, borderColor: '#fff' }]
           },
           options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
         });
@@ -1476,7 +1509,7 @@
         const tc = ws.getCell(r, 1);
         tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
         tc.font = { name: 'Calibri', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
-        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: pKey === 'meta' ? 'FF2563EB' : pKey === 'instagram' ? 'FFDB2777' : 'FF1E293B' } };
+        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: pKey === 'meta' ? 'FF0081FB' : pKey === 'instagram' ? 'FFE1306C' : 'FF1E293B' } };
         tc.alignment = { vertical: 'middle', horizontal: 'center' };
         ws.getRow(r).height = 24;
         r++;
