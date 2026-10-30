@@ -1,0 +1,11 @@
+{
+  "period": "November 01-30, 2026",
+  "kpis": {
+    "budget": 0,
+    "signups": 0,
+    "users": 0,
+    "revenue": 0,
+    "profit": 0
+  },
+  "campaigns": []
+}
