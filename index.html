@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title>WiseKapital - Marketing Performance Dashboard</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Kalam:wght@700&family=Inter:wght@400;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { background-color: #F8FAFC; color: #0F172A; font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .master-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
+    .master-table th, .master-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
+    .master-table thead tr:first-child th { border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800; }
+    .sticky-col { position: sticky; left: 0; z-index: 10; border-left: 1px solid #D1D5DB; background: #fff; }
+    .editable-cell { outline: none; cursor: text; transition: filter 0.15s; }
+    .editable-cell:hover { filter: brightness(0.95); }
+    .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
+    .readonly-cell { cursor: default; user-select: none; }
+    .col-budget { background-color: #F4F4F4 !important; }
+    .col-views { background-color: #F0F5FA !important; }
+    .col-prod { background-color: #FFFBEB !important; }
+    .col-clicks { background-color: #FEF6ED !important; }
+    .col-regs { background-color: #F2F8F1 !important; }
+    .col-users { background-color: #FAF2F6 !important; }
+    .col-perf { background-color: #F3F7FE !important; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- TOAST -->
+  <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="saveToastText">Updated</span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      <div class="flex items-center justify-between flex-wrap gap-4 min-h-[4rem]">
+        
+        <div class="flex items-center gap-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-9 w-auto select-none">
+            <text x="4" y="47" font-family="'Poppins', sans-serif" font-weight="700" font-size="47" fill="#111827">WiseKapital</text>
+            <text x="112" y="77" font-family="'Kalam', cursive" font-weight="700" font-size="26" fill="#ECA51A">Who Dares Wins!</text>
+          </svg>
+          <div class="hidden sm:block pl-4 border-l border-slate-200">
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Syncing...</span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">Loading...</span>
+              <span id="editModeBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold"></span>
+            </div>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">Loading...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- DATE PICKER -->
+          <div class="flex items-center gap-2 font-bold text-xs">
+            <span class="text-slate-400">FROM</span>
+            <div class="relative">
+              <button id="fromBtn" onclick="toggleCal('from', event)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 hover:border-slate-400 cursor-pointer flex items-center gap-2 shadow-xs">
+                <span id="fromDateText">11/01/2026</span>
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-600"></i>
+              </button>
+              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px]">
+                <div class="flex items-center justify-between font-black text-xs text-slate-900 mb-3 px-1">
+                  <button onclick="navCalMonth('from', -1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="fromMonthYearLabel" class="font-extrabold text-xs tracking-wider uppercase">...</span>
+                  <button onclick="navCalMonth('from', 1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-700 mb-2">
+                  <span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span>
+                </div>
+                <div id="fromDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs font-bold"></div>
+              </div>
+            </div>
+
+            <span class="text-slate-400">TO</span>
+            <div class="relative">
+              <button id="toBtn" onclick="toggleCal('to', event)" class="px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 cursor-pointer flex items-center gap-2 shadow-xs">
+                <span id="toDateText">11/03/2026</span>
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-900"></i>
+              </button>
+              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px]">
+                <div class="flex items-center justify-between font-black text-xs text-slate-900 mb-3 px-1">
+                  <button onclick="navCalMonth('to', -1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="toMonthYearLabel" class="font-extrabold text-xs tracking-wider uppercase">...</span>
+                  <button onclick="navCalMonth('to', 1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-700 mb-2">
+                  <span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span>
+                </div>
+                <div id="toDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs font-bold"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTÓN SAVE TO GIT -->
+          <button id="saveGitBtn" onclick="saveDashboardData(false)" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i><span id="saveGitBtnText">Save to Git</span>
+          </button>
+
+          <!-- BOTÓN EXPORT EXCEL -->
+          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export Excel</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+    <!-- TEAM PERFORMANCE -->
+    <div class="space-y-2">
+      <h2 class="text-base font-bold font-display text-slate-900">Team Performance</h2>
+      <div class="glass-card rounded-xl overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-xs border-collapse text-center">
+            <thead>
+              <tr>
+                <th class="bg-white py-2 px-3 font-extrabold text-slate-900" style="width: 100px;">TEAM</th>
+                <th colspan="5" id="tpKpiHeaderTitle" class="bg-[#1976D2] text-white font-extrabold py-2 px-2 border-r border-white/20">KPIS</th>
+                <th colspan="5" class="bg-[#2E7D32] text-white font-extrabold py-2 px-2 border-r border-white/20">MTD</th>
+                <th colspan="6" class="bg-[#B45309] text-white font-extrabold py-2 px-2">RR - RUN-RATE</th>
+              </tr>
+              <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-200">
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2">PROFIT</th><th class="py-2 px-2">ROI</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 bg-white">
+              <tr>
+                <td class="py-3 px-3"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FCE4EC] text-[#D81B60]">SOCIAL</span></td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'budget')" id="tpKpiBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'signups')" id="tpKpiSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'users')" id="tpKpiUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'revenue')" id="tpKpiRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'profit')" id="tpKpiProfit">$0</td>
+
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200" id="tpMtdProfit">$0</td>
+
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrProfit">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">1:0.4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">BUDGET</span><i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: $0</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Signups</span><i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiSignups">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetSignups">KPI: 0</span><span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-purple-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Users (FTD)</span><i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiFtd">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetUsers">KPI: 0</span><span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Revenue</span><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiRevenue">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetRevenue">KPI: $0</span><span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-teal-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Profit</span><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetProfit">KPI: $0</span><span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+    </div>
+
+    <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
+    <div id="platformsContainer" class="space-y-8"></div>
+
+    <!-- PERFORMANCE TAKE AWAYS TABLES (DEBAJO DE X Y ARRIBA DE LAS GRAFICAS) -->
+    <div id="takeawaysContainer" class="space-y-8 pt-4 border-t border-slate-200"></div>
+
+    <!-- CHARTS -->
+    <div class="space-y-6 pt-4 border-t border-slate-200">
+      <h2 class="text-base font-bold font-display text-slate-900">Platform Performance: Meta, Instagram &amp; X</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Signups by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="signupsPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaSignups">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGSignups">0</span></div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Users (FTD) by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="usersPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaUsers">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGUsers">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-blue-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Meta</h3><span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="metaBudgetRevenueChart"></canvas></div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-pink-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Instagram</h3><span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="instagramBudgetRevenueChart"></canvas></div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-slate-900">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">X</h3><span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="xBudgetRevenueChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const GH_OWNER = "WiseKapital";
+    const GH_REPO = "Social-Management-Report";
+    const GH_BRANCH = "main";
+    let GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
+
+    let appData = null;
+    let rawMonthData = null;
+    let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
+
+    const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    const sysToday = new Date();
+    let currentLoadedYear = sysToday.getFullYear();
+    let currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
+
+    let fromDate = new Date(sysToday.getFullYear(), sysToday.getMonth(), 1);
+    let toDate = new Date(sysToday.getFullYear(), sysToday.getMonth(), sysToday.getDate());
+    let fromViewYear = fromDate.getFullYear(), fromViewMonth = fromDate.getMonth();
+    let toViewYear = toDate.getFullYear(), toViewMonth = toDate.getMonth();
+
+    const fmtDateUS = d => {
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${mm}/${dd}/${d.getFullYear()}`;
+    };
+
+    function updateDatesUI() {
+      setTxt('fromDateText', fmtDateUS(fromDate));
+      setTxt('toDateText', fmtDateUS(toDate));
+    }
+
+    function isEditingAllowed() {
+      if (!fromDate || !toDate) return false;
+      const startD = fromDate <= toDate ? fromDate : toDate;
+      const endD = fromDate <= toDate ? toDate : fromDate;
+
+      if (startD.getFullYear() !== endD.getFullYear() || startD.getMonth() !== endD.getMonth()) return false;
+      if (startD.getDate() !== 1) return false;
+
+      const now = new Date();
+      const isCurrentMonth = (endD.getFullYear() === now.getFullYear() && endD.getMonth() === now.getMonth());
+      const totalDaysInMonth = new Date(endD.getFullYear(), endD.getMonth() + 1, 0).getDate();
+
+      return isCurrentMonth ? endD.getDate() === now.getDate() : endD.getDate() === totalDaysInMonth;
+    }
+
+    const COOLDOWN_KEY = "wisekapital_save_cooldown_target";
+    const COOLDOWN_DURATION_SEC = 5 * 60;
+    let isSaveCooldown = false;
+    let saveCooldownTimer = null;
+    let cooldownRemaining = 0;
+
+    const fmtCooldownTime = (sec) => {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m > 0 ? `${m}m ${s < 10 ? '0' : ''}${s}s` : `${s}s`;
+    };
+
+    function startSaveCooldown(seconds = COOLDOWN_DURATION_SEC) {
+      const targetTime = Date.now() + (seconds * 1000);
+      localStorage.setItem(COOLDOWN_KEY, targetTime.toString());
+      initOrResumeSaveCooldown();
+    }
+
+    function initOrResumeSaveCooldown() {
+      const storedTarget = localStorage.getItem(COOLDOWN_KEY);
+      if (!storedTarget) return;
+
+      const targetTime = parseInt(storedTarget, 10);
+      const now = Date.now();
+      const diffSec = Math.ceil((targetTime - now) / 1000);
+
+      if (diffSec <= 0) {
+        localStorage.removeItem(COOLDOWN_KEY);
+        isSaveCooldown = false;
+        return;
+      }
+
+      isSaveCooldown = true;
+      cooldownRemaining = diffSec;
+
+      const btn = document.getElementById('saveGitBtn');
+      const btnText = document.getElementById('saveGitBtnText');
+      if (!btn) return;
+
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btn.classList.remove('hover:bg-indigo-700', 'cursor-pointer');
+
+      if (saveCooldownTimer) clearInterval(saveCooldownTimer);
+
+      const renderWait = () => {
+        if (btnText) btnText.innerText = `Wait ${fmtCooldownTime(cooldownRemaining)}`;
+      };
+      renderWait();
+
+      saveCooldownTimer = setInterval(() => {
+        const remaining = Math.ceil((targetTime - Date.now()) / 1000);
+        cooldownRemaining = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(saveCooldownTimer);
+          saveCooldownTimer = null;
+          isSaveCooldown = false;
+          localStorage.removeItem(COOLDOWN_KEY);
+          btn.disabled = !isEditingAllowed();
+          if (isEditingAllowed()) {
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('hover:bg-indigo-700', 'cursor-pointer');
+          }
+          if (btnText) btnText.innerText = 'Save to Git';
+        } else {
+          renderWait();
+        }
+      }, 1000);
+    }
+
+    const PLATFORMS = [
+      { key: 'meta', title: 'Meta (Facebook Ads)', btnBg: 'bg-blue-600 hover:bg-blue-700', bg: 'bg-[#0081FB]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 640 512"><path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/></svg>` },
+      { key: 'instagram', title: 'Instagram Ads', btnBg: 'bg-pink-600 hover:bg-pink-700', bg: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
+      { key: 'x', title: 'X Campaigns', btnBg: 'bg-slate-800 hover:bg-slate-900', bg: 'bg-black', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` }
+    ];
+
+    const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.innerText = v; };
+    const toNum = val => { if (val === undefined || val === null || val === '—' || val === '-' || val === '') return 0; const n = parseFloat(String(val).replace(/[$,%]/g, '')); return isNaN(n) ? 0 : n; };
+    const utf8ToB64 = str => { const bytes = new TextEncoder().encode(str); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+    const b64ToUtf8 = b64 => { const bin = atob(b64.replace(/\s/g, '')); return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0))); };
+    
+    const cellEnter = (e, el) => {
+      if (!isEditingAllowed()) { e.preventDefault(); el.blur(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    };
+    const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
+
+    function getBaseDaysOfData(data, year, monthIdx) {
+      const totalDaysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+      if (data && data.period) {
+        const m = String(data.period).match(/(\d{1,2})\s*-\s*(\d{1,2})/);
+        if (m) {
+          const s = parseInt(m[1], 10), e = parseInt(m[2], 10);
+          if (!isNaN(s) && !isNaN(e) && e >= s) return (e - s + 1);
+        }
+      }
+      const isCurrentMonth = (year === sysToday.getFullYear() && monthIdx === sysToday.getMonth());
+      return isCurrentMonth ? Math.max(1, sysToday.getDate()) : totalDaysInMonth;
+    }
+
+    function calculateAutoRR(val) {
+      const n = toNum(val);
+      if (n <= 0) return 0;
+
+      const startD = fromDate <= toDate ? fromDate : toDate;
+      const endD = fromDate <= toDate ? toDate : fromDate;
+
+      if (startD.getFullYear() === endD.getFullYear() && startD.getMonth() === endD.getMonth()) {
+        const totalDays = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
+        const daysSelected = Math.max(1, endD.getDate() - startD.getDate() + 1);
+        return Math.round(n * (totalDays / daysSelected));
+      } else {
+        const months = getMonthsInRange(startD, endD);
+        let totalDaysInInvolvedMonths = 0, totalDaysSelected = 0;
+
+        for (let mIdx = 0; mIdx < months.length; mIdx++) {
+          const m = months[mIdx];
+          const totD = new Date(m.year, m.monthIndex + 1, 0).getDate();
+          totalDaysInInvolvedMonths += totD;
+
+          let s = 1, e = totD;
+          if (mIdx === 0) s = startD.getDate();
+          if (mIdx === months.length - 1) e = endD.getDate();
+          totalDaysSelected += Math.max(1, e - s + 1);
+        }
+
+        const factor = totalDaysSelected > 0 ? (totalDaysInInvolvedMonths / totalDaysSelected) : 1.0;
+        return Math.round(n * factor);
+      }
+    }
+
+    function getDynamicPeriodString(startD, endD) {
+      const s = startD <= endD ? startD : endD;
+      const e = startD <= endD ? endD : startD;
+      const sDayStr = String(s.getDate()).padStart(2, '0');
+      const eDayStr = String(e.getDate()).padStart(2, '0');
+      const sMonthName = fullMonthNames[s.getMonth()];
+      const eMonthName = fullMonthNames[e.getMonth()];
+
+      return s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth()
+        ? `${sMonthName} ${sDayStr}-${eDayStr}, ${s.getFullYear()}`
+        : `${sMonthName} ${sDayStr}, ${s.getFullYear()} – ${eMonthName} ${eDayStr}, ${e.getFullYear()}`;
+    }
+
+    function calculateRoi(revenue, spent) {
+      const sp = toNum(spent), rev = toNum(revenue);
+      if (sp <= 0) return rev > 0 ? '+100.0%' : '0.0%';
+      const roiPercent = ((rev - sp) / sp) * 100;
+      return `${roiPercent > 0 ? '+' : ''}${roiPercent.toFixed(1)}%`;
+    }
+
+    function getRoiColorClass(revenue, spent) {
+      const sp = toNum(spent), rev = toNum(revenue);
+      if (sp <= 0) return rev > 0 ? 'text-emerald-700 font-extrabold' : 'text-slate-400 font-extrabold';
+      const roiPercent = ((rev - sp) / sp) * 100;
+      return roiPercent > 0 ? 'text-emerald-700 font-extrabold' : roiPercent < 0 ? 'text-rose-600 font-extrabold' : 'text-slate-500 font-extrabold';
+    }
+
+    function toggleCal(t, e) {
+      e?.stopPropagation();
+      document.getElementById(t === 'from' ? 'toPop' : 'fromPop').classList.add('hidden');
+      const pop = document.getElementById(t + 'Pop');
+      pop.classList.toggle('hidden');
+      if (!pop.classList.contains('hidden')) {
+        if (t === 'from') { fromViewYear = fromDate.getFullYear(); fromViewMonth = fromDate.getMonth(); }
+        else { toViewYear = toDate.getFullYear(); toViewMonth = toDate.getMonth(); }
+        renderDaysGrid(t);
+      }
+    }
+
+    function navCalMonth(t, s, e) {
+      e?.stopPropagation();
+      if (t === 'from') {
+        fromViewMonth += s;
+        if (fromViewMonth < 0) { fromViewMonth = 11; fromViewYear--; }
+        else if (fromViewMonth > 11) { fromViewMonth = 0; fromViewYear++; }
+        if (fromViewYear < 2026 || (fromViewYear === 2026 && fromViewMonth < 9)) { fromViewYear = 2026; fromViewMonth = 9; }
+      } else {
+        toViewMonth += s;
+        if (toViewMonth < 0) { toViewMonth = 11; toViewYear--; }
+        else if (toViewMonth > 11) { toViewMonth = 0; toViewYear++; }
+        if (toViewYear < 2026 || (toViewYear === 2026 && toViewMonth < 9)) { toViewYear = 2026; toViewMonth = 9; }
+      }
+      renderDaysGrid(t);
+    }
+
+    function renderDaysGrid(t) {
+      const isFrom = (t === 'from');
+      const year = isFrom ? fromViewYear : toViewYear;
+      const month = isFrom ? fromViewMonth : toViewMonth;
+      const activeDate = isFrom ? fromDate : toDate;
+
+      setTxt(isFrom ? 'fromMonthYearLabel' : 'toMonthYearLabel', `${fullMonthNames[month].toUpperCase()} ${year}`);
+      const grid = document.getElementById(t + 'DaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const startOffset = (firstDayIndex + 6) % 7;
+
+      for (let i = 0; i < startOffset; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'w-8 h-8';
+        grid.appendChild(blank);
+      }
+
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dayDate = new Date(year, month, day);
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.textContent = day;
+
+        const isFuture = dayDate > today;
+        const isPastMin = (year < 2026 || (year === 2026 && month < 9));
+        const isDisabled = isFuture || isPastMin;
+        const isSelected = (activeDate.getFullYear() === year && activeDate.getMonth() === month && activeDate.getDate() === day);
+
+        if (isDisabled) cell.className = 'w-8 h-8 flex items-center justify-center rounded-xl text-slate-300 font-semibold cursor-not-allowed select-none';
+        else if (isSelected) cell.className = 'w-8 h-8 flex items-center justify-center rounded-xl bg-emerald-600 text-white font-extrabold shadow-sm select-none cursor-pointer';
+        else cell.className = 'w-8 h-8 flex items-center justify-center rounded-xl text-slate-800 hover:bg-slate-100 font-bold transition select-none cursor-pointer';
+
+        if (!isDisabled) {
+          cell.onclick = (e) => {
+            e.stopPropagation();
+            if (isFrom) {
+              fromDate = new Date(year, month, day);
+              if (fromDate > toDate) toDate = new Date(year, month, day);
+            } else {
+              toDate = new Date(year, month, day);
+              if (toDate < fromDate) fromDate = new Date(year, month, day);
+            }
+            document.getElementById(t + 'Pop').classList.add('hidden');
+            updateDatesUI();
+            loadDataForRange(fromDate, toDate);
+          };
+        }
+        grid.appendChild(cell);
+      }
+      lucide.createIcons();
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#fromPop') && !e.target.closest('#fromBtn')) document.getElementById('fromPop').classList.add('hidden');
+      if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) document.getElementById('toPop').classList.add('hidden');
+    });
+
+    function getMonthsInRange(start, end) {
+      const s = start <= end ? start : end;
+      const e = start <= end ? end : start;
+      const list = [];
+      let curr = new Date(s.getFullYear(), s.getMonth(), 1);
+      const last = new Date(e.getFullYear(), e.getMonth(), 1);
+      while (curr <= last) {
+        list.push({ year: curr.getFullYear(), monthIndex: curr.getMonth(), monthName: fullMonthNames[curr.getMonth()] });
+        curr.setMonth(curr.getMonth() + 1);
+      }
+      return list;
+    }
+
+    function distributeKpisToCampaigns() {
+      if (!appData || !appData.campaigns || !appData.kpis) return;
+      const allCamps = appData.campaigns;
+      const bPer = Math.round(toNum(appData.kpis.budget) / (allCamps.length || 1));
+      allCamps.forEach(c => { c.budget = bPer; });
+    }
+
+    function createEmptyMonth(mName, year) {
+      return { 
+        period: getDynamicPeriodString(fromDate, toDate), 
+        kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, 
+        campaigns: [] 
+      };
+    }
+
+    function addCampaign(platform) {
+      if (!isEditingAllowed()) { alert("Editing is disabled for this date range."); return; }
+      if (!appData) appData = createEmptyMonth(currentLoadedMonth, currentLoadedYear);
+      const newCamp = {
+        id: `camp_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+        name: `New Campaign`, platform, highlight: false,
+        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
+        productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
+        takeaways: "", lessons: "", improvements: ""
+      };
+      appData.campaigns.push(newCamp);
+      if (rawMonthData && rawMonthData.campaigns) rawMonthData.campaigns.push({ ...newCamp });
+      distributeKpisToCampaigns();
+      renderDashboard();
+      showSaveToast(`Added campaign to ${platform.toUpperCase()}. Click "Save to Git" to commit.`);
+    }
+
+    function deleteCampaign(id, e) {
+      e?.stopPropagation();
+      if (!isEditingAllowed()) { alert("Editing is disabled for this date range."); return; }
+      if (!confirm("Delete this campaign?")) return;
+      appData.campaigns = (appData.campaigns || []).filter(c => String(c.id) !== String(id));
+      if (rawMonthData && rawMonthData.campaigns) rawMonthData.campaigns = rawMonthData.campaigns.filter(c => String(c.id) !== String(id));
+      distributeKpisToCampaigns();
+      renderDashboard();
+      showSaveToast('Campaign removed. Click "Save to Git" to commit.');
+    }
+
+    function showSaveToast(text) {
+      const t = document.getElementById('saveToast');
+      setTxt('saveToastText', text);
+      if (t) {
+        t.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => t.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 3500);
+      }
+    }
+
+    function getCleanData() {
+      distributeKpisToCampaigns();
+      return {
+        period: appData.period,
+        kpis: appData.kpis,
+        campaigns: (appData.campaigns || []).map(c => { const o = { ...c }; delete o.id; return o; })
+      };
+    }
+
+    function validateSaveAllowed() {
+      if (!isEditingAllowed()) {
+        const now = new Date();
+        const endD = fromDate <= toDate ? toDate : fromDate;
+        const isCurrentMonth = (endD.getFullYear() === now.getFullYear() && endD.getMonth() === now.getMonth());
+        const totalDaysInMonth = new Date(endD.getFullYear(), endD.getMonth() + 1, 0).getDate();
+        const targetDay = isCurrentMonth ? now.getDate() : totalDaysInMonth;
+        const expectedDateStr = `${String(endD.getMonth() + 1).padStart(2, '0')}/${String(targetDay).padStart(2, '0')}/${endD.getFullYear()}`;
+        const reason = isCurrentMonth ? `today's date (${expectedDateStr}) for the current month` : `the last day of the month (${expectedDateStr}) for past months`;
+        alert(`Cannot save: Saving is only allowed from day 01 to ${reason}. Please update your selection before saving.`);
+        return false;
+      }
+      return true;
+    }
+
+    async function saveDashboardData(silentAutoCreate = false) {
+      if (!appData) return;
+      if (!silentAutoCreate) {
+        if (!validateSaveAllowed()) return;
+        if (isSaveCooldown) { showSaveToast(`⏳ Wait ${fmtCooldownTime(cooldownRemaining)} before saving again.`); return; }
+      }
+
+      const btn = document.getElementById('saveGitBtn');
+      const btnText = document.getElementById('saveGitBtnText');
+      if (!silentAutoCreate) {
+        if (btn) btn.disabled = true;
+        if (btnText) btnText.innerText = "Saving...";
+        showSaveToast("⏳ Committing to GitHub...");
+      }
+
+      const cleanData = getCleanData();
+      const jsonStr = JSON.stringify(cleanData, null, 2);
+      const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
+
+      try {
+        const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}`;
+        let sha = "";
+        
+        const getRes = await fetch(`${apiUrl}?ref=${GH_BRANCH}&t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (getRes.ok) {
+          const j = await getRes.json();
+          sha = j.sha;
+        }
+
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify({
+            message: silentAutoCreate ? `Auto-create ${relPath}` : `Update ${relPath} via Dashboard`,
+            content: utf8ToB64(jsonStr),
+            branch: GH_BRANCH,
+            sha: sha || undefined
+          })
+        });
+
+        if (putRes.ok) {
+          showSaveToast(silentAutoCreate ? `🆕 Created ${relPath} in GitHub!` : `✅ Saved to GitHub: ${relPath}`);
+          setLiveBadge(`Live Git (${currentLoadedMonth})`);
+          setTxt('headerPathBadge', `${relPath} ✓`);
+          if (!silentAutoCreate) startSaveCooldown(COOLDOWN_DURATION_SEC);
+        } else {
+          const err = await putRes.json();
+          if (!silentAutoCreate) {
+            if (btn) btn.disabled = false;
+            if (btnText) btnText.innerText = "Save to Git";
+            alert(`GitHub Error: ${err.message}`);
+          }
+        }
+      } catch (e) {
+        if (!silentAutoCreate) {
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.innerText = "Save to Git";
+          alert("Network error while saving to GitHub.");
+        }
+      }
+    }
+
+    function setLiveBadge(label) {
+      const b = document.getElementById('liveStatusBadge');
+      if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
+    }
+
+    async function fetchFreshJson(year, mName) {
+      const candidates = [`${year}/${mName}/data.json`, `${mName}/data.json`];
+      let got404 = false;
+
+      for (const rel of candidates) {
+        try {
+          const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${rel}?ref=${GH_BRANCH}&t=${Date.now()}`;
+          const headers = { 'Accept': 'application/vnd.github.v3+json' };
+          if (GITHUB_TOKEN) headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+          const res = await fetch(apiUrl, { cache: 'no-store', headers });
+          if (res.ok) {
+            const fileObj = await res.json();
+            if (fileObj && fileObj.content) return { status: 'found', data: JSON.parse(b64ToUtf8(fileObj.content)) };
+          } else if (res.status === 404) got404 = true;
+        } catch (e) {}
+      }
+
+      for (const rel of candidates) {
+        try {
+          const res = await fetch(`./${rel}?nocache=${Date.now()}`, { cache: 'no-store' });
+          if (res.ok) return { status: 'found', data: await res.json() };
+        } catch (e) {}
+      }
+
+      return { status: got404 ? 'not_found' : 'error', data: null };
+    }
+
+    async function loadDataForRange(startObj, endObj) {
+      const startD = startObj <= endObj ? startObj : endObj;
+      const endD = startObj <= endObj ? endObj : startObj;
+      const months = getMonthsInRange(startD, endD);
+
+      if (months.length === 1) {
+        const { year, monthName, monthIndex } = months[0];
+        currentLoadedYear = year;
+        currentLoadedMonth = monthName;
+        setTxt('headerPathBadge', `${year}/${monthName}/data.json`);
+
+        const currentKey = `${year}_${monthName}`;
+        if (!rawMonthData || rawMonthData._cacheKey !== currentKey) {
+          const result = await fetchFreshJson(year, monthName);
+          if (result.status === 'found' && result.data) {
+            rawMonthData = JSON.parse(JSON.stringify(result.data));
+            rawMonthData._cacheKey = currentKey;
+            setLiveBadge(`Live Git (${monthName})`);
+          } else {
+            rawMonthData = createEmptyMonth(monthName, year);
+            rawMonthData._cacheKey = currentKey;
+            setLiveBadge(`New (${monthName})`);
+            if (result.status === 'not_found' && GITHUB_TOKEN) await saveDashboardData(true);
+          }
+        }
+
+        const baseDays = getBaseDaysOfData(rawMonthData, year, monthIndex);
+        const selectedDays = Math.max(1, endD.getDate() - startD.getDate() + 1);
+        const scaleFactor = selectedDays / baseDays;
+
+        const scaledCampaigns = (rawMonthData.campaigns || []).map((c, i) => {
+          const baseSpent = toNum(c.spent);
+          const baseImp = toNum(c.impMtd);
+          const basePv = toNum(c.productViews);
+          const baseV2p = toNum(c.v2p);
+          const baseClicks = toNum(c.clicksMtd);
+          const baseReg = toNum(c.regMtd);
+          const baseUsers = toNum(c.usersMtd);
+          const baseRev = toNum(c.revenue);
+
+          const spent = Math.round(baseSpent * scaleFactor);
+          const impMtd = Math.round(baseImp * scaleFactor);
+          const productViews = Math.round(basePv * scaleFactor);
+          const v2p = Math.round(baseV2p * scaleFactor);
+          const clicksMtd = Math.round(baseClicks * scaleFactor);
+          const regMtd = Math.round(baseReg * scaleFactor);
+          const usersMtd = Math.round(baseUsers * scaleFactor);
+          const revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
+          const dailyBudget = selectedDays > 0 ? Math.round(spent / selectedDays) : 0;
+
+          return {
+            ...c,
+            id: c.id || `c_${i}_${Date.now()}`,
+            budget: toNum(c.budget),
+            impKpi: toNum(c.impKpi),
+            clicksKpi: toNum(c.clicksKpi),
+            regKpi: c.regKpi !== undefined ? toNum(c.regKpi) : 0,
+            usersFtp: c.usersFtp !== undefined ? toNum(c.usersFtp) : 0,
+            spent,
+            dailyBudget,
+            impMtd,
+            productViews,
+            v2p,
+            clicksMtd,
+            regMtd,
+            usersMtd,
+            revenue,
+            rrBudget: calculateAutoRR(spent),
+            impRr: calculateAutoRR(impMtd),
+            clicksRr: calculateAutoRR(clicksMtd),
+            regRr: calculateAutoRR(regMtd),
+            usersRr: calculateAutoRR(usersMtd),
+            takeaways: c.takeaways || "",
+            lessons: c.lessons || "",
+            improvements: c.improvements || "",
+            ctr: impMtd > 0 ? ((clicksMtd / impMtd) * 100).toFixed(1) + '%' : '0.0%',
+            s2p: regMtd > 0 ? ((usersMtd / regMtd) * 100).toFixed(1) + '%' : '0.0%',
+            roi: calculateRoi(revenue, spent)
+          };
+        });
+
+        appData = {
+          period: getDynamicPeriodString(startD, endD),
+          kpis: rawMonthData.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 },
+          campaigns: scaledCampaigns
+        };
+
+        distributeKpisToCampaigns();
+        setTxt('dateAutoInfo', appData.period);
+        renderDashboard();
+      } else {
+        setLiveBadge(`Range (${months.length} Months)`);
+        setTxt('headerPathBadge', `${months[0].year}/${months[0].monthName} – ${months[months.length-1].year}/${months[months.length-1].monthName}`);
+
+        let mergedKpis = { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 };
+        const campMap = new Map();
+        let totalDaysInInvolvedMonths = 0, totalDaysSelected = 0;
+
+        for (let mIdx = 0; mIdx < months.length; mIdx++) {
+          const m = months[mIdx];
+          const totDaysMonth = new Date(m.year, m.monthIndex + 1, 0).getDate();
+          totalDaysInInvolvedMonths += totDaysMonth;
+
+          let sDay = 1, eDay = totDaysMonth;
+          if (mIdx === 0) sDay = startD.getDate();
+          if (mIdx === months.length - 1) eDay = endD.getDate();
+
+          const selectedDaysThisMonth = Math.max(1, eDay - sDay + 1);
+          totalDaysSelected += selectedDaysThisMonth;
+
+          const res = await fetchFreshJson(m.year, m.monthName);
+          if (res.status === 'found' && res.data) {
+            const k = res.data.kpis || {};
+            mergedKpis.budget += toNum(k.budget);
+            mergedKpis.signups += toNum(k.signups);
+            mergedKpis.users += toNum(k.users);
+            mergedKpis.revenue += toNum(k.revenue);
+            mergedKpis.profit += toNum(k.profit);
+
+            const baseDaysMonth = getBaseDaysOfData(res.data, m.year, m.monthIndex);
+            const scaleFactorMonth = selectedDaysThisMonth / baseDaysMonth;
+
+            (res.data.campaigns || []).forEach(c => {
+              const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
+              const sSpent = toNum(c.spent) * scaleFactorMonth;
+              const sImp = toNum(c.impMtd) * scaleFactorMonth;
+              const sPv = toNum(c.productViews) * scaleFactorMonth;
+              const sV2p = toNum(c.v2p) * scaleFactorMonth;
+              const sClicks = toNum(c.clicksMtd) * scaleFactorMonth;
+              const sReg = toNum(c.regMtd) * scaleFactorMonth;
+              const sUsers = toNum(c.usersMtd) * scaleFactorMonth;
+              const sRev = toNum(c.revenue) * scaleFactorMonth;
+
+              if (!campMap.has(key)) {
+                campMap.set(key, {
+                  ...c,
+                  id: `c_agg_${key}`,
+                  budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
+                  spent: sSpent, impMtd: sImp, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev,
+                  takeaways: c.takeaways || "", lessons: c.lessons || "", improvements: c.improvements || ""
+                });
+              } else {
+                const ex = campMap.get(key);
+                ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
+                ex.spent += sSpent; ex.impMtd += sImp; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
+                if (!ex.takeaways && c.takeaways) ex.takeaways = c.takeaways;
+                if (!ex.lessons && c.lessons) ex.lessons = c.lessons;
+                if (!ex.improvements && c.improvements) ex.improvements = c.improvements;
+              }
+            });
+          }
+        }
+
+        const multiMonthRrFactor = totalDaysSelected > 0 ? (totalDaysInInvolvedMonths / totalDaysSelected) : 1.0;
+        const mergedCamps = Array.from(campMap.values()).map(c => {
+          c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
+          c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
+          c.dailyBudget = totalDaysSelected > 0 ? Math.round(c.spent / totalDaysSelected) : 0;
+          c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
+          c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
+          c.roi = calculateRoi(c.revenue, c.spent);
+          c.ctr = c.impMtd > 0 ? ((c.clicksMtd / c.impMtd) * 100).toFixed(1) + '%' : '0.0%';
+          c.s2p = c.regMtd > 0 ? ((c.usersMtd / c.regMtd) * 100).toFixed(1) + '%' : '0.0%';
+          return c;
+        });
+
+        appData = { period: getDynamicPeriodString(startD, endD), kpis: mergedKpis, campaigns: mergedCamps };
+        setTxt('dateAutoInfo', appData.period);
+        renderDashboard();
+      }
+    }
+
+    function onKpiEdit(el, field) {
+      if (!isEditingAllowed()) { renderDashboard(); return; }
+      if (!appData) return;
+      appData.kpis[field] = toNum(el.innerText);
+      if (rawMonthData && rawMonthData.kpis) rawMonthData.kpis[field] = toNum(el.innerText);
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function handleCellBlur(el, id, field) {
+      if (!isEditingAllowed()) { renderDashboard(); return; }
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+      if (field === 'name') c[field] = el.innerText.trim();
+      else c[field] = toNum(el.innerText);
+
+      if (rawMonthData && rawMonthData.campaigns) {
+        const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
+        if (rawC) {
+          const sDay = Math.min(fromDate.getDate(), toDate.getDate());
+          const eDay = Math.max(fromDate.getDate(), toDate.getDate());
+          const scaleFactor = Math.max(1, eDay - sDay + 1) / getBaseDaysOfData(rawMonthData, currentLoadedYear, fullMonthNames.indexOf(currentLoadedMonth));
+          if (scaleFactor > 0 && field !== 'name') rawC[field] = Math.round(toNum(el.innerText) / scaleFactor);
+          else rawC[field] = el.innerText.trim();
+        }
+      }
+
+      c.rrBudget = calculateAutoRR(c.spent);
+      c.impRr = calculateAutoRR(c.impMtd);
+      c.clicksRr = calculateAutoRR(c.clicksMtd);
+      c.regRr = calculateAutoRR(c.regMtd);
+      c.usersRr = calculateAutoRR(c.usersMtd);
+
+      const imp = toNum(c.impMtd), clk = toNum(c.clicksMtd);
+      c.ctr = imp > 0 ? ((clk / imp) * 100).toFixed(1) + '%' : '0.0%';
+      const reg = toNum(c.regMtd), usr = toNum(c.usersMtd);
+      c.s2p = reg > 0 ? ((usr / reg) * 100).toFixed(1) + '%' : '0.0%';
+
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function handleTakeawayBlur(el, id, field) {
+      if (!isEditingAllowed()) { renderDashboard(); return; }
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+      c[field] = el.innerText.trim();
+      if (rawMonthData && rawMonthData.campaigns) {
+        const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
+        if (rawC) rawC[field] = el.innerText.trim();
+      }
+    }
+
+    function renderDashboard() {
+      if (!appData) return;
+      const canEdit = isEditingAllowed();
+
+      const editBadge = document.getElementById('editModeBadge');
+      if (editBadge) {
+        editBadge.className = canEdit ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+        editBadge.innerText = canEdit ? 'Editable' : 'View Only';
+      }
+
+      const saveBtn = document.getElementById('saveGitBtn');
+      if (saveBtn && !isSaveCooldown) {
+        saveBtn.disabled = !canEdit;
+        if (!canEdit) {
+          saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          saveBtn.classList.remove('hover:bg-indigo-700', 'cursor-pointer');
+        } else {
+          saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          saveBtn.classList.add('hover:bg-indigo-700', 'cursor-pointer');
+        }
+      }
+
+      setTxt('tpKpiHeaderTitle', `KPIS ${canEdit ? '(CLICK TO EDIT TARGETS)' : '(LOCKED)'}`);
+
+      const k = appData.kpis || {};
+      const kpiClass = canEdit ? 'py-3 px-2 font-extrabold text-[13px] editable-cell' : 'py-3 px-2 font-extrabold text-[13px] readonly-cell text-slate-700';
+
+      const updateKpiCell = (id, val) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerText = val;
+        el.contentEditable = canEdit ? 'true' : 'false';
+        el.className = kpiClass;
+      };
+
+      updateKpiCell('tpKpiBudget', `$${toNum(k.budget).toLocaleString()}`);
+      updateKpiCell('tpKpiSignups', toNum(k.signups).toLocaleString());
+      updateKpiCell('tpKpiUsers', toNum(k.users).toLocaleString());
+      updateKpiCell('tpKpiRevenue', `$${toNum(k.revenue).toLocaleString()}`);
+      updateKpiCell('tpKpiProfit', `$${toNum(k.profit).toLocaleString()}`);
+
+      setTxt('kpiTargetBudget', `KPI: $${toNum(k.budget)}`);
+      setTxt('kpiTargetSignups', `KPI: ${toNum(k.signups)}`);
+      setTxt('kpiTargetUsers', `KPI: ${toNum(k.users)}`);
+      setTxt('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
+      setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
+
+      renderAllTables();
+      renderTakeawaysTables();
+      syncGlobalSummaries();
+      updateCharts();
+      lucide.createIcons();
+    }
+
+    function renderAllTables() {
+      const container = document.getElementById('platformsContainer');
+      container.innerHTML = '';
+      const canEdit = isEditingAllowed();
+
+      PLATFORMS.forEach(p => {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        const totB = sum('budget'), totS = sum('spent'), totRRB = sum('rrBudget'), totDB = sum('dailyBudget');
+        const totImpK = sum('impKpi'), totImpM = sum('impMtd'), totImpR = sum('impRr');
+        const totPV = sum('productViews'), totV2P = sum('v2p');
+        const totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
+        const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr');
+        const totUK = sum('usersFtp'), totUM = sum('usersMtd'), totUR = sum('usersRr');
+        const totRev = sum('revenue');
+
+        const card = document.createElement('div');
+        card.id = `section_${p.key}`;
+        card.className = 'space-y-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center shadow-xs">${p.icon}</span>
+              <h2 class="text-base font-bold font-display text-slate-900">${p.title}</h2>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-bold">
+              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
+              <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
+              ${canEdit ? `
+                <button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded-md ${p.btnBg} text-white transition flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span>
+                </button>
+              ` : `
+                <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                  <i data-lucide="lock" class="w-3 h-3"></i><span>View Only</span>
+                </span>
+              `}
+            </div>
+          </div>
+          <div class="glass-card rounded-xl overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="master-table min-w-[1360px]">
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="bg-white sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                    <th colspan="4" class="bg-[#D9D9D9]">BUDGET</th>
+                    <th colspan="3" class="bg-[#CFE2F3]">META VIEWS</th>
+                    <th colspan="2" class="bg-[#FFF2CC]">Product Views</th>
+                    <th colspan="4" class="bg-[#FCE5CD]">CLICKS</th>
+                    <th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th>
+                    <th colspan="3" class="bg-[#EAD1DC]">USERS</th>
+                    <th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
+                  </tr>
+                  <tr class="text-[10px] font-bold">
+                    <th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily Budget</th>
+                    <th class="bg-[#DFECF7]">Imp. (KPI)</th><th class="bg-[#DFECF7]">MTD</th><th class="bg-[#DFECF7]">RR</th>
+                    <th class="bg-[#FFF6D9]">Product Views</th><th class="bg-[#FFF6D9]">V2P</th>
+                    <th class="bg-[#FDEFE0]">Clicks (KPI)</th><th class="bg-[#FDEFE0]">MTD</th><th class="bg-[#FDEFE0]">RR</th><th class="bg-[#FDEFE0]">CTR</th>
+                    <th class="bg-[#E5F1E1]">Reg (KPI)</th><th class="bg-[#E5F1E1]">MTD</th><th class="bg-[#E5F1E1]">RR</th>
+                    <th class="bg-[#F2DFE8]">Users (KPI)</th><th class="bg-[#F2DFE8]">MTD</th><th class="bg-[#F2DFE8]">RR</th>
+                    <th class="bg-[#D9E5FA]">S2P</th><th class="bg-[#D9E5FA]">Revenue</th><th class="bg-[#D9E5FA]">ROI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${camps.length === 0 ? `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => `
+                    <tr class="hover:brightness-95">
+                      <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
+                        <div class="relative flex items-center justify-center min-h-[26px]">
+                          <span class="${canEdit ? 'editable-cell' : 'readonly-cell'} text-center font-bold px-7 w-full truncate block" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'name')">${c.name}</span>
+                          ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
+                        </div>
+                      </td>
+                      <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
+                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
+                      <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
+                      <td class="col-budget font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'dailyBudget')">$${c.dailyBudget}</td>
+                      <td class="col-views font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
+                      <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
+                      <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
+                      <td class="col-prod font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'productViews')">${c.productViews}</td>
+                      <td class="col-prod font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'v2p')">${c.v2p}</td>
+                      <td class="col-clicks font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksKpi')">${toNum(c.clicksKpi).toLocaleString()}</td>
+                      <td class="col-clicks font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'clicksMtd')">${toNum(c.clicksMtd).toLocaleString()}</td>
+                      <td class="col-clicks font-mono readonly-cell ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
+                      <td class="col-clicks font-mono font-bold readonly-cell">${c.ctr || '0.0%'}</td>
+                      <td class="col-regs font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'regKpi')">${c.regKpi !== undefined ? toNum(c.regKpi).toLocaleString() : 0}</td>
+                      <td class="col-regs font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'regMtd')">${toNum(c.regMtd).toLocaleString()}</td>
+                      <td class="col-regs font-mono readonly-cell ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
+                      <td class="col-users font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersFtp')">${c.usersFtp !== undefined ? toNum(c.usersFtp).toLocaleString() : 0}</td>
+                      <td class="col-users font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'usersMtd')">${toNum(c.usersMtd).toLocaleString()}</td>
+                      <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? toNum(c.usersRr).toLocaleString() : 0}</td>
+                      <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
+                      <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
+                      <td class="col-perf font-mono font-extrabold readonly-cell ${getRoiColorClass(c.revenue, c.spent)}">${calculateRoi(c.revenue, c.spent)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot>
+                  <tr class="font-black font-mono">
+                    <td class="text-center sticky-col bg-white">TOTAL ${p.key.toUpperCase()}</td>
+                    <td class="col-budget">$${Math.round(totB).toLocaleString()}</td>
+                    <td class="col-budget">$${Math.round(totS).toLocaleString()}</td>
+                    <td class="col-budget ${getRrColorClass(totRRB, totB)}">$${Math.round(totRRB).toLocaleString()}</td>
+                    <td class="col-budget">$${Math.round(totDB).toLocaleString()}</td>
+                    <td class="col-views">${totImpK.toLocaleString()}</td>
+                    <td class="col-views">${totImpM.toLocaleString()}</td>
+                    <td class="col-views ${getRrColorClass(totImpR, totImpK)}">${totImpR.toLocaleString()}</td>
+                    <td class="col-prod">${totPV.toLocaleString()}</td>
+                    <td class="col-prod">${totV2P}</td>
+                    <td class="col-clicks">${Math.round(totCK).toLocaleString()}</td>
+                    <td class="col-clicks">${totCM.toLocaleString()}</td>
+                    <td class="col-clicks ${getRrColorClass(totCR, totCK)}">${totCR.toLocaleString()}</td>
+                    <td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0.0%'}</td>
+                    <td class="col-regs">${totRK > 0 ? totRK.toLocaleString() : '—'}</td>
+                    <td class="col-regs">${totRM.toLocaleString()}</td>
+                    <td class="col-regs ${getRrColorClass(totRR, totRK)}">${totRR.toLocaleString()}</td>
+                    <td class="col-users">${totUK > 0 ? totUK.toLocaleString() : '—'}</td>
+                    <td class="col-users">${totUM.toLocaleString()}</td>
+                    <td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR.toLocaleString()}</td>
+                    <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
+                    <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
+                    <td class="col-perf ${getRoiColorClass(totRev, totS)}">${calculateRoi(totRev, totS)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // TABLAS TAKE AWAYS: COLORES DE ENCABEZADO Y CELDAS SINCRONIZADOS (GRIS, AMARILLO Y CELESTE)
+    function renderTakeawaysTables() {
+      const container = document.getElementById('takeawaysContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const canEdit = isEditingAllowed();
+
+      PLATFORMS.forEach(p => {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
+
+        const card = document.createElement('div');
+        card.id = `section_takeaway_${p.key}`;
+        card.className = 'space-y-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center shadow-xs">${p.icon}</span>
+              <h2 class="text-base font-bold font-display text-slate-900">${p.title} — Performance Take Aways</h2>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-bold">
+              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">${camps.length} Campaigns</span>
+            </div>
+          </div>
+          <div class="glass-card rounded-xl overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="master-table w-full text-left" style="table-layout: fixed; width: 100%;">
+                <colgroup>
+                  <col style="width: 22%;">
+                  <col style="width: 26%;">
+                  <col style="width: 26%;">
+                  <col style="width: 26%;">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th class="bg-white sticky-col font-extrabold text-slate-900 text-center py-2.5 px-3">
+                      Campaign<br><span class="text-[10px] font-bold text-slate-700">Name</span>
+                    </th>
+                    <th class="bg-[#D9D9D9] font-extrabold text-slate-900 text-center py-2.5 px-3">Performance Take Aways</th>
+                    <th class="bg-[#FFFF00] font-extrabold text-slate-900 text-center py-2.5 px-3">Lessons Learned</th>
+                    <th class="bg-[#CFE2F3] font-extrabold text-slate-900 text-center py-2.5 px-3">What can be improved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${camps.length === 0 ? `<tr><td colspan="4" class="text-center py-5 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => `
+                    <tr class="hover:brightness-95 transition-colors">
+                      <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-2.5 text-center align-top border-r border-slate-300">
+                        <span class="font-bold text-slate-900 block break-words" title="${c.name}">${c.name}</span>
+                      </td>
+                      <td class="bg-[#F8F9FA] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
+                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
+                          contenteditable="${canEdit}"
+                          onblur="handleTakeawayBlur(this, '${c.id}', 'takeaways')">${c.takeaways || ''}</td>
+                      <td class="bg-[#FEFCE8] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
+                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
+                          contenteditable="${canEdit}"
+                          onblur="handleTakeawayBlur(this, '${c.id}', 'lessons')">${c.lessons || ''}</td>
+                      <td class="bg-[#F0F9FF] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
+                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
+                          contenteditable="${canEdit}"
+                          onblur="handleTakeawayBlur(this, '${c.id}', 'improvements')">${c.improvements || ''}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function syncGlobalSummaries() {
+      const all = appData.campaigns || [];
+      const sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
+
+      const totSpent = sum('spent');
+      const totRRB = sum('rrBudget');
+      const totSign = sum('regMtd');
+      const totRRSign = sum('regRr');
+      const totUsers = sum('usersMtd');
+      const totRRUsers = sum('usersRr');
+      const totRev = sum('revenue');
+
+      const totProf = totRev - totSpent;
+      const totRrRev = calculateAutoRR(totRev);
+      const totProfRr = totRrRev - totRRB;
+
+      const k = appData.kpis || {};
+      const fmtMoney = (val) => `${val < 0 ? '-$' : '$'}${Math.abs(Math.round(val)).toLocaleString()}`;
+
+      setTxt('tpMtdBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('tpMtdSignups', totSign.toLocaleString());
+      setTxt('tpMtdUsers', totUsers.toLocaleString());
+      setTxt('tpMtdRevenue', `$${Math.round(totRev).toLocaleString()}`);
+      setTxt('tpMtdProfit', fmtMoney(totProf));
+
+      setTxt('tpRrBudget', `$${Math.round(totRRB).toLocaleString()}`);
+      setTxt('tpRrSignups', totRRSign.toLocaleString());
+      setTxt('tpRrUsers', totRRUsers.toLocaleString());
+      setTxt('tpRrRevenue', `$${Math.round(totRrRev).toLocaleString()}`);
+      setTxt('tpRrProfit', fmtMoney(totProfRr));
+
+      const setRrColor = (id, rrVal, kpiVal) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isOk = toNum(rrVal) >= toNum(kpiVal);
+        el.classList.remove('text-emerald-600', 'text-rose-600');
+        el.classList.add(isOk ? 'text-emerald-600' : 'text-rose-600');
+      };
+
+      setRrColor('tpRrBudget', totRRB, k.budget);
+      setRrColor('tpRrSignups', totRRSign, k.signups);
+      setRrColor('tpRrUsers', totRRUsers, k.users);
+      setRrColor('tpRrRevenue', totRrRev, k.revenue);
+      setRrColor('tpRrProfit', totProfRr, k.profit);
+
+      const spendVal = toNum(totRRB) > 0 ? toNum(totRRB) : toNum(totSpent);
+      const revVal = toNum(totRrRev) > 0 ? toNum(totRrRev) : toNum(totRev);
+      const ratioVal = spendVal > 0 ? (revVal / spendVal).toFixed(1) : '0.4';
+      setTxt('tpRoiRatio', `1:${ratioVal}`);
+
+      setTxt('kpiBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('kpiSignups', totSign.toLocaleString());
+      setTxt('kpiFtd', totUsers.toLocaleString());
+      setTxt('kpiRevenue', `$${Math.round(totRev).toLocaleString()}`);
+
+      setTxt('kpiProfit', fmtMoney(totProf));
+      const kpiProfitEl = document.getElementById('kpiProfit');
+      if (kpiProfitEl) {
+        kpiProfitEl.classList.remove('text-slate-900', 'text-emerald-600', 'text-rose-600');
+        kpiProfitEl.classList.add(totProf < 0 ? 'text-rose-600' : 'text-emerald-600');
+      }
+
+      const badge = (id, v, target, isCurrency = false) => {
+        const el = document.getElementById(id);
+        if (el) {
+          const numVal = toNum(v);
+          const isOk = (numVal >= toNum(target) && toNum(target) > 0);
+          el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${isOk ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
+          el.innerText = `RR: ${isCurrency ? fmtMoney(numVal) : Math.round(numVal).toLocaleString()}`;
+        }
+      };
+
+      badge('rrBudget', totRRB, k.budget, true);
+      badge('rrSignups', totRRSign, k.signups, false);
+      badge('rrFtd', totRRUsers, k.users, false);
+      badge('rrRevenue', totRrRev, k.revenue, true);
+      badge('rrProfit', totProfRr, k.profit, true);
+    }
+
+    function updateCharts() {
+      const all = appData.campaigns || [];
+      const sumP = (p, f) => all.filter(c => (c.platform || '').toLowerCase() === p).reduce((s, c) => s + toNum(c[f]), 0);
+      const mS = sumP('meta', 'spent'), mR = sumP('meta', 'revenue'), iS = sumP('instagram', 'spent'), iR = sumP('instagram', 'revenue'), xS = sumP('x', 'spent'), xR = sumP('x', 'revenue');
+      const mSign = sumP('meta', 'regMtd'), iSign = sumP('instagram', 'regMtd'), mUsr = sumP('meta', 'usersMtd'), iUsr = sumP('instagram', 'usersMtd');
+
+      setTxt('pieMetaSignups', mSign); setTxt('pieIGSignups', iSign);
+      setTxt('pieMetaUsers', mUsr); setTxt('pieIGUsers', iUsr);
+      setTxt('badgeRoiMeta', `ROI: ${calculateRoi(mR, mS)}`);
+      setTxt('badgeRoiIG', `ROI: ${calculateRoi(iR, iS)}`);
+      setTxt('badgeRoiX', `ROI: ${calculateRoi(xR, xS)}`);
+
+      if (chartSignups) chartSignups.destroy();
+      chartSignups = new Chart(document.getElementById('signupsPieChart').getContext('2d'), {
+        type: 'doughnut', data: { labels: ['Meta', 'Instagram'], datasets: [{ data: [mSign, iSign], backgroundColor: ['#0081FB', '#E1306C'] }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      });
+
+      if (chartUsers) chartUsers.destroy();
+      chartUsers = new Chart(document.getElementById('usersPieChart').getContext('2d'), {
+        type: 'doughnut', data: { labels: ['Meta', 'Instagram'], datasets: [{ data: [mUsr, iUsr], backgroundColor: ['#0081FB', '#E1306C'] }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+      });
+
+      const miniBar = (id, s, r, ch) => {
+        if (ch) ch.destroy();
+        return new Chart(document.getElementById(id).getContext('2d'), {
+          type: 'bar', data: { labels: ['Spent', 'Revenue'], datasets: [{ data: [s, r], backgroundColor: ['#6366F1', '#10B981'], borderRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '$' + v } } } }
+        });
+      };
+      chartMetaBR = miniBar('metaBudgetRevenueChart', mS, mR, chartMetaBR);
+      chartIGBR = miniBar('instagramBudgetRevenueChart', iS, iR, chartIGBR);
+      chartXBR = miniBar('xBudgetRevenueChart', xS, xR, chartXBR);
+    }
+
+    async function exportToExcel() {
+      if (!appData || !appData.campaigns) return;
+      distributeKpisToCampaigns();
+
+      const ARGB = {
+        border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D',
+        white: 'FFFFFFFF', highlightBlue: 'FFCFE2F3',
+        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD',
+        grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
+        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0',
+        subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
+        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED',
+        tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
+      };
+
+      const thinBorder = {
+        top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } },
+        bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } }
+      };
+
+      function setCell(cell, value, bg, bold = false, color = ARGB.textDark) {
+        cell.value = value;
+        if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+        cell.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = thinBorder;
+      }
+
+      function mergeRange(ws, r1, c1, r2, c2, val, bg, bold = true, color = ARGB.textDark) {
+        ws.mergeCells(r1, c1, r2, c2);
+        for (let r = r1; r <= r2; r++) {
+          for (let c = c1; c <= c2; c++) {
+            const cell = ws.getCell(r, c);
+            if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+            cell.border = thinBorder;
+          }
+        }
+        const master = ws.getCell(r1, c1);
+        master.value = val;
+        master.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        master.alignment = { vertical: 'middle', horizontal: 'center' };
+      }
+
+      function getRrColorArgb(rrVal, kpiVal) {
+        const rr = toNum(rrVal), kpi = toNum(kpiVal);
+        return (kpi > 0 ? rr >= kpi : rr > 0) ? ARGB.textGreen : ARGB.textRed;
+      }
+
+      function getRoiArgb(rev, sp) {
+        const s = toNum(sp), r = toNum(rev);
+        if (s <= 0) return r > 0 ? ARGB.textGreen : ARGB.textDark;
+        return ((r - s) / s) >= 0 ? ARGB.textGreen : ARGB.textRed;
+      }
+
+      const wb = new ExcelJS.Workbook();
+      wb.creator = 'WiseKapital';
+      const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
+
+      ws.columns = [
+        { width: 28 }, { width: 14 }, { width: 12 }, { width: 12 }, { width: 14 },
+        { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 10 },
+        { width: 14 }, { width: 12 }, { width: 12 }, { width: 10 }, { width: 14 },
+        { width: 12 }, { width: 12 }, { width: 14 }, { width: 12 }, { width: 12 },
+        { width: 10 }, { width: 16 }, { width: 16 }
+      ];
+
+      function buildPlatformExcelBlock(pKey, title, bannerColor, startRow) {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
+        let r = startRow;
+
+        ws.mergeCells(r, 1, r, 23);
+        const tc = ws.getCell(r, 1);
+        tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
+        tc.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bannerColor } };
+        tc.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(r).height = 24;
+        r++;
+
+        const h1 = r, h2 = r + 1;
+        mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
+        mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
+        mergeRange(ws, h1, 6, h1, 8, 'META VIEWS', ARGB.grpViews, true);
+        mergeRange(ws, h1, 9, h1, 10, 'Product Views', ARGB.grpProduct, true);
+        mergeRange(ws, h1, 11, h1, 14, 'CLICKS', ARGB.grpClicks, true);
+        mergeRange(ws, h1, 15, h1, 17, 'REGISTRATIONS', ARGB.grpRegs, true);
+        mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
+        mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
+
+        const subs = [
+          { c: 2, t: 'Budget', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
+          { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews },
+          { c: 9, t: 'Product Views', bg: ARGB.subProduct }, { c: 10, t: 'V2P', bg: ARGB.subProduct },
+          { c: 11, t: 'Clicks (KPI)', bg: ARGB.subClicks }, { c: 12, t: 'MTD', bg: ARGB.subClicks }, { c: 13, t: 'RR', bg: ARGB.subClicks }, { c: 14, t: 'CTR', bg: ARGB.subClicks },
+          { c: 15, t: 'Registration', bg: ARGB.subRegs }, { c: 16, t: 'MTD', bg: ARGB.subRegs }, { c: 17, t: 'RR', bg: ARGB.subRegs },
+          { c: 18, t: 'Users (FTP)', bg: ARGB.subUsers }, { c: 19, t: 'MTD', bg: ARGB.subUsers }, { c: 20, t: 'RR', bg: ARGB.subUsers },
+          { c: 21, t: 'S2P', bg: ARGB.subPerf }, { c: 22, t: 'Revenue', bg: ARGB.subPerf }, { c: 23, t: 'ROI', bg: ARGB.subPerf }
+        ];
+        subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true));
+        r += 2;
+
+        camps.forEach(c => {
+          const row = ws.getRow(r);
+          row.height = 19;
+          setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
+          setCell(row.getCell(2), `$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true);
+          setCell(row.getCell(3), `$${Math.round(toNum(c.spent)).toLocaleString()}`, ARGB.tintBudget, true);
+          setCell(row.getCell(4), `$${Math.round(toNum(c.rrBudget)).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget));
+          setCell(row.getCell(5), `$${Math.round(toNum(c.dailyBudget)).toLocaleString()}`, ARGB.tintBudget);
+          setCell(row.getCell(6), Math.round(toNum(c.impKpi)).toLocaleString(), ARGB.tintViews);
+          setCell(row.getCell(7), Math.round(toNum(c.impMtd)).toLocaleString(), ARGB.tintViews, true);
+          setCell(row.getCell(8), Math.round(toNum(c.impRr)).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi));
+          setCell(row.getCell(9), Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true);
+          setCell(row.getCell(10), toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true);
+          setCell(row.getCell(11), Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks);
+          setCell(row.getCell(12), Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true);
+          setCell(row.getCell(13), Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi));
+          setCell(row.getCell(14), c.ctr || '0.0%', ARGB.tintClicks, true);
+          setCell(row.getCell(15), toNum(c.regKpi) > 0 ? Math.round(toNum(c.regKpi)).toLocaleString() : (c.regKpi !== undefined ? c.regKpi : '—'), ARGB.tintRegs, true);
+          setCell(row.getCell(16), Math.round(toNum(c.regMtd)).toLocaleString(), ARGB.tintRegs, true);
+          setCell(row.getCell(17), Math.round(toNum(c.regRr)).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi));
+          setCell(row.getCell(18), toNum(c.usersFtp) > 0 ? Math.round(toNum(c.usersFtp)).toLocaleString() : (c.usersFtp !== undefined ? c.usersFtp : '—'), ARGB.tintUsers, true);
+          setCell(row.getCell(19), Math.round(toNum(c.usersMtd)).toLocaleString(), ARGB.tintUsers, true);
+          setCell(row.getCell(20), toNum(c.usersRr) > 0 ? Math.round(toNum(c.usersRr)).toLocaleString() : (toNum(c.usersRr) === 0 && toNum(c.usersFtp) > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
+          setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
+          setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
+          setCell(row.getCell(23), calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, getRoiArgb(c.revenue, c.spent));
+          r++;
+        });
+
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        const fRow = ws.getRow(r);
+        fRow.height = 20;
+        setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
+        setCell(fRow.getCell(2), `$${Math.round(sum('budget')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(3), `$${Math.round(sum('spent')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(4), `$${Math.round(sum('rrBudget')).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget')));
+        setCell(fRow.getCell(5), `$${Math.round(sum('dailyBudget')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(6), Math.round(sum('impKpi')).toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(7), Math.round(sum('impMtd')).toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(8), Math.round(sum('impRr')).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi')));
+        setCell(fRow.getCell(9), Math.round(sum('productViews')).toLocaleString(), ARGB.tintProduct, true);
+        setCell(fRow.getCell(10), Math.round(sum('v2p')).toLocaleString(), ARGB.tintProduct, true);
+        setCell(fRow.getCell(11), Math.round(sum('clicksKpi')).toLocaleString(), ARGB.tintClicks, true);
+        setCell(fRow.getCell(12), Math.round(sum('clicksMtd')).toLocaleString(), ARGB.tintClicks, true);
+        setCell(fRow.getCell(13), Math.round(sum('clicksRr')).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi')));
+        setCell(fRow.getCell(14), sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintClicks, true);
+        setCell(fRow.getCell(15), sum('regKpi') > 0 ? Math.round(sum('regKpi')).toLocaleString() : '—', ARGB.tintRegs, true);
+        setCell(fRow.getCell(16), Math.round(sum('regMtd')).toLocaleString(), ARGB.tintRegs, true);
+        setCell(fRow.getCell(17), Math.round(sum('regRr')).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi')));
+        setCell(fRow.getCell(18), sum('usersFtp') > 0 ? Math.round(sum('usersFtp')).toLocaleString() : '—', ARGB.tintUsers, true);
+        setCell(fRow.getCell(19), Math.round(sum('usersMtd')).toLocaleString(), ARGB.tintUsers, true);
+        setCell(fRow.getCell(20), sum('usersRr') > 0 ? Math.round(sum('usersRr')).toLocaleString() : (sum('usersFtp') > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
+        setCell(fRow.getCell(21), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
+        setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
+        setCell(fRow.getCell(23), calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, getRoiArgb(sum('revenue'), sum('spent')));
+        r++;
+
+        return r + 1;
+      }
+
+      let currentRow = 1;
+      currentRow = buildPlatformExcelBlock('meta', 'Meta (Facebook Ads)', 'FF1D63ED', currentRow);
+      currentRow = buildPlatformExcelBlock('instagram', 'Instagram Ads', 'FFE1306C', currentRow);
+      currentRow = buildPlatformExcelBlock('x', 'X Campaigns', 'FF111827', currentRow);
+
+      const buf = await wb.xlsx.writeBuffer();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([buf]));
+      a.download = `WiseKapital_Social_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showSaveToast("📊 Excel exported successfully!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateDatesUI();
+      loadDataForRange(fromDate, toDate);
+      initOrResumeSaveCooldown();
+    });
+  </script>
+</body>
+</html>
