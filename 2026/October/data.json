@@ -34,9 +34,9 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "*CTR of 3.2% indicates moderate engagement, but acquisition volume remains limited.\n\n*Zero FTDs and revenue mean the campaign has not demonstrated downstream value.",
+      "lessons": "Generating registrations is not enough if users do not progress through the funnel.\n\nThe current creative and audience combination has not demonstrated sufficient conversion quality.\n\nMore spend will not solve an unproven conversion funnel.",
+      "improvements": "Test stronger acquisition messaging to improve CTR and registration volume.\n\nIdentify where users abandon the registration-to-FTD journey.\n\nKeep spending controlled until downstream conversion is demonstrated."
     },
     {
       "name": "V1 Imperial Sweeps",
@@ -64,9 +64,9 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "Achieved a 6.1% CTR, the highest among the Facebook campaigns.\n\nDespite strong engagement and acquisition efficiency, generated zero FTDs and revenue.",
+      "lessons": "The campaign attracts attention, but engagement has not translated into business value.\n\nLow CPR can create a misleading impression of success when downstream conversions are absent.\n\nThe creative approach is worth testing further, but the audience quality remains unvalidated.",
+      "improvements": "Preserve the high-performing creative elements while testing alternative conversion-focused messaging.\n\nAnalyze registration quality and identify barriers to FTD conversion.\n\nEvaluate success against qualified users and revenue, not CTR alone."
     },
     {
       "name": "C4 Imperial Sweeps",
@@ -94,9 +94,9 @@
       "s2p": "3.2%",
       "revenue": 140,
       "roi": "+27.3%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "Delivered 31 registrations at a $3.55 CPR, the strongest acquisition efficiency across all six campaigns.\n\nGenerated 1 FTD and $140 revenue from $110 spend.\n\nReported ROI of +27.3%, but revenue still exceeded spend by only $30.",
+      "lessons": "C4 is the strongest registration acquisition benchmark, but its downstream conversion rate remains low.\n\nHigh registration volume does not automatically produce proportional revenue.\n\nThe campaign has demonstrated revenue potential, but not yet enough evidence for aggressive scaling.",
+      "improvements": "Replicate the winning acquisition elements in controlled creative tests.\n\nImprove the 3.2% S2P rate to increase the value generated from existing registrations.\n\nFocus on improving revenue per registration before substantially increasing spend."
     },
     {
       "name": "C2 SweepzKings",
@@ -124,9 +124,9 @@
       "s2p": "6.7%",
       "revenue": 140,
       "roi": "+23.9%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "Generated 15 registrations at a $7.53 CPR, more than twice C4's acquisition cost.\n\nRecorded a 2.1% CTR, indicating weaker engagement than the other Facebook campaigns.\n\nGenerated 1 FTD and $140 revenue against $113 spend, with a reported +23.9% ROI.",
+      "lessons": "The campaign can generate downstream value, but its acquisition efficiency is weaker than C4.\n\nLow CTR is a clear signal to investigate creative relevance and audience response.\n\nOne FTD is not sufficient evidence to establish consistent profitability.\n\nWhat Can Be Improved",
+      "improvements": "Test C4's stronger creative structure against C2's existing concepts.\n\nImprove CTR to reduce inefficient traffic acquisition.\n\nOptimize toward qualified registrations and repeatable FTD volume rather than simply increasing registrations."
     },
     {
       "name": "C3 Imperial Sweeps",
@@ -154,9 +154,9 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "Generated only 2 registrations from $104 spend, resulting in a $52 CPR.\n\nAchieved a 3.2% CTR but failed to convert traffic into meaningful registration volume.\n\nGenerated zero FTDs and revenue, resulting in a -100% reported ROI.",
+      "lessons": "Traffic generation is not the primary problem to solve; post-click conversion requires investigation.\n\nThe campaign consumed almost half of Instagram's total spend while generating only 2 registrations.\n\nThe current audience and creative combination has not justified its investment.",
+      "improvements": "Reassess audience quality and test alternative creative concepts.\n\nReduce or pause spend until conversion efficiency improves and the funnel is validated."
     },
     {
       "name": "C1 SweepzKings",
@@ -184,9 +184,9 @@
       "s2p": "7.1%",
       "revenue": 140,
       "roi": "+34.6%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": ""
+      "takeaways": "Generated 14 registrations at a $7.43 CPR, accounting for the majority of Instagram registrations.\n\nDelivered 1 FTD and $140 revenue from $104 spend.\n\nReported a +34.6% ROI, the strongest reported ROI across the six campaigns.",
+      "lessons": "C1 demonstrated that Instagram can generate downstream value when the campaign converts.\n\nIts 7.1% S2P rate was stronger than C4 and C2, despite lower registration volume.\n\nRevenue performance is encouraging, but its 1.5% CTR reveals an opportunity to acquire more efficiently.",
+      "improvements": "Improve creative engagement to increase CTR without sacrificing registration quality.\n\nTest variations of the current winning creative and audience combination.\n\nExplore controlled budget increases only after confirming that FTD and revenue performance is repeatable."
     }
   ]
 }
