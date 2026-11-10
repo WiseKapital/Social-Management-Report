@@ -285,6 +285,13 @@
       setTxt('toDateText', fmtDateUS(toDate));
     }
 
+    function getSelectedDaysCount() {
+      if (!fromDate || !toDate) return 1;
+      const s = fromDate <= toDate ? fromDate : toDate;
+      const e = fromDate <= toDate ? toDate : fromDate;
+      return Math.max(1, Math.round((e - s) / (1000 * 60 * 60 * 24)) + 1);
+    }
+
     function isEditingAllowed() {
       if (!fromDate || !toDate) return false;
       const startD = fromDate <= toDate ? fromDate : toDate;
@@ -433,12 +440,11 @@
           d = (d % daysCount) + 1;
         }
       } else {
-        // Distribuir en días distintos espaciados a lo largo del mes
         const step = daysCount / totalUsers;
         const used = new Set();
         for (let i = 0; i < totalUsers; i++) {
           let pos = Math.floor((i + 0.5) * step) + 1;
-          let offset = ((hash + i) % 3) - 1; // Variación pequeña para que distintas campañas no colisionen
+          let offset = ((hash + i) % 3) - 1;
           pos = Math.max(1, Math.min(daysCount, pos + offset));
           
           let search = 0;
@@ -639,9 +645,11 @@
     function addCampaign(platform) {
       if (!isEditingAllowed()) { alert("Editing is disabled for this date range."); return; }
       if (!appData) appData = createEmptyMonth(currentLoadedMonth, currentLoadedYear);
+      const curDays = getSelectedDaysCount();
       const newCamp = {
         id: `camp_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
         name: `New Campaign`, platform, highlight: false,
+        numDays: curDays,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
         regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
@@ -851,12 +859,10 @@
           const clicksMtd = Math.round(baseClicks * scaleFactor);
           const regMtd = Math.round(baseReg * scaleFactor);
           
-          // NUEVA LÓGICA: Distribuye los usuarios en distintos días del mes
           const usersMtd = isDefaultOrFull 
             ? baseUsers 
             : calculateDistributedUsers(c, startD.getDate(), endD.getDate(), maxDays);
           
-          // Users y Revenue van de la mano: cada usuario arrastra su revenue completo
           let revenue = 0;
           if (isDefaultOrFull || (startD.getDate() <= 1 && endD.getDate() >= maxDays)) {
             revenue = baseRev;
@@ -866,11 +872,14 @@
             revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
           }
           
-          const dailyBudget = toNum(c.dailyBudget);
+          const numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDays;
+          // FÓRMULA AUTOMÁTICA: Daily Budget = Spent / # Days
+          const dailyBudget = numDays > 0 ? Math.round(spent / numDays) : 0;
 
           return {
             ...c,
             id: c.id || `c_${i}_${Date.now()}`,
+            numDays,
             budget: toNum(c.budget),
             impKpi: toNum(c.impKpi),
             clicksKpi: toNum(c.clicksKpi),
@@ -966,12 +975,16 @@
                 sRev = Math.round((cRev * scaleFactorMonth) * 100) / 100;
               }
 
+              const numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
+              const dailyBudget = numDays > 0 ? Math.round(sSpent / numDays) : 0;
+
               if (!campMap.has(key)) {
                 campMap.set(key, {
                   ...c,
                   id: `c_agg_${key}`,
+                  numDays,
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
-                  dailyBudget: toNum(c.dailyBudget),
+                  dailyBudget,
                   spent: sSpent, impMtd: sImp, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev,
                   takeaways: c.takeaways || "", lessons: c.lessons || "", improvements: c.improvements || ""
                 });
@@ -979,6 +992,7 @@
                 const ex = campMap.get(key);
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
+                ex.dailyBudget = ex.numDays > 0 ? Math.round(ex.spent / ex.numDays) : 0;
                 if (!ex.takeaways && c.takeaways) ex.takeaways = c.takeaways;
                 if (!ex.lessons && c.lessons) ex.lessons = c.lessons;
                 if (!ex.improvements && c.improvements) ex.improvements = c.improvements;
@@ -991,7 +1005,8 @@
         const mergedCamps = Array.from(campMap.values()).map(c => {
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
-          c.dailyBudget = toNum(c.dailyBudget);
+          c.numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
+          c.dailyBudget = c.numDays > 0 ? Math.round(c.spent / c.numDays) : 0;
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
           c.roi = calculateRoi(c.revenue, c.spent);
@@ -1028,6 +1043,14 @@
           if (field === 'name') rawC[field] = el.innerText.trim();
           else rawC[field] = toNum(el.innerText);
         }
+      }
+
+      // Recalcular Daily Budget automáticamente: Spent / # Days
+      const curD = toNum(c.numDays) > 0 ? toNum(c.numDays) : getSelectedDaysCount();
+      c.dailyBudget = curD > 0 ? Math.round(toNum(c.spent) / curD) : 0;
+      if (rawMonthData && rawMonthData.campaigns) {
+        const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
+        if (rawC) rawC.dailyBudget = c.dailyBudget;
       }
 
       c.rrBudget = calculateAutoRR(c.spent);
@@ -1114,6 +1137,7 @@
       const container = document.getElementById('platformsContainer');
       container.innerHTML = '';
       const canEdit = isEditingAllowed();
+      const curDays = getSelectedDaysCount();
 
       PLATFORMS.forEach(p => {
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
@@ -1151,20 +1175,20 @@
           </div>
           <div class="glass-card rounded-xl overflow-hidden">
             <div class="overflow-x-auto custom-scrollbar">
-              <table class="master-table min-w-[1360px]">
+              <table class="master-table min-w-[1420px]">
                 <thead>
                   <tr>
                     <th rowspan="2" class="bg-white sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
-                    <th colspan="4" class="bg-[#D9D9D9]">BUDGET</th>
+                    <th colspan="5" class="bg-[#D9D9D9]">BUDGET</th>
                     <th colspan="3" class="bg-[#CFE2F3]">META VIEWS</th>
-                    <th colspan="2" class="bg-[#FFF2CC]">Product Views</th>
-                    <th colspan="4" class="bg-[#FCE5CD]">CLICKS</th>
+                    <th colspan="2" class="bg-[#FFF2CC]">PRODUCT VIEWS</th>
+                    <th colspan="4" class="bg-[#FCE5CD]">PRODUCT CLICKS</th>
                     <th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th>
                     <th colspan="3" class="bg-[#EAD1DC]">USERS</th>
                     <th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
                   </tr>
                   <tr class="text-[10px] font-bold">
-                    <th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily Budget</th>
+                    <th class="bg-[#E8E8E8]"># Days</th><th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily Budget</th>
                     <th class="bg-[#DFECF7]">Imp. (KPI)</th><th class="bg-[#DFECF7]">MTD</th><th class="bg-[#DFECF7]">RR</th>
                     <th class="bg-[#FFF6D9]">Product Views</th><th class="bg-[#FFF6D9]">V2P</th>
                     <th class="bg-[#FDEFE0]">Clicks (KPI)</th><th class="bg-[#FDEFE0]">MTD</th><th class="bg-[#FDEFE0]">RR</th><th class="bg-[#FDEFE0]">CTR</th>
@@ -1174,7 +1198,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${camps.length === 0 ? `<tr><td colspan="23" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => `
+                  ${camps.length === 0 ? `<tr><td colspan="24" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => `
                     <tr class="hover:brightness-95">
                       <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
                         <div class="relative flex items-center justify-center min-h-[26px]">
@@ -1182,10 +1206,12 @@
                           ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         </div>
                       </td>
+                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${c.numDays !== undefined && toNum(c.numDays) > 0 ? c.numDays : curDays}</td>
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
                       <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
-                      <td class="col-budget font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'dailyBudget')">$${c.dailyBudget}</td>
+                      <!-- DAILY BUDGET CALCULADO AUTOMÁTICAMENTE (NO EDITABLE) -->
+                      <td class="col-budget font-mono font-bold readonly-cell">$${c.dailyBudget}</td>
                       <td class="col-views font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
                       <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
                       <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
@@ -1210,6 +1236,7 @@
                 <tfoot>
                   <tr class="font-black font-mono">
                     <td class="text-center sticky-col bg-white">TOTAL ${p.key.toUpperCase()}</td>
+                    <td class="col-budget">${curDays}</td>
                     <td class="col-budget">$${Math.round(totB).toLocaleString()}</td>
                     <td class="col-budget">$${Math.round(totS).toLocaleString()}</td>
                     <td class="col-budget ${getRrColorClass(totRRB, totB)}">$${Math.round(totRRB).toLocaleString()}</td>
@@ -1493,18 +1520,38 @@
       const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
 
       ws.columns = [
-        { width: 28 }, { width: 14 }, { width: 12 }, { width: 12 }, { width: 14 },
-        { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 10 },
-        { width: 14 }, { width: 12 }, { width: 12 }, { width: 10 }, { width: 14 },
-        { width: 12 }, { width: 12 }, { width: 14 }, { width: 12 }, { width: 12 },
-        { width: 10 }, { width: 16 }, { width: 16 }
+        { width: 28 }, // 1: Campaign
+        { width: 10 }, // 2: # Days
+        { width: 14 }, // 3: Budget
+        { width: 12 }, // 4: Spent
+        { width: 12 }, // 5: RR
+        { width: 14 }, // 6: Daily Budget
+        { width: 14 }, // 7: Imp. (KPI)
+        { width: 14 }, // 8: MTD
+        { width: 14 }, // 9: RR
+        { width: 14 }, // 10: Product Views
+        { width: 10 }, // 11: V2P
+        { width: 14 }, // 12: Clicks (KPI)
+        { width: 12 }, // 13: MTD
+        { width: 12 }, // 14: RR
+        { width: 10 }, // 15: CTR
+        { width: 14 }, // 16: Registration
+        { width: 12 }, // 17: MTD
+        { width: 12 }, // 18: RR
+        { width: 14 }, // 19: Users (FTP)
+        { width: 12 }, // 20: MTD
+        { width: 12 }, // 21: RR
+        { width: 10 }, // 22: S2P
+        { width: 16 }, // 23: Revenue
+        { width: 16 }  // 24: ROI
       ];
 
       function buildPlatformExcelBlock(pKey, title, bannerColor, startRow) {
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
         let r = startRow;
+        const curDays = getSelectedDaysCount();
 
-        ws.mergeCells(r, 1, r, 23);
+        ws.mergeCells(r, 1, r, 24);
         const tc = ws.getCell(r, 1);
         tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
         tc.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
@@ -1515,22 +1562,38 @@
 
         const h1 = r, h2 = r + 1;
         mergeRange(ws, h1, 1, h2, 1, 'Campaign (Brand)', ARGB.white, true);
-        mergeRange(ws, h1, 2, h1, 5, 'BUDGET', ARGB.grpBudget, true);
-        mergeRange(ws, h1, 6, h1, 8, 'META VIEWS', ARGB.grpViews, true);
-        mergeRange(ws, h1, 9, h1, 10, 'Product Views', ARGB.grpProduct, true);
-        mergeRange(ws, h1, 11, h1, 14, 'CLICKS', ARGB.grpClicks, true);
-        mergeRange(ws, h1, 15, h1, 17, 'REGISTRATIONS', ARGB.grpRegs, true);
-        mergeRange(ws, h1, 18, h1, 20, 'USERS', ARGB.grpUsers, true);
-        mergeRange(ws, h1, 21, h1, 23, 'PERFORMANCE', ARGB.grpPerf, true);
+        mergeRange(ws, h1, 2, h1, 6, 'BUDGET', ARGB.grpBudget, true);
+        mergeRange(ws, h1, 7, h1, 9, 'META VIEWS', ARGB.grpViews, true);
+        mergeRange(ws, h1, 10, h1, 11, 'PRODUCT VIEWS', ARGB.grpProduct, true);
+        mergeRange(ws, h1, 12, h1, 15, 'PRODUCT CLICKS', ARGB.grpClicks, true);
+        mergeRange(ws, h1, 16, h1, 18, 'REGISTRATIONS', ARGB.grpRegs, true);
+        mergeRange(ws, h1, 19, h1, 21, 'USERS', ARGB.grpUsers, true);
+        mergeRange(ws, h1, 22, h1, 24, 'PERFORMANCE', ARGB.grpPerf, true);
 
         const subs = [
-          { c: 2, t: 'Budget', bg: ARGB.subBudget }, { c: 3, t: 'Spent', bg: ARGB.subBudget }, { c: 4, t: 'RR', bg: ARGB.subBudget }, { c: 5, t: 'Daily Budget', bg: ARGB.subBudget },
-          { c: 6, t: 'Imp. (KPI)', bg: ARGB.subViews }, { c: 7, t: 'MTD', bg: ARGB.subViews }, { c: 8, t: 'RR', bg: ARGB.subViews },
-          { c: 9, t: 'Product Views', bg: ARGB.subProduct }, { c: 10, t: 'V2P', bg: ARGB.subProduct },
-          { c: 11, t: 'Clicks (KPI)', bg: ARGB.subClicks }, { c: 12, t: 'MTD', bg: ARGB.subClicks }, { c: 13, t: 'RR', bg: ARGB.subClicks }, { c: 14, t: 'CTR', bg: ARGB.subClicks },
-          { c: 15, t: 'Registration', bg: ARGB.subRegs }, { c: 16, t: 'MTD', bg: ARGB.subRegs }, { c: 17, t: 'RR', bg: ARGB.subRegs },
-          { c: 18, t: 'Users (FTP)', bg: ARGB.subUsers }, { c: 19, t: 'MTD', bg: ARGB.subUsers }, { c: 20, t: 'RR', bg: ARGB.subUsers },
-          { c: 21, t: 'S2P', bg: ARGB.subPerf }, { c: 22, t: 'Revenue', bg: ARGB.subPerf }, { c: 23, t: 'ROI', bg: ARGB.subPerf }
+          { c: 2, t: '# Days', bg: ARGB.subBudget },
+          { c: 3, t: 'Budget', bg: ARGB.subBudget },
+          { c: 4, t: 'Spent', bg: ARGB.subBudget },
+          { c: 5, t: 'RR', bg: ARGB.subBudget },
+          { c: 6, t: 'Daily Budget', bg: ARGB.subBudget },
+          { c: 7, t: 'Imp. (KPI)', bg: ARGB.subViews },
+          { c: 8, t: 'MTD', bg: ARGB.subViews },
+          { c: 9, t: 'RR', bg: ARGB.subViews },
+          { c: 10, t: 'Product Views', bg: ARGB.subProduct },
+          { c: 11, t: 'V2P', bg: ARGB.subProduct },
+          { c: 12, t: 'Clicks (KPI)', bg: ARGB.subClicks },
+          { c: 13, t: 'MTD', bg: ARGB.subClicks },
+          { c: 14, t: 'RR', bg: ARGB.subClicks },
+          { c: 15, t: 'CTR', bg: ARGB.subClicks },
+          { c: 16, t: 'Registration', bg: ARGB.subRegs },
+          { c: 17, t: 'MTD', bg: ARGB.subRegs },
+          { c: 18, t: 'RR', bg: ARGB.subRegs },
+          { c: 19, t: 'Users (FTP)', bg: ARGB.subUsers },
+          { c: 20, t: 'MTD', bg: ARGB.subUsers },
+          { c: 21, t: 'RR', bg: ARGB.subUsers },
+          { c: 22, t: 'S2P', bg: ARGB.subPerf },
+          { c: 23, t: 'Revenue', bg: ARGB.subPerf },
+          { c: 24, t: 'ROI', bg: ARGB.subPerf }
         ];
         subs.forEach(s => setCell(ws.getCell(h2, s.c), s.t, s.bg, true));
         r += 2;
@@ -1538,29 +1601,31 @@
         camps.forEach(c => {
           const row = ws.getRow(r);
           row.height = 19;
+          const cDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : curDays;
           setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
-          setCell(row.getCell(2), `$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true);
-          setCell(row.getCell(3), `$${Math.round(toNum(c.spent)).toLocaleString()}`, ARGB.tintBudget, true);
-          setCell(row.getCell(4), `$${Math.round(toNum(c.rrBudget)).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget));
-          setCell(row.getCell(5), `$${Math.round(toNum(c.dailyBudget)).toLocaleString()}`, ARGB.tintBudget);
-          setCell(row.getCell(6), Math.round(toNum(c.impKpi)).toLocaleString(), ARGB.tintViews);
-          setCell(row.getCell(7), Math.round(toNum(c.impMtd)).toLocaleString(), ARGB.tintViews, true);
-          setCell(row.getCell(8), Math.round(toNum(c.impRr)).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi));
-          setCell(row.getCell(9), Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true);
-          setCell(row.getCell(10), toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true);
-          setCell(row.getCell(11), Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks);
-          setCell(row.getCell(12), Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true);
-          setCell(row.getCell(13), Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi));
-          setCell(row.getCell(14), c.ctr || '0.0%', ARGB.tintClicks, true);
-          setCell(row.getCell(15), toNum(c.regKpi) > 0 ? Math.round(toNum(c.regKpi)).toLocaleString() : (c.regKpi !== undefined ? c.regKpi : '—'), ARGB.tintRegs, true);
-          setCell(row.getCell(16), Math.round(toNum(c.regMtd)).toLocaleString(), ARGB.tintRegs, true);
-          setCell(row.getCell(17), Math.round(toNum(c.regRr)).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi));
-          setCell(row.getCell(18), toNum(c.usersFtp) > 0 ? Math.round(toNum(c.usersFtp)).toLocaleString() : (c.usersFtp !== undefined ? c.usersFtp : '—'), ARGB.tintUsers, true);
-          setCell(row.getCell(19), Math.round(toNum(c.usersMtd)).toLocaleString(), ARGB.tintUsers, true);
-          setCell(row.getCell(20), toNum(c.usersRr) > 0 ? Math.round(toNum(c.usersRr)).toLocaleString() : (toNum(c.usersRr) === 0 && toNum(c.usersFtp) > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
-          setCell(row.getCell(21), c.s2p || '0.0%', ARGB.tintPerf, true);
-          setCell(row.getCell(22), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
-          setCell(row.getCell(23), calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, getRoiArgb(c.revenue, c.spent));
+          setCell(row.getCell(2), cDays, ARGB.tintBudget, true);
+          setCell(row.getCell(3), `$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true);
+          setCell(row.getCell(4), `$${Math.round(toNum(c.spent)).toLocaleString()}`, ARGB.tintBudget, true);
+          setCell(row.getCell(5), `$${Math.round(toNum(c.rrBudget)).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(c.rrBudget, c.budget));
+          setCell(row.getCell(6), `$${Math.round(toNum(c.dailyBudget)).toLocaleString()}`, ARGB.tintBudget);
+          setCell(row.getCell(7), Math.round(toNum(c.impKpi)).toLocaleString(), ARGB.tintViews);
+          setCell(row.getCell(8), Math.round(toNum(c.impMtd)).toLocaleString(), ARGB.tintViews, true);
+          setCell(row.getCell(9), Math.round(toNum(c.impRr)).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi));
+          setCell(row.getCell(10), Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true);
+          setCell(row.getCell(11), toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true);
+          setCell(row.getCell(12), Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks);
+          setCell(row.getCell(13), Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true);
+          setCell(row.getCell(14), Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi));
+          setCell(row.getCell(15), c.ctr || '0.0%', ARGB.tintClicks, true);
+          setCell(row.getCell(16), toNum(c.regKpi) > 0 ? Math.round(toNum(c.regKpi)).toLocaleString() : (c.regKpi !== undefined ? c.regKpi : '—'), ARGB.tintRegs, true);
+          setCell(row.getCell(17), Math.round(toNum(c.regMtd)).toLocaleString(), ARGB.tintRegs, true);
+          setCell(row.getCell(18), Math.round(toNum(c.regRr)).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(c.regRr, c.regKpi));
+          setCell(row.getCell(19), toNum(c.usersFtp) > 0 ? Math.round(toNum(c.usersFtp)).toLocaleString() : (c.usersFtp !== undefined ? c.usersFtp : '—'), ARGB.tintUsers, true);
+          setCell(row.getCell(20), Math.round(toNum(c.usersMtd)).toLocaleString(), ARGB.tintUsers, true);
+          setCell(row.getCell(21), toNum(c.usersRr) > 0 ? Math.round(toNum(c.usersRr)).toLocaleString() : (toNum(c.usersRr) === 0 && toNum(c.usersFtp) > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(c.usersRr, c.usersFtp));
+          setCell(row.getCell(22), c.s2p || '0.0%', ARGB.tintPerf, true);
+          setCell(row.getCell(23), toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark);
+          setCell(row.getCell(24), calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, getRoiArgb(c.revenue, c.spent));
           r++;
         });
 
@@ -1568,28 +1633,29 @@
         const fRow = ws.getRow(r);
         fRow.height = 20;
         setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
-        setCell(fRow.getCell(2), `$${Math.round(sum('budget')).toLocaleString()}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(3), `$${Math.round(sum('spent')).toLocaleString()}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(4), `$${Math.round(sum('rrBudget')).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget')));
-        setCell(fRow.getCell(5), `$${Math.round(sum('dailyBudget')).toLocaleString()}`, ARGB.tintBudget, true);
-        setCell(fRow.getCell(6), Math.round(sum('impKpi')).toLocaleString(), ARGB.tintViews, true);
-        setCell(fRow.getCell(7), Math.round(sum('impMtd')).toLocaleString(), ARGB.tintViews, true);
-        setCell(fRow.getCell(8), Math.round(sum('impRr')).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi')));
-        setCell(fRow.getCell(9), Math.round(sum('productViews')).toLocaleString(), ARGB.tintProduct, true);
-        setCell(fRow.getCell(10), Math.round(sum('v2p')).toLocaleString(), ARGB.tintProduct, true);
-        setCell(fRow.getCell(11), Math.round(sum('clicksKpi')).toLocaleString(), ARGB.tintClicks, true);
-        setCell(fRow.getCell(12), Math.round(sum('clicksMtd')).toLocaleString(), ARGB.tintClicks, true);
-        setCell(fRow.getCell(13), Math.round(sum('clicksRr')).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi')));
-        setCell(fRow.getCell(14), sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintClicks, true);
-        setCell(fRow.getCell(15), sum('regKpi') > 0 ? Math.round(sum('regKpi')).toLocaleString() : '—', ARGB.tintRegs, true);
-        setCell(fRow.getCell(16), Math.round(sum('regMtd')).toLocaleString(), ARGB.tintRegs, true);
-        setCell(fRow.getCell(17), Math.round(sum('regRr')).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi')));
-        setCell(fRow.getCell(18), sum('usersFtp') > 0 ? Math.round(sum('usersFtp')).toLocaleString() : '—', ARGB.tintUsers, true);
-        setCell(fRow.getCell(19), Math.round(sum('usersMtd')).toLocaleString(), ARGB.tintUsers, true);
-        setCell(fRow.getCell(20), sum('usersRr') > 0 ? Math.round(sum('usersRr')).toLocaleString() : (sum('usersFtp') > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
-        setCell(fRow.getCell(21), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
-        setCell(fRow.getCell(22), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
-        setCell(fRow.getCell(23), calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, getRoiArgb(sum('revenue'), sum('spent')));
+        setCell(fRow.getCell(2), curDays, ARGB.tintBudget, true);
+        setCell(fRow.getCell(3), `$${Math.round(sum('budget')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(4), `$${Math.round(sum('spent')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(5), `$${Math.round(sum('rrBudget')).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget')));
+        setCell(fRow.getCell(6), `$${Math.round(sum('dailyBudget')).toLocaleString()}`, ARGB.tintBudget, true);
+        setCell(fRow.getCell(7), Math.round(sum('impKpi')).toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(8), Math.round(sum('impMtd')).toLocaleString(), ARGB.tintViews, true);
+        setCell(fRow.getCell(9), Math.round(sum('impRr')).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(sum('impRr'), sum('impKpi')));
+        setCell(fRow.getCell(10), Math.round(sum('productViews')).toLocaleString(), ARGB.tintProduct, true);
+        setCell(fRow.getCell(11), Math.round(sum('v2p')).toLocaleString(), ARGB.tintProduct, true);
+        setCell(fRow.getCell(12), Math.round(sum('clicksKpi')).toLocaleString(), ARGB.tintClicks, true);
+        setCell(fRow.getCell(13), Math.round(sum('clicksMtd')).toLocaleString(), ARGB.tintClicks, true);
+        setCell(fRow.getCell(14), Math.round(sum('clicksRr')).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(sum('clicksRr'), sum('clicksKpi')));
+        setCell(fRow.getCell(15), sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintClicks, true);
+        setCell(fRow.getCell(16), sum('regKpi') > 0 ? Math.round(sum('regKpi')).toLocaleString() : '—', ARGB.tintRegs, true);
+        setCell(fRow.getCell(17), Math.round(sum('regMtd')).toLocaleString(), ARGB.tintRegs, true);
+        setCell(fRow.getCell(18), Math.round(sum('regRr')).toLocaleString(), ARGB.tintRegs, true, getRrColorArgb(sum('regRr'), sum('regKpi')));
+        setCell(fRow.getCell(19), sum('usersFtp') > 0 ? Math.round(sum('usersFtp')).toLocaleString() : '—', ARGB.tintUsers, true);
+        setCell(fRow.getCell(20), Math.round(sum('usersMtd')).toLocaleString(), ARGB.tintUsers, true);
+        setCell(fRow.getCell(21), sum('usersRr') > 0 ? Math.round(sum('usersRr')).toLocaleString() : (sum('usersFtp') > 0 ? '0' : '—'), ARGB.tintUsers, true, getRrColorArgb(sum('usersRr'), sum('usersFtp')));
+        setCell(fRow.getCell(22), sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true);
+        setCell(fRow.getCell(23), `$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen);
+        setCell(fRow.getCell(24), calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, getRoiArgb(sum('revenue'), sum('spent')));
         r++;
 
         return r + 1;
