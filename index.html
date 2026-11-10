@@ -893,7 +893,8 @@
           let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDays;
           numDays = Math.min(totalDaysInMonth, Math.max(1, numDays));
           
-          const dailyBudget = numDays > 0 ? Math.round(spent / numDays) : 0;
+          // DAILY BUDGET MANUAL DIRECTO DEL JSON (SIN FÓRMULA)
+          const dailyBudget = toNum(c.dailyBudget);
 
           return {
             ...c,
@@ -995,7 +996,7 @@
 
               let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
               numDays = Math.min(totDaysMonth, Math.max(1, numDays));
-              const dailyBudget = numDays > 0 ? Math.round(sSpent / numDays) : 0;
+              const dailyBudget = toNum(c.dailyBudget);
 
               if (!campMap.has(key)) {
                 campMap.set(key, {
@@ -1010,7 +1011,7 @@
                 const ex = campMap.get(key);
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.metaClicks += sMetaClicks; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
-                ex.dailyBudget = ex.numDays > 0 ? Math.round(ex.spent / ex.numDays) : 0;
+                ex.dailyBudget = toNum(c.dailyBudget) || ex.dailyBudget;
               }
             });
           }
@@ -1020,7 +1021,8 @@
         const mergedCamps = Array.from(campMap.values()).map(c => {
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.metaClicks = Math.round(c.metaClicks || 0); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
-          c.dailyBudget = c.numDays > 0 ? Math.round(c.spent / c.numDays) : 0;
+          c.dailyBudget = toNum(c.dailyBudget);
+          c.numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
           c.roi = calculateRoi(c.revenue, c.spent);
@@ -1071,13 +1073,7 @@
         }
       }
 
-      // Recalcular Daily Budget automáticamente: Spent / # Days
-      const curD = toNum(c.numDays) > 0 ? toNum(c.numDays) : getSelectedDaysCount();
-      c.dailyBudget = curD > 0 ? Math.round(toNum(c.spent) / curD) : 0;
-      if (rawMonthData && rawMonthData.campaigns) {
-        const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
-        if (rawC) rawC.dailyBudget = c.dailyBudget;
-      }
+      // DAILY BUDGET MANUAL: SE GUARDA DIRECTAMENTE SIN FÓRMULAS AUTOMÁTICAS
 
       c.rrBudget = calculateAutoRR(c.spent);
       c.impRr = calculateAutoRR(c.impMtd);
@@ -1227,7 +1223,8 @@
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
                       <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
-                      <td class="col-budget font-mono font-bold readonly-cell">$${c.dailyBudget}</td>
+                      <!-- DAILY BUDGET EDITABLE DIRECTAMENTE (SIN FÓRMULAS) -->
+                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'dailyBudget')">$${c.dailyBudget}</td>
                       <td class="col-views font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
                       <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
                       <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
