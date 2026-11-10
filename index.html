@@ -265,7 +265,7 @@
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    const sysToday = new Date();
+    const sysToday = new Date(2026, 10, 15); // Simula el 15 de Noviembre (en JS los meses van de 0 a 11, por eso 10 = Noviembre)
     let currentLoadedYear = sysToday.getFullYear();
     let currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
 
