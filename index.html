@@ -209,9 +209,6 @@
     <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
     <div id="platformsContainer" class="space-y-8"></div>
 
-    <!-- PERFORMANCE TAKE AWAYS TABLES (DEBAJO DE X Y ARRIBA DE LAS GRAFICAS) -->
-    <div id="takeawaysContainer" class="space-y-8 pt-4 border-t border-slate-200"></div>
-
     <!-- CHARTS -->
     <div class="space-y-6 pt-4 border-t border-slate-200">
       <h2 class="text-base font-bold font-display text-slate-900">Platform Performance: Meta, Instagram &amp; X</h2>
@@ -652,8 +649,7 @@
         numDays: curDays,
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
-        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
-        takeaways: "", lessons: "", improvements: ""
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%"
       };
       appData.campaigns.push(newCamp);
       if (rawMonthData && rawMonthData.campaigns) rawMonthData.campaigns.push({ ...newCamp });
@@ -872,8 +868,9 @@
             revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
           }
           
-          const numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDays;
-          // FÓRMULA AUTOMÁTICA: Daily Budget = Spent / # Days
+          let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDays;
+          numDays = Math.min(totalDaysInMonth, Math.max(1, numDays));
+          
           const dailyBudget = numDays > 0 ? Math.round(spent / numDays) : 0;
 
           return {
@@ -899,9 +896,6 @@
             clicksRr: calculateAutoRR(clicksMtd),
             regRr: calculateAutoRR(regMtd),
             usersRr: calculateAutoRR(usersMtd),
-            takeaways: c.takeaways || "",
-            lessons: c.lessons || "",
-            improvements: c.improvements || "",
             ctr: impMtd > 0 ? ((clicksMtd / impMtd) * 100).toFixed(1) + '%' : '0.0%',
             s2p: regMtd > 0 ? ((usersMtd / regMtd) * 100).toFixed(1) + '%' : '0.0%',
             roi: calculateRoi(revenue, spent)
@@ -975,7 +969,8 @@
                 sRev = Math.round((cRev * scaleFactorMonth) * 100) / 100;
               }
 
-              const numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
+              let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
+              numDays = Math.min(totDaysMonth, Math.max(1, numDays));
               const dailyBudget = numDays > 0 ? Math.round(sSpent / numDays) : 0;
 
               if (!campMap.has(key)) {
@@ -985,17 +980,13 @@
                   numDays,
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
                   dailyBudget,
-                  spent: sSpent, impMtd: sImp, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev,
-                  takeaways: c.takeaways || "", lessons: c.lessons || "", improvements: c.improvements || ""
+                  spent: sSpent, impMtd: sImp, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev
                 });
               } else {
                 const ex = campMap.get(key);
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
                 ex.dailyBudget = ex.numDays > 0 ? Math.round(ex.spent / ex.numDays) : 0;
-                if (!ex.takeaways && c.takeaways) ex.takeaways = c.takeaways;
-                if (!ex.lessons && c.lessons) ex.lessons = c.lessons;
-                if (!ex.improvements && c.improvements) ex.improvements = c.improvements;
               }
             });
           }
@@ -1005,7 +996,6 @@
         const mergedCamps = Array.from(campMap.values()).map(c => {
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
-          c.numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
           c.dailyBudget = c.numDays > 0 ? Math.round(c.spent / c.numDays) : 0;
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
@@ -1034,14 +1024,26 @@
       if (!isEditingAllowed()) { renderDashboard(); return; }
       const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
       if (!c) return;
+
+      let valNum = toNum(el.innerText);
+
+      // Limitar numDays a los días exactos del mes seleccionado
+      if (field === 'numDays') {
+        const startD = fromDate <= toDate ? fromDate : toDate;
+        const totalDaysInMonth = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
+        if (valNum > totalDaysInMonth) valNum = totalDaysInMonth;
+        if (valNum < 1) valNum = 1;
+        el.innerText = valNum;
+      }
+
       if (field === 'name') c[field] = el.innerText.trim();
-      else c[field] = toNum(el.innerText);
+      else c[field] = (field === 'numDays') ? valNum : toNum(el.innerText);
 
       if (rawMonthData && rawMonthData.campaigns) {
         const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
         if (rawC) {
           if (field === 'name') rawC[field] = el.innerText.trim();
-          else rawC[field] = toNum(el.innerText);
+          else rawC[field] = (field === 'numDays') ? valNum : toNum(el.innerText);
         }
       }
 
@@ -1066,17 +1068,6 @@
 
       distributeKpisToCampaigns();
       renderDashboard();
-    }
-
-    function handleTakeawayBlur(el, id, field) {
-      if (!isEditingAllowed()) { renderDashboard(); return; }
-      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
-      if (!c) return;
-      c[field] = el.innerText.trim();
-      if (rawMonthData && rawMonthData.campaigns) {
-        const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
-        if (rawC) rawC[field] = el.innerText.trim();
-      }
     }
 
     function renderDashboard() {
@@ -1127,7 +1118,6 @@
       setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
 
       renderAllTables();
-      renderTakeawaysTables();
       syncGlobalSummaries();
       updateCharts();
       lucide.createIcons();
@@ -1138,6 +1128,8 @@
       container.innerHTML = '';
       const canEdit = isEditingAllowed();
       const curDays = getSelectedDaysCount();
+      const startD = fromDate <= toDate ? fromDate : toDate;
+      const totalDaysInCurrentMonth = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
 
       PLATFORMS.forEach(p => {
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
@@ -1206,11 +1198,10 @@
                           ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         </div>
                       </td>
-                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${c.numDays !== undefined && toNum(c.numDays) > 0 ? c.numDays : curDays}</td>
+                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${c.numDays !== undefined && toNum(c.numDays) > 0 ? Math.min(totalDaysInCurrentMonth, toNum(c.numDays)) : curDays}</td>
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
                       <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
-                      <!-- DAILY BUDGET CALCULADO AUTOMÁTICAMENTE (NO EDITABLE) -->
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.dailyBudget}</td>
                       <td class="col-views font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
                       <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
@@ -1236,7 +1227,7 @@
                 <tfoot>
                   <tr class="font-black font-mono">
                     <td class="text-center sticky-col bg-white">TOTAL ${p.key.toUpperCase()}</td>
-                    <td class="col-budget">${curDays}</td>
+                    <td class="col-budget font-bold">-</td>
                     <td class="col-budget">$${Math.round(totB).toLocaleString()}</td>
                     <td class="col-budget">$${Math.round(totS).toLocaleString()}</td>
                     <td class="col-budget ${getRrColorClass(totRRB, totB)}">$${Math.round(totRRB).toLocaleString()}</td>
@@ -1261,77 +1252,6 @@
                     <td class="col-perf ${getRoiColorClass(totRev, totS)}">${calculateRoi(totRev, totS)}</td>
                   </tr>
                 </tfoot>
-              </table>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // TABLAS TAKE AWAYS: COLORES DE ENCABEZADO Y CELDAS SINCRONIZADOS (GRIS, AMARILLO Y CELESTE)
-    function renderTakeawaysTables() {
-      const container = document.getElementById('takeawaysContainer');
-      if (!container) return;
-      container.innerHTML = '';
-      const canEdit = isEditingAllowed();
-
-      PLATFORMS.forEach(p => {
-        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
-
-        const card = document.createElement('div');
-        card.id = `section_takeaway_${p.key}`;
-        card.className = 'space-y-2';
-        card.innerHTML = `
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2.5">
-              <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center shadow-xs">${p.icon}</span>
-              <h2 class="text-base font-bold font-display text-slate-900">${p.title} — Performance Take Aways</h2>
-            </div>
-            <div class="flex items-center gap-2 text-xs font-bold">
-              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">${camps.length} Campaigns</span>
-            </div>
-          </div>
-          <div class="glass-card rounded-xl overflow-hidden">
-            <div class="overflow-x-auto custom-scrollbar">
-              <table class="master-table w-full text-left" style="table-layout: fixed; width: 100%;">
-                <colgroup>
-                  <col style="width: 22%;">
-                  <col style="width: 26%;">
-                  <col style="width: 26%;">
-                  <col style="width: 26%;">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th class="bg-white sticky-col font-extrabold text-slate-900 text-center py-2.5 px-3">
-                      Campaign<br><span class="text-[10px] font-bold text-slate-700">Name</span>
-                    </th>
-                    <th class="bg-[#D9D9D9] font-extrabold text-slate-900 text-center py-2.5 px-3">Performance Take Aways</th>
-                    <th class="bg-[#FFFF00] font-extrabold text-slate-900 text-center py-2.5 px-3">Lessons Learned</th>
-                    <th class="bg-[#CFE2F3] font-extrabold text-slate-900 text-center py-2.5 px-3">What can be improved</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${camps.length === 0 ? `<tr><td colspan="4" class="text-center py-5 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => `
-                    <tr class="hover:brightness-95 transition-colors">
-                      <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-2.5 text-center align-top border-r border-slate-300">
-                        <span class="font-bold text-slate-900 block break-words" title="${c.name}">${c.name}</span>
-                      </td>
-                      <td class="bg-[#F8F9FA] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
-                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
-                          contenteditable="${canEdit}"
-                          onblur="handleTakeawayBlur(this, '${c.id}', 'takeaways')">${c.takeaways || ''}</td>
-                      <td class="bg-[#FEFCE8] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
-                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
-                          contenteditable="${canEdit}"
-                          onblur="handleTakeawayBlur(this, '${c.id}', 'lessons')">${c.lessons || ''}</td>
-                      <td class="bg-[#F0F9FF] text-slate-800 text-left align-top p-2.5 text-xs border-r border-slate-300 ${canEdit ? 'editable-cell focus:ring-1 focus:ring-blue-500' : 'readonly-cell'}"
-                          style="white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; min-height: 44px; line-height: 1.45;"
-                          contenteditable="${canEdit}"
-                          onblur="handleTakeawayBlur(this, '${c.id}', 'improvements')">${c.improvements || ''}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
               </table>
             </div>
           </div>
@@ -1550,6 +1470,8 @@
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
         let r = startRow;
         const curDays = getSelectedDaysCount();
+        const startD = fromDate <= toDate ? fromDate : toDate;
+        const totalDaysInCurrentMonth = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
 
         ws.mergeCells(r, 1, r, 24);
         const tc = ws.getCell(r, 1);
@@ -1601,7 +1523,7 @@
         camps.forEach(c => {
           const row = ws.getRow(r);
           row.height = 19;
-          const cDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : curDays;
+          const cDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? Math.min(totalDaysInCurrentMonth, toNum(c.numDays)) : curDays;
           setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
           setCell(row.getCell(2), cDays, ARGB.tintBudget, true);
           setCell(row.getCell(3), `$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true);
@@ -1633,7 +1555,7 @@
         const fRow = ws.getRow(r);
         fRow.height = 20;
         setCell(fRow.getCell(1), `TOTAL ${pKey.toUpperCase()}`, ARGB.white, true);
-        setCell(fRow.getCell(2), curDays, ARGB.tintBudget, true);
+        setCell(fRow.getCell(2), '-', ARGB.tintBudget, true);
         setCell(fRow.getCell(3), `$${Math.round(sum('budget')).toLocaleString()}`, ARGB.tintBudget, true);
         setCell(fRow.getCell(4), `$${Math.round(sum('spent')).toLocaleString()}`, ARGB.tintBudget, true);
         setCell(fRow.getCell(5), `$${Math.round(sum('rrBudget')).toLocaleString()}`, ARGB.tintBudget, true, getRrColorArgb(sum('rrBudget'), sum('budget')));
