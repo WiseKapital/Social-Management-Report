@@ -37,8 +37,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
-      "metaClicks": 0
+      "numDays": 1,
+      "metaClicks": 99999
     },
     {
       "name": "V1 Imperial Sweeps",
@@ -69,7 +69,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 1,
       "metaClicks": 0
     },
     {
@@ -101,7 +101,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 1,
       "metaClicks": 0
     },
     {
@@ -133,7 +133,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 1,
       "metaClicks": 0
     },
     {
@@ -229,7 +229,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 1,
       "metaClicks": 0
     },
     {
@@ -261,8 +261,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 20,
-      "metaClicks": 0.1
+      "numDays": 1,
+      "metaClicks": 0
     }
   ]
 }
