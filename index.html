@@ -770,7 +770,11 @@
 
         const baseDays = getBaseDaysOfData(rawMonthData, year, monthIndex);
         const selectedDays = Math.max(1, endD.getDate() - startD.getDate() + 1);
-        const scaleFactor = selectedDays / baseDays;
+
+        // CORRECCIÓN: Si estamos en la vista estándar del mes o día actual, NO escalar.
+        // Solo escala si el usuario filtró activamente un sub-rango menor a los días base.
+        const isDefaultOrFull = isEditingAllowed() || (startD.getDate() === 1 && endD.getDate() >= baseDays);
+        const scaleFactor = isDefaultOrFull ? 1.0 : Math.min(1.0, selectedDays / baseDays);
 
         const scaledCampaigns = (rawMonthData.campaigns || []).map((c, i) => {
           const baseSpent = toNum(c.spent);
@@ -862,7 +866,7 @@
             mergedKpis.profit += toNum(k.profit);
 
             const baseDaysMonth = getBaseDaysOfData(res.data, m.year, m.monthIndex);
-            const scaleFactorMonth = selectedDaysThisMonth / baseDaysMonth;
+            const scaleFactorMonth = (sDay === 1 && eDay >= baseDaysMonth) ? 1.0 : Math.min(1.0, selectedDaysThisMonth / baseDaysMonth);
 
             (res.data.campaigns || []).forEach(c => {
               const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
@@ -930,14 +934,12 @@
       if (field === 'name') c[field] = el.innerText.trim();
       else c[field] = toNum(el.innerText);
 
+      // CORRECCIÓN: Guardar directamente el valor en rawMonthData sin dividirlo entre scaleFactor
       if (rawMonthData && rawMonthData.campaigns) {
         const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
         if (rawC) {
-          const sDay = Math.min(fromDate.getDate(), toDate.getDate());
-          const eDay = Math.max(fromDate.getDate(), toDate.getDate());
-          const scaleFactor = Math.max(1, eDay - sDay + 1) / getBaseDaysOfData(rawMonthData, currentLoadedYear, fullMonthNames.indexOf(currentLoadedMonth));
-          if (scaleFactor > 0 && field !== 'name') rawC[field] = Math.round(toNum(el.innerText) / scaleFactor);
-          else rawC[field] = el.innerText.trim();
+          if (field === 'name') rawC[field] = el.innerText.trim();
+          else rawC[field] = toNum(el.innerText);
         }
       }
 
