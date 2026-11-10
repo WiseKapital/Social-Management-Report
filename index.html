@@ -173,11 +173,16 @@
     </div>
 
     <!-- KPI CARDS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">BUDGET</span><i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">$0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: $0</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-sky-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Clicks</span><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-sky-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiClicks">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetClicks">KPI: 0</span><span id="rrClicks" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
       </div>
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Signups</span><i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i></div>
@@ -1225,6 +1230,9 @@
 
       const totSpent = sum('spent');
       const totRRB = sum('rrBudget');
+      const totClicks = sum('clicksMtd');
+      const totRRClicks = sum('clicksRr');
+      const totClicksKpi = sum('clicksKpi');
       const totSign = sum('regMtd');
       const totRRSign = sum('regRr');
       const totUsers = sum('usersMtd');
@@ -1270,6 +1278,8 @@
       setTxt('tpRoiRatio', `1:${ratioVal}`);
 
       setTxt('kpiBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('kpiClicks', totClicks.toLocaleString());
+      setTxt('kpiTargetClicks', `KPI: ${totClicksKpi.toLocaleString()}`);
       setTxt('kpiSignups', totSign.toLocaleString());
       setTxt('kpiFtd', totUsers.toLocaleString());
       setTxt('kpiRevenue', `$${Math.round(totRev).toLocaleString()}`);
@@ -1292,6 +1302,7 @@
       };
 
       badge('rrBudget', totRRB, k.budget, true);
+      badge('rrClicks', totRRClicks, totClicksKpi, false);
       badge('rrSignups', totRRSign, k.signups, false);
       badge('rrFtd', totRRUsers, k.users, false);
       badge('rrRevenue', totRrRev, k.revenue, true);
