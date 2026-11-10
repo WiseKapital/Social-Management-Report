@@ -265,7 +265,7 @@
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    const sysToday = new Date(2026, 10, 15); // Simula el 15 de Noviembre (en JS los meses van de 0 a 11, por eso 10 = Noviembre)
+    const sysToday = new Date();
     let currentLoadedYear = sysToday.getFullYear();
     let currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
 
@@ -771,8 +771,6 @@
         const baseDays = getBaseDaysOfData(rawMonthData, year, monthIndex);
         const selectedDays = Math.max(1, endD.getDate() - startD.getDate() + 1);
 
-        // CORRECCIÓN: Si estamos en la vista estándar del mes o día actual, NO escalar.
-        // Solo escala si el usuario filtró activamente un sub-rango menor a los días base.
         const isDefaultOrFull = isEditingAllowed() || (startD.getDate() === 1 && endD.getDate() >= baseDays);
         const scaleFactor = isDefaultOrFull ? 1.0 : Math.min(1.0, selectedDays / baseDays);
 
@@ -794,7 +792,9 @@
           const regMtd = Math.round(baseReg * scaleFactor);
           const usersMtd = Math.round(baseUsers * scaleFactor);
           const revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
-          const dailyBudget = selectedDays > 0 ? Math.round(spent / selectedDays) : 0;
+          
+          // CORRECCIÓN: Tomar el Daily Budget directo del JSON sin dividir entre días
+          const dailyBudget = toNum(c.dailyBudget);
 
           return {
             ...c,
@@ -884,6 +884,7 @@
                   ...c,
                   id: `c_agg_${key}`,
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
+                  dailyBudget: toNum(c.dailyBudget),
                   spent: sSpent, impMtd: sImp, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev,
                   takeaways: c.takeaways || "", lessons: c.lessons || "", improvements: c.improvements || ""
                 });
@@ -903,7 +904,7 @@
         const mergedCamps = Array.from(campMap.values()).map(c => {
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
-          c.dailyBudget = totalDaysSelected > 0 ? Math.round(c.spent / totalDaysSelected) : 0;
+          c.dailyBudget = toNum(c.dailyBudget);
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
           c.roi = calculateRoi(c.revenue, c.spent);
@@ -934,7 +935,6 @@
       if (field === 'name') c[field] = el.innerText.trim();
       else c[field] = toNum(el.innerText);
 
-      // CORRECCIÓN: Guardar directamente el valor en rawMonthData sin dividirlo entre scaleFactor
       if (rawMonthData && rawMonthData.campaigns) {
         const rawC = rawMonthData.campaigns.find(x => (x.name || '').trim() === (c.name || '').trim());
         if (rawC) {
