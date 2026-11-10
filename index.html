@@ -265,7 +265,7 @@
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    const sysToday = new Date(2026, 10, 15); // Simula el 15 de Noviembre (en JS los meses van de 0 a 11, por eso 10 = Noviembre)
+    const sysToday = new Date();
     let currentLoadedYear = sysToday.getFullYear();
     let currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
 
@@ -399,6 +399,63 @@
       }
       const isCurrentMonth = (year === sysToday.getFullYear() && monthIdx === sysToday.getMonth());
       return isCurrentMonth ? Math.max(1, sysToday.getDate()) : totalDaysInMonth;
+    }
+
+    // ALGORITMO: Distribuye determinísticamente los usuarios en distintos días del mes
+    function calculateDistributedUsers(c, startDay, endDay, maxDays) {
+      const totalUsers = toNum(c.usersMtd);
+      if (totalUsers <= 0) return 0;
+      if (startDay <= 1 && endDay >= maxDays) return totalUsers;
+
+      const daysCount = Math.max(1, maxDays);
+      const s = Math.max(1, Math.min(daysCount, startDay));
+      const e = Math.max(1, Math.min(daysCount, endDay));
+      if (s > e) return 0;
+
+      let hash = 0;
+      const str = String(c.id || c.name || 'camp');
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      hash = Math.abs(hash);
+
+      const daySlots = new Array(daysCount + 1).fill(0);
+
+      if (totalUsers >= daysCount) {
+        const perDay = Math.floor(totalUsers / daysCount);
+        let rem = totalUsers % daysCount;
+        for (let d = 1; d <= daysCount; d++) daySlots[d] = perDay;
+        let d = (hash % daysCount) + 1;
+        while (rem > 0) {
+          daySlots[d]++;
+          rem--;
+          d = (d % daysCount) + 1;
+        }
+      } else {
+        // Distribuir en días distintos espaciados a lo largo del mes
+        const step = daysCount / totalUsers;
+        const used = new Set();
+        for (let i = 0; i < totalUsers; i++) {
+          let pos = Math.floor((i + 0.5) * step) + 1;
+          let offset = ((hash + i) % 3) - 1; // Variación pequeña para que distintas campañas no colisionen
+          pos = Math.max(1, Math.min(daysCount, pos + offset));
+          
+          let search = 0;
+          while (used.has(pos) && search < daysCount) {
+            pos = (pos % daysCount) + 1;
+            search++;
+          }
+          used.add(pos);
+          daySlots[pos] = (daySlots[pos] || 0) + 1;
+        }
+      }
+
+      let sum = 0;
+      for (let d = s; d <= e; d++) {
+        sum += daySlots[d];
+      }
+      return sum;
     }
 
     function calculateAutoRR(val) {
@@ -769,10 +826,13 @@
         }
 
         const baseDays = getBaseDaysOfData(rawMonthData, year, monthIndex);
+        const totalDaysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+        const isCurrentMonth = (year === sysToday.getFullYear() && monthIndex === sysToday.getMonth());
+        const maxDays = Math.max(baseDays, isCurrentMonth ? sysToday.getDate() : totalDaysInMonth);
+        
         const selectedDays = Math.max(1, endD.getDate() - startD.getDate() + 1);
-
-        const isDefaultOrFull = isEditingAllowed() || (startD.getDate() === 1 && endD.getDate() >= baseDays);
-        const scaleFactor = isDefaultOrFull ? 1.0 : Math.min(1.0, selectedDays / baseDays);
+        const isDefaultOrFull = isEditingAllowed() || (startD.getDate() === 1 && endD.getDate() >= maxDays);
+        const scaleFactor = isDefaultOrFull ? 1.0 : Math.min(1.0, selectedDays / maxDays);
 
         const scaledCampaigns = (rawMonthData.campaigns || []).map((c, i) => {
           const baseSpent = toNum(c.spent);
@@ -790,14 +850,17 @@
           const v2p = Math.round(baseV2p * scaleFactor);
           const clicksMtd = Math.round(baseClicks * scaleFactor);
           const regMtd = Math.round(baseReg * scaleFactor);
-          const usersMtd = Math.round(baseUsers * scaleFactor);
           
-          // NUEVA LÓGICA: Users (MTD) y Revenue van de la mano
+          // NUEVA LÓGICA: Distribuye los usuarios en distintos días del mes
+          const usersMtd = isDefaultOrFull 
+            ? baseUsers 
+            : calculateDistributedUsers(c, startD.getDate(), endD.getDate(), maxDays);
+          
+          // Users y Revenue van de la mano: cada usuario arrastra su revenue completo
           let revenue = 0;
-          if (scaleFactor >= 1.0) {
+          if (isDefaultOrFull || (startD.getDate() <= 1 && endD.getDate() >= maxDays)) {
             revenue = baseRev;
           } else if (baseUsers > 0) {
-            // El revenue sale completo por cada usuario presente (no por partes)
             revenue = Math.round((usersMtd * (baseRev / baseUsers)) * 100) / 100;
           } else {
             revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
@@ -875,7 +938,9 @@
             mergedKpis.profit += toNum(k.profit);
 
             const baseDaysMonth = getBaseDaysOfData(res.data, m.year, m.monthIndex);
-            const scaleFactorMonth = (sDay === 1 && eDay >= baseDaysMonth) ? 1.0 : Math.min(1.0, selectedDaysThisMonth / baseDaysMonth);
+            const isCurrM = (m.year === sysToday.getFullYear() && m.monthIndex === sysToday.getMonth());
+            const maxDaysMonth = Math.max(baseDaysMonth, isCurrM ? sysToday.getDate() : totDaysMonth);
+            const scaleFactorMonth = (sDay === 1 && eDay >= maxDaysMonth) ? 1.0 : Math.min(1.0, selectedDaysThisMonth / maxDaysMonth);
 
             (res.data.campaigns || []).forEach(c => {
               const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
@@ -887,11 +952,13 @@
               const sV2p = toNum(c.v2p) * scaleFactorMonth;
               const sClicks = toNum(c.clicksMtd) * scaleFactorMonth;
               const sReg = toNum(c.regMtd) * scaleFactorMonth;
-              const sUsers = Math.round(cUsers * scaleFactorMonth);
+              
+              const sUsers = (sDay === 1 && eDay >= maxDaysMonth)
+                ? cUsers
+                : calculateDistributedUsers(c, sDay, eDay, maxDaysMonth);
 
-              // Users y Revenue van de la mano también en multi-mes
               let sRev = 0;
-              if (scaleFactorMonth >= 1.0) {
+              if (sDay === 1 && eDay >= maxDaysMonth) {
                 sRev = cRev;
               } else if (cUsers > 0) {
                 sRev = Math.round((sUsers * (cRev / cUsers)) * 100) / 100;
