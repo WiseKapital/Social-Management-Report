@@ -172,33 +172,51 @@
       </div>
     </div>
 
-    <!-- KPI CARDS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
+    <!-- KPI CARDS (7 COLUMNAS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3.5">
+      <!-- 1. BUDGET -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">BUDGET</span><i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">$0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: $0</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
       </div>
+
+      <!-- 2. META CLICKS (A LA IZQUIERDA DE PRODUCT CLICKS) -->
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Meta Clicks</span><i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-blue-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiMetaClicks">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetMetaClicks">KPI: —</span><span id="rrMetaClicks" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+
+      <!-- 3. PRODUCT CLICKS (RENOMBRADO) -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-sky-500">
-        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Clicks</span><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-sky-600"></i></div>
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Product Clicks</span><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-sky-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiClicks">0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetClicks">KPI: 0</span><span id="rrClicks" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
       </div>
+
+      <!-- 4. SIGNUPS -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Signups</span><i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiSignups">0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetSignups">KPI: 0</span><span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
       </div>
+
+      <!-- 5. USERS (FTD) -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-purple-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Users (FTD)</span><i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiFtd">0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetUsers">KPI: 0</span><span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
       </div>
+
+      <!-- 6. REVENUE -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Revenue</span><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiRevenue">$0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetRevenue">KPI: $0</span><span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
       </div>
+
+      <!-- 7. PROFIT -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-teal-500">
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Profit</span><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">$0</div>
@@ -1212,7 +1230,6 @@
                       <td class="col-views font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impKpi')">${toNum(c.impKpi).toLocaleString()}</td>
                       <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'impMtd')">${toNum(c.impMtd).toLocaleString()}</td>
                       <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
-                      <!-- META CLICKS AGREGADO -->
                       <td class="col-views font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'metaClicks')">${toNum(c.metaClicks).toLocaleString()}</td>
                       <td class="col-prod font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'productViews')">${c.productViews}</td>
                       <td class="col-prod font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'v2p')">${c.v2p}</td>
@@ -1275,6 +1292,8 @@
 
       const totSpent = sum('spent');
       const totRRB = sum('rrBudget');
+      const totMetaClicks = sum('metaClicks');
+      const totRRMetaClicks = calculateAutoRR(totMetaClicks);
       const totClicks = sum('clicksMtd');
       const totRRClicks = sum('clicksRr');
       const totClicksKpi = sum('clicksKpi');
@@ -1323,6 +1342,7 @@
       setTxt('tpRoiRatio', `1:${ratioVal}`);
 
       setTxt('kpiBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('kpiMetaClicks', totMetaClicks.toLocaleString());
       setTxt('kpiClicks', totClicks.toLocaleString());
       setTxt('kpiTargetClicks', `KPI: ${totClicksKpi.toLocaleString()}`);
       setTxt('kpiSignups', totSign.toLocaleString());
@@ -1340,13 +1360,14 @@
         const el = document.getElementById(id);
         if (el) {
           const numVal = toNum(v);
-          const isOk = (numVal >= toNum(target) && toNum(target) > 0);
+          const isOk = toNum(target) > 0 ? numVal >= toNum(target) : numVal > 0;
           el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${isOk ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
           el.innerText = `RR: ${isCurrency ? fmtMoney(numVal) : Math.round(numVal).toLocaleString()}`;
         }
       };
 
       badge('rrBudget', totRRB, k.budget, true);
+      badge('rrMetaClicks', totRRMetaClicks, 0, false);
       badge('rrClicks', totRRClicks, totClicksKpi, false);
       badge('rrSignups', totRRSign, k.signups, false);
       badge('rrFtd', totRRUsers, k.users, false);
