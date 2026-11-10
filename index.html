@@ -996,7 +996,6 @@
 
               let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
               numDays = Math.min(totDaysMonth, Math.max(1, numDays));
-              const dailyBudget = toNum(c.dailyBudget);
 
               if (!campMap.has(key)) {
                 campMap.set(key, {
@@ -1004,14 +1003,15 @@
                   id: `c_agg_${key}`,
                   numDays,
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
-                  dailyBudget,
+                  dailyBudget: toNum(c.dailyBudget),
                   spent: sSpent, impMtd: sImp, metaClicks: sMetaClicks, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev
                 });
               } else {
                 const ex = campMap.get(key);
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.metaClicks += sMetaClicks; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
-                ex.dailyBudget = toNum(c.dailyBudget) || ex.dailyBudget;
+                // SUMA DE DAILY BUDGET EN MULTI-MES
+                ex.dailyBudget = (toNum(ex.dailyBudget) || 0) + toNum(c.dailyBudget);
               }
             });
           }
@@ -1021,7 +1021,7 @@
         const mergedCamps = Array.from(campMap.values()).map(c => {
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.metaClicks = Math.round(c.metaClicks || 0); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
-          c.dailyBudget = toNum(c.dailyBudget);
+          c.dailyBudget = Math.round(toNum(c.dailyBudget));
           c.numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : totalDaysSelected;
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
