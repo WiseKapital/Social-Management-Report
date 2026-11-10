@@ -15,7 +15,7 @@
       "budget": 140,
       "spent": 48,
       "rrBudget": 144,
-      "dailyBudget": 7,
+      "dailyBudget": 5,
       "impKpi": 2000,
       "impMtd": 3008,
       "impRr": 9024,
@@ -36,7 +36,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "V1 Imperial Sweeps",
@@ -66,7 +67,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "C4 Imperial Sweeps",
@@ -96,7 +98,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "C2 SweepzKings",
@@ -126,7 +129,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "C3 Imperial Sweeps",
@@ -153,10 +157,11 @@
       "usersRr": 3,
       "s2p": "25.0%",
       "revenue": 140,
-      "roi": "-100.0%",
+      "roi": "+102.9%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "C1 SweepzKings",
@@ -186,7 +191,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "SP SweepzKings",
@@ -195,7 +201,7 @@
       "budget": 140,
       "spent": 47,
       "rrBudget": 141,
-      "dailyBudget": 7,
+      "dailyBudget": 5,
       "impKpi": 2000,
       "impMtd": 1984,
       "impRr": 5952,
@@ -213,10 +219,11 @@
       "usersRr": 3,
       "s2p": "25.0%",
       "revenue": 130,
-      "roi": "+208.5%",
+      "roi": "+176.6%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 10
     },
     {
       "name": "MM Imperial Sweeps",
@@ -225,7 +232,7 @@
       "budget": 140,
       "spent": 45,
       "rrBudget": 135,
-      "dailyBudget": 7,
+      "dailyBudget": 2,
       "impKpi": 2000,
       "impMtd": 4137,
       "impRr": 12411,
@@ -246,7 +253,8 @@
       "roi": "-100.0%",
       "takeaways": "",
       "lessons": "",
-      "improvements": ""
+      "improvements": "",
+      "numDays": 20
     }
   ]
 }
