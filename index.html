@@ -265,7 +265,7 @@
     const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     
-    const sysToday = new Date();
+    const sysToday = new Date(2026, 10, 15); // Simula el 15 de Noviembre (en JS los meses van de 0 a 11, por eso 10 = Noviembre)
     let currentLoadedYear = sysToday.getFullYear();
     let currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
 
@@ -791,9 +791,18 @@
           const clicksMtd = Math.round(baseClicks * scaleFactor);
           const regMtd = Math.round(baseReg * scaleFactor);
           const usersMtd = Math.round(baseUsers * scaleFactor);
-          const revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
           
-          // CORRECCIÓN: Tomar el Daily Budget directo del JSON sin dividir entre días
+          // NUEVA LÓGICA: Users (MTD) y Revenue van de la mano
+          let revenue = 0;
+          if (scaleFactor >= 1.0) {
+            revenue = baseRev;
+          } else if (baseUsers > 0) {
+            // El revenue sale completo por cada usuario presente (no por partes)
+            revenue = Math.round((usersMtd * (baseRev / baseUsers)) * 100) / 100;
+          } else {
+            revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
+          }
+          
           const dailyBudget = toNum(c.dailyBudget);
 
           return {
@@ -870,14 +879,25 @@
 
             (res.data.campaigns || []).forEach(c => {
               const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
+              const cUsers = toNum(c.usersMtd);
+              const cRev = toNum(c.revenue);
               const sSpent = toNum(c.spent) * scaleFactorMonth;
               const sImp = toNum(c.impMtd) * scaleFactorMonth;
               const sPv = toNum(c.productViews) * scaleFactorMonth;
               const sV2p = toNum(c.v2p) * scaleFactorMonth;
               const sClicks = toNum(c.clicksMtd) * scaleFactorMonth;
               const sReg = toNum(c.regMtd) * scaleFactorMonth;
-              const sUsers = toNum(c.usersMtd) * scaleFactorMonth;
-              const sRev = toNum(c.revenue) * scaleFactorMonth;
+              const sUsers = Math.round(cUsers * scaleFactorMonth);
+
+              // Users y Revenue van de la mano también en multi-mes
+              let sRev = 0;
+              if (scaleFactorMonth >= 1.0) {
+                sRev = cRev;
+              } else if (cUsers > 0) {
+                sRev = Math.round((sUsers * (cRev / cUsers)) * 100) / 100;
+              } else {
+                sRev = Math.round((cRev * scaleFactorMonth) * 100) / 100;
+              }
 
               if (!campMap.has(key)) {
                 campMap.set(key, {
