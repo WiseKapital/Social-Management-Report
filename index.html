@@ -181,7 +181,7 @@
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: $0</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
       </div>
 
-      <!-- 2. META CLICKS -->
+      <!-- 2. META CLICKS (SIN KPI NI RR) -->
       <div class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 flex flex-col justify-between">
         <div>
           <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Meta Clicks</span><i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-blue-600"></i></div>
@@ -890,7 +890,6 @@
             revenue = Math.round((baseRev * scaleFactor) * 100) / 100;
           }
           
-          // Limitación a los días máximos del mes
           let numDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDays;
           numDays = Math.min(totalDaysInMonth, Math.max(1, numDays));
           
@@ -994,27 +993,26 @@
                 sRev = Math.round((cRev * scaleFactorMonth) * 100) / 100;
               }
 
-              // Días de esta campaña en este mes específico
-              let mDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDaysThisMonth;
-              mDays = Math.min(totDaysMonth, Math.max(1, mDays));
+              // Días de este mes individual respetando el tope de ese mes
+              let cMonthDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDaysThisMonth;
+              cMonthDays = Math.min(totDaysMonth, Math.max(1, cMonthDays));
 
               if (!campMap.has(key)) {
                 campMap.set(key, {
                   ...c,
                   id: `c_agg_${key}`,
-                  numDays: mDays,
+                  numDays: cMonthDays, // Comienza con los días de este mes
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
                   dailyBudget: toNum(c.dailyBudget),
                   spent: sSpent, impMtd: sImp, metaClicks: sMetaClicks, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev
                 });
               } else {
                 const ex = campMap.get(key);
-                // SUMA DE # DAYS EN MULTI-MES (SIN LIMITAR A 30 O 31)
-                ex.numDays = (toNum(ex.numDays) || 0) + mDays;
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.metaClicks += sMetaClicks; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
-                // SUMA DE DAILY BUDGET EN MULTI-MES
                 ex.dailyBudget = (toNum(ex.dailyBudget) || 0) + toNum(c.dailyBudget);
+                // SUMA DE # DAYS EN MULTI-MES (SÍ PUEDE PASAR DE 30 O 31)
+                ex.numDays = (toNum(ex.numDays) || 0) + cMonthDays;
               }
             });
           }
@@ -1025,8 +1023,8 @@
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.metaClicks = Math.round(c.metaClicks || 0); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
           c.dailyBudget = Math.round(toNum(c.dailyBudget));
-          // En multi-mes se mantiene la suma exacta de numDays (puede superar 30 o 31)
-          c.numDays = Math.round(toNum(c.numDays) || totalDaysSelected);
+          // Consolidar la suma acumulada de días en multi-mes
+          c.numDays = Math.round(toNum(c.numDays));
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
           c.roi = calculateRoi(c.revenue, c.spent);
@@ -1057,7 +1055,7 @@
 
       let valNum = toNum(el.innerText);
 
-      // Limitar numDays a los días del mes SOLO si es vista de un solo mes
+      // Limitar numDays a los días exactos del mes seleccionado (solo en vista individual de mes)
       if (field === 'numDays') {
         const startD = fromDate <= toDate ? fromDate : toDate;
         const totalDaysInMonth = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
@@ -1216,9 +1214,8 @@
                 </thead>
                 <tbody>
                   ${camps.length === 0 ? `<tr><td colspan="25" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => {
-                    const daysVal = (c.numDays !== undefined && toNum(c.numDays) > 0)
-                      ? (isMultiMonth ? toNum(c.numDays) : Math.min(totalDaysInCurrentMonth, toNum(c.numDays)))
-                      : curDays;
+                    const rawDays = (c.numDays !== undefined && toNum(c.numDays) > 0) ? toNum(c.numDays) : curDays;
+                    const displayDays = isMultiMonth ? rawDays : Math.min(totalDaysInCurrentMonth, rawDays);
                     return `
                     <tr class="hover:brightness-95">
                       <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
@@ -1227,7 +1224,8 @@
                           ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         </div>
                       </td>
-                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${daysVal}</td>
+                      <!-- # DAYS SUMADO EN MULTI-MES (PERMITE >30/31) Y CLAMP EN MES ÚNICO -->
+                      <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${displayDays}</td>
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
                       <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
@@ -1252,7 +1250,7 @@
                       <td class="col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'} ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'revenue')">$${toNum(c.revenue).toFixed(2)}</td>
                       <td class="col-perf font-mono font-extrabold readonly-cell ${getRoiColorClass(c.revenue, c.spent)}">${calculateRoi(c.revenue, c.spent)}</td>
                     </tr>
-                    `;
+                  `;
                   }).join('')}
                 </tbody>
                 <tfoot>
@@ -1561,9 +1559,8 @@
         camps.forEach(c => {
           const row = ws.getRow(r);
           row.height = 19;
-          const cDays = (c.numDays !== undefined && toNum(c.numDays) > 0)
-            ? (isMultiMonth ? toNum(c.numDays) : Math.min(totalDaysInCurrentMonth, toNum(c.numDays)))
-            : curDays;
+          const rawDays = (c.numDays !== undefined && toNum(c.numDays) > 0) ? toNum(c.numDays) : curDays;
+          const cDays = isMultiMonth ? rawDays : Math.min(totalDaysInCurrentMonth, rawDays);
           setCell(row.getCell(1), c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true);
           setCell(row.getCell(2), cDays, ARGB.tintBudget, true);
           setCell(row.getCell(3), `$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true);
@@ -1575,7 +1572,7 @@
           setCell(row.getCell(9), Math.round(toNum(c.impRr)).toLocaleString(), ARGB.tintViews, true, getRrColorArgb(c.impRr, c.impKpi));
           setCell(row.getCell(10), Math.round(toNum(c.metaClicks)).toLocaleString(), ARGB.tintViews, true);
           setCell(row.getCell(11), Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true);
-          setCell(row.getCell(12), toNum(c.v2p)).toLocaleString(), ARGB.tintProduct, true);
+          setCell(row.getCell(12), toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true);
           setCell(row.getCell(13), Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks);
           setCell(row.getCell(14), Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true);
           setCell(row.getCell(15), Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, getRrColorArgb(c.clicksRr, c.clicksKpi));
