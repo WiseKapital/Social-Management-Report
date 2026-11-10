@@ -37,7 +37,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "V1 Imperial Sweeps",
@@ -68,7 +69,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "C4 Imperial Sweeps",
@@ -99,7 +101,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "C2 SweepzKings",
@@ -130,7 +133,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "C3 Imperial Sweeps",
@@ -161,7 +165,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "C1 SweepzKings",
@@ -192,7 +197,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "SP SweepzKings",
@@ -223,7 +229,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10
+      "numDays": 10,
+      "metaClicks": 0
     },
     {
       "name": "MM Imperial Sweeps",
@@ -254,7 +261,8 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 20
+      "numDays": 20,
+      "metaClicks": 100
     }
   ]
 }
