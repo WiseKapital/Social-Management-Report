@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -222,6 +223,123 @@
         <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Profit</span><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i></div>
         <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">$0</div>
         <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetProfit">KPI: $0</span><span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+    </div>
+
+    <!-- TABLA ESTÁTICA: NOVIEMBRE BUDGET ALLOCATION (SOLO VISIBLE EN NOVIEMBRE) -->
+    <div id="novemberAllocationContainer" class="hidden space-y-2">
+      <div class="glass-card rounded-xl p-4 overflow-hidden">
+        <h2 class="text-sm font-extrabold text-slate-900 mb-2">November Campaign Budget Allocation</h2>
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-xs border-collapse" style="min-width: 860px;">
+            <thead>
+              <tr class="font-extrabold text-slate-900 text-center border-b border-white">
+                <th class="py-2.5 px-4 text-left bg-white" style="width: 25%;">Campaign</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]">Previous<br>Budget KPI</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]">Spent<br>MTD</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]">Run Rate<br>MTD</th>
+                <th class="py-2.5 px-3 bg-[#FCE4D6]">Previous<br>Daily</th>
+                <th class="py-2.5 px-3 bg-[#D9E1F2]">New Budget KPI</th>
+                <th class="py-2.5 px-3 bg-[#D9E1F2]">New Daily</th>
+                <th class="py-2.5 px-3 bg-[#D9E1F2]">New RR</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-900 divide-y divide-white/60">
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">V1 Imperial Sweeps – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$66</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$198</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$63</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$3</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$63</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">C4 Imperial Sweeps – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$85</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$255</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$9</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$84</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$4</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$84</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">C3 Imperial Sweeps – IG</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$69</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$207</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$168</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$8</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$168</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">V2 SweepzKings – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$48</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$144</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">C2 SweepzKings – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$85</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$255</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$9</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$84</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$4</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$84</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">C1 SweepzKings – IG</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$65</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$195</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">SP SweepzKings – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$47</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$141</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$189</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$9</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$189</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 font-semibold text-left bg-white">MM Imperial Sweeps – FB</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$45</td>
+                <td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$135</td>
+                <td class="py-2 px-3 text-center bg-[#FCE4D6] font-mono">$7</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$21</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$1</td>
+                <td class="py-2 px-3 text-center bg-[#D9E1F2] font-mono">$21</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="font-extrabold text-slate-900 text-center border-t border-white">
+                <td class="py-3 px-4 text-left bg-white">TOTAL</td>
+                <td class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#16A34A]">$1,120</td>
+                <td class="py-3 px-3 bg-[#C5C5C5] font-mono">$510</td>
+                <td class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#DC2626]">$1,530</td>
+                <td class="py-3 px-3 bg-[#FCE4D6] font-mono">$60</td>
+                <td class="py-3 px-3 bg-[#D9E1F2] font-mono text-[#16A34A]">$609</td>
+                <td class="py-3 px-3 bg-[#D9E1F2] font-mono">$29</td>
+                <td class="py-3 px-3 bg-[#D9E1F2] font-mono text-[#16A34A]">$609</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -993,7 +1111,6 @@
                 sRev = Math.round((cRev * scaleFactorMonth) * 100) / 100;
               }
 
-              // Días de este mes individual respetando el tope de ese mes
               let cMonthDays = c.numDays !== undefined && toNum(c.numDays) > 0 ? toNum(c.numDays) : selectedDaysThisMonth;
               cMonthDays = Math.min(totDaysMonth, Math.max(1, cMonthDays));
 
@@ -1001,7 +1118,7 @@
                 campMap.set(key, {
                   ...c,
                   id: `c_agg_${key}`,
-                  numDays: cMonthDays, // Comienza con los días de este mes
+                  numDays: cMonthDays,
                   budget: toNum(c.budget), impKpi: toNum(c.impKpi), clicksKpi: toNum(c.clicksKpi), regKpi: toNum(c.regKpi), usersFtp: toNum(c.usersFtp),
                   dailyBudget: toNum(c.dailyBudget),
                   spent: sSpent, impMtd: sImp, metaClicks: sMetaClicks, productViews: sPv, v2p: sV2p, clicksMtd: sClicks, regMtd: sReg, usersMtd: sUsers, revenue: sRev
@@ -1011,7 +1128,6 @@
                 ex.budget += toNum(c.budget); ex.impKpi += toNum(c.impKpi); ex.clicksKpi += toNum(c.clicksKpi); ex.regKpi += toNum(c.regKpi); ex.usersFtp += toNum(c.usersFtp);
                 ex.spent += sSpent; ex.impMtd += sImp; ex.metaClicks += sMetaClicks; ex.productViews += sPv; ex.v2p += sV2p; ex.clicksMtd += sClicks; ex.regMtd += sReg; ex.usersMtd += sUsers; ex.revenue += sRev;
                 ex.dailyBudget = (toNum(ex.dailyBudget) || 0) + toNum(c.dailyBudget);
-                // SUMA DE # DAYS EN MULTI-MES (SÍ PUEDE PASAR DE 30 O 31)
                 ex.numDays = (toNum(ex.numDays) || 0) + cMonthDays;
               }
             });
@@ -1023,7 +1139,6 @@
           c.spent = Math.round(c.spent); c.impMtd = Math.round(c.impMtd); c.metaClicks = Math.round(c.metaClicks || 0); c.productViews = Math.round(c.productViews); c.v2p = Math.round(c.v2p);
           c.clicksMtd = Math.round(c.clicksMtd); c.regMtd = Math.round(c.regMtd); c.usersMtd = Math.round(c.usersMtd); c.revenue = Math.round(c.revenue * 100) / 100;
           c.dailyBudget = Math.round(toNum(c.dailyBudget));
-          // Consolidar la suma acumulada de días en multi-mes
           c.numDays = Math.round(toNum(c.numDays));
           c.rrBudget = Math.round(c.spent * multiMonthRrFactor); c.impRr = Math.round(c.impMtd * multiMonthRrFactor);
           c.clicksRr = Math.round(c.clicksMtd * multiMonthRrFactor); c.regRr = Math.round(c.regMtd * multiMonthRrFactor); c.usersRr = Math.round(c.usersMtd * multiMonthRrFactor);
@@ -1055,7 +1170,6 @@
 
       let valNum = toNum(el.innerText);
 
-      // Limitar numDays a los días exactos del mes seleccionado (solo en vista individual de mes)
       if (field === 'numDays') {
         const startD = fromDate <= toDate ? fromDate : toDate;
         const totalDaysInMonth = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
@@ -1136,6 +1250,17 @@
       setTxt('kpiTargetUsers', `KPI: ${toNum(k.users)}`);
       setTxt('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
       setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
+
+      // CONDICIÓN: MOSTRAR TABLA ESTÁTICA SOLO EN NOVIEMBRE
+      const novContainer = document.getElementById('novemberAllocationContainer');
+      if (novContainer) {
+        const isNov = (String(currentLoadedMonth).toLowerCase() === 'november');
+        if (isNov) {
+          novContainer.classList.remove('hidden');
+        } else {
+          novContainer.classList.add('hidden');
+        }
+      }
 
       renderAllTables();
       syncGlobalSummaries();
@@ -1224,7 +1349,6 @@
                           ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         </div>
                       </td>
-                      <!-- # DAYS SUMADO EN MULTI-MES (PERMITE >30/31) Y CLAMP EN MES ÚNICO -->
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'numDays')">${displayDays}</td>
                       <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
                       <td class="col-budget font-mono font-bold ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'spent')">$${c.spent}</td>
