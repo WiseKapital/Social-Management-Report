@@ -37,7 +37,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 21,
+      "numDays": 22,
       "metaClicks": 457
     },
     {
@@ -165,7 +165,7 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 11,
       "metaClicks": 315
     },
     {
@@ -197,14 +197,14 @@
       "takeaways": "",
       "lessons": "",
       "improvements": "",
-      "numDays": 10,
+      "numDays": 11,
       "metaClicks": 179
     },
     {
       "name": "ON MGM",
       "platform": "meta",
       "highlight": false,
-      "numDays": 18,
+      "numDays": 1,
       "budget": 124,
       "spent": 1,
       "rrBudget": 2,
@@ -233,7 +233,7 @@
       "name": "AB MGM",
       "platform": "meta",
       "highlight": false,
-      "numDays": 18,
+      "numDays": 1,
       "budget": 124,
       "spent": 1,
       "rrBudget": 2,
@@ -262,7 +262,7 @@
       "name": "ON LC",
       "platform": "meta",
       "highlight": false,
-      "numDays": 18,
+      "numDays": 1,
       "budget": 124,
       "spent": 1,
       "rrBudget": 2,
