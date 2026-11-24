@@ -12,7 +12,7 @@
       "name": "V1 Imperial Sweeps",
       "platform": "meta",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 115,
       "rrBudget": 144,
       "dailyBudget": 3,
@@ -38,13 +38,16 @@
       "lessons": "",
       "improvements": "",
       "numDays": 26,
-      "metaClicks": 469
+      "metaClicks": 469,
+      "allocBudget": 140,
+      "allocSpent": 66,
+      "allocDaily": 7
     },
     {
       "name": "C4 Imperial Sweeps",
       "platform": "meta",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 160,
       "rrBudget": 200,
       "dailyBudget": 4,
@@ -70,13 +73,16 @@
       "lessons": "",
       "improvements": "",
       "numDays": 30,
-      "metaClicks": 563
+      "metaClicks": 563,
+      "allocBudget": 140,
+      "allocSpent": 85,
+      "allocDaily": 9
     },
     {
       "name": "C2 SweepzKings",
       "platform": "meta",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 148,
       "rrBudget": 185,
       "dailyBudget": 4,
@@ -102,13 +108,16 @@
       "lessons": "",
       "improvements": "",
       "numDays": 30,
-      "metaClicks": 395
+      "metaClicks": 395,
+      "allocBudget": 140,
+      "allocSpent": 85,
+      "allocDaily": 9
     },
     {
       "name": "C3 Imperial Sweeps",
       "platform": "instagram",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 270,
       "rrBudget": 338,
       "dailyBudget": 8,
@@ -134,13 +143,16 @@
       "lessons": "",
       "improvements": "",
       "numDays": 30,
-      "metaClicks": 305
+      "metaClicks": 305,
+      "allocBudget": 140,
+      "allocSpent": 69,
+      "allocDaily": 7
     },
     {
       "name": "SP SweepzKings",
       "platform": "meta",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 155,
       "rrBudget": 194,
       "dailyBudget": 9,
@@ -166,13 +178,16 @@
       "lessons": "",
       "improvements": "",
       "numDays": 18,
-      "metaClicks": 319
+      "metaClicks": 319,
+      "allocBudget": 140,
+      "allocSpent": 47,
+      "allocDaily": 7
     },
     {
       "name": "MM Imperial Sweeps",
       "platform": "meta",
       "highlight": false,
-      "budget": 112,
+      "budget": 124,
       "spent": 61,
       "rrBudget": 76,
       "dailyBudget": 1,
@@ -198,14 +213,17 @@
       "lessons": "",
       "improvements": "",
       "numDays": 18,
-      "metaClicks": 179
+      "metaClicks": 179,
+      "allocBudget": 140,
+      "allocSpent": 45,
+      "allocDaily": 7
     },
     {
       "name": "ON MGM",
       "platform": "meta",
       "highlight": false,
       "numDays": 7,
-      "budget": 112,
+      "budget": 124,
       "spent": 12,
       "rrBudget": 15,
       "dailyBudget": 5,
@@ -227,14 +245,17 @@
       "usersRr": 0,
       "s2p": "0.0%",
       "revenue": 0,
-      "roi": "-100.0%"
+      "roi": "-100.0%",
+      "allocBudget": 0,
+      "allocSpent": 0,
+      "allocDaily": 0
     },
     {
       "name": "AB MGM",
       "platform": "meta",
       "highlight": false,
       "numDays": 7,
-      "budget": 112,
+      "budget": 124,
       "spent": 9,
       "rrBudget": 11,
       "dailyBudget": 5,
@@ -256,14 +277,17 @@
       "usersRr": 0,
       "s2p": "0.0%",
       "revenue": 0,
-      "roi": "-100.0%"
+      "roi": "-100.0%",
+      "allocBudget": 0,
+      "allocSpent": 0,
+      "allocDaily": 0
     },
     {
       "name": "ON LC",
       "platform": "meta",
       "highlight": false,
       "numDays": 7,
-      "budget": 112,
+      "budget": 124,
       "spent": 8,
       "rrBudget": 10,
       "dailyBudget": 5,
@@ -285,36 +309,10 @@
       "usersRr": 0,
       "s2p": "0.0%",
       "revenue": 0,
-      "roi": "-100.0%"
-    },
-    {
-      "name": "New Campaign",
-      "platform": "x",
-      "highlight": false,
-      "numDays": 24,
-      "budget": 112,
-      "spent": 0,
-      "rrBudget": 0,
-      "dailyBudget": 0,
-      "impKpi": 0,
-      "impMtd": 100,
-      "impRr": 125,
-      "metaClicks": 10,
-      "productViews": 0,
-      "v2p": 0,
-      "clicksKpi": 0,
-      "clicksMtd": 0,
-      "clicksRr": 0,
-      "ctr": "0.0%",
-      "regKpi": 0,
-      "regMtd": 0,
-      "regRr": 0,
-      "usersFtp": 0,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "0.0%"
+      "roi": "-100.0%",
+      "allocBudget": 0,
+      "allocSpent": 0,
+      "allocDaily": 0
     }
   ]
 }
