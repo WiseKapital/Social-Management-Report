@@ -219,16 +219,16 @@
           <table class="w-full text-xs border-collapse" style="min-width: 520px;">
             <thead>
               <tr class="font-extrabold text-slate-900 text-center border-b border-white">
-                <th class="py-2.5 px-4 text-left bg-white" style="width: 40%;">Campaign</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]">Budget (KPI)</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]">Spent</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]">Daily Budget</th>
+                <th class="py-2.5 px-4 pr-8 text-left bg-white whitespace-nowrap" style="width: 1%;">Campaign</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Budget (KPI)</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Spent</th>
+                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Daily Budget</th>
               </tr>
             </thead>
             <tbody id="novAllocBody" class="text-slate-900 divide-y divide-white/60"></tbody>
             <tfoot>
               <tr class="font-extrabold text-slate-900 text-center border-t border-white">
-                <td class="py-3 px-4 text-left bg-white">TOTAL</td>
+                <td class="py-3 px-4 pr-8 text-left bg-white whitespace-nowrap">TOTAL</td>
                 <td id="novTotBudget" class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#16A34A]">$0</td>
                 <td id="novTotSpent" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
                 <td id="novTotDaily" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
@@ -800,7 +800,7 @@
         const b = Math.round(toNum(c.allocBudget)), s = Math.round(toNum(c.allocSpent)), d = Math.round(toNum(c.allocDaily));
         totB += b; totS += s; totD += d;
         const cell = (field, val) => `<td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleAllocBlur(this, '${c.id}', '${field}')">$${val.toLocaleString()}</td>`;
-        return `<tr><td class="py-2 px-4 font-semibold text-left bg-white">${escHtml(c.name)}</td>${cell('allocBudget', b)}${cell('allocSpent', s)}${cell('allocDaily', d)}</tr>`;
+        return `<tr><td class="py-2 px-4 pr-8 font-semibold text-left bg-white whitespace-nowrap">${escHtml(c.name)}</td>${cell('allocBudget', b)}${cell('allocSpent', s)}${cell('allocDaily', d)}</tr>`;
       }).join('') : `<tr><td colspan="4" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
 
       setTxt('novTotBudget', `$${totB.toLocaleString()}`);
