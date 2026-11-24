@@ -15,7 +15,7 @@
       "budget": 124,
       "spent": 115,
       "rrBudget": 144,
-      "dailyBudget": 3,
+      "dailyBudget": 6,
       "impKpi": 2000,
       "impMtd": 15923,
       "impRr": 19904,
@@ -39,9 +39,10 @@
       "improvements": "",
       "numDays": 26,
       "metaClicks": 469,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 66,
-      "allocDaily": 7
+      "allocDaily": 7,
+      "leadsMtd": 6
     },
     {
       "name": "C4 Imperial Sweeps",
@@ -74,9 +75,10 @@
       "improvements": "",
       "numDays": 30,
       "metaClicks": 563,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 85,
-      "allocDaily": 9
+      "allocDaily": 9,
+      "leadsMtd": 1
     },
     {
       "name": "C2 SweepzKings",
@@ -109,9 +111,10 @@
       "improvements": "",
       "numDays": 30,
       "metaClicks": 395,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 85,
-      "allocDaily": 9
+      "allocDaily": 9,
+      "leadsMtd": 0
     },
     {
       "name": "C3 Imperial Sweeps",
@@ -131,12 +134,12 @@
       "clicksRr": 18,
       "ctr": "0.1%",
       "regKpi": 10,
-      "regMtd": 9,
-      "regRr": 11,
+      "regMtd": 12,
+      "regRr": 15,
       "usersFtp": 5,
       "usersMtd": 2,
       "usersRr": 3,
-      "s2p": "22.2%",
+      "s2p": "16.7%",
       "revenue": 280,
       "roi": "+3.7%",
       "takeaways": "",
@@ -144,9 +147,10 @@
       "improvements": "",
       "numDays": 30,
       "metaClicks": 305,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 69,
-      "allocDaily": 7
+      "allocDaily": 7,
+      "leadsMtd": 4
     },
     {
       "name": "SP SweepzKings",
@@ -155,7 +159,7 @@
       "budget": 124,
       "spent": 155,
       "rrBudget": 194,
-      "dailyBudget": 9,
+      "dailyBudget": 6,
       "impKpi": 2000,
       "impMtd": 12522,
       "impRr": 15653,
@@ -179,9 +183,10 @@
       "improvements": "",
       "numDays": 18,
       "metaClicks": 319,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 47,
-      "allocDaily": 7
+      "allocDaily": 7,
+      "leadsMtd": 2
     },
     {
       "name": "MM Imperial Sweeps",
@@ -190,7 +195,7 @@
       "budget": 124,
       "spent": 61,
       "rrBudget": 76,
-      "dailyBudget": 1,
+      "dailyBudget": 4,
       "impKpi": 2000,
       "impMtd": 8102,
       "impRr": 10128,
@@ -214,9 +219,10 @@
       "improvements": "",
       "numDays": 18,
       "metaClicks": 179,
-      "allocBudget": 140,
+      "allocBudget": 124,
       "allocSpent": 45,
-      "allocDaily": 7
+      "allocDaily": 7,
+      "leadsMtd": 1
     },
     {
       "name": "ON MGM",
@@ -226,7 +232,7 @@
       "budget": 124,
       "spent": 12,
       "rrBudget": 15,
-      "dailyBudget": 5,
+      "dailyBudget": 4,
       "impKpi": 2000,
       "impMtd": 1723,
       "impRr": 2154,
@@ -246,9 +252,10 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "allocBudget": 0,
+      "allocBudget": 124,
       "allocSpent": 0,
-      "allocDaily": 0
+      "allocDaily": 0,
+      "leadsMtd": 0
     },
     {
       "name": "AB MGM",
@@ -258,7 +265,7 @@
       "budget": 124,
       "spent": 9,
       "rrBudget": 11,
-      "dailyBudget": 5,
+      "dailyBudget": 4,
       "impKpi": 2000,
       "impMtd": 806,
       "impRr": 1008,
@@ -278,9 +285,10 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "allocBudget": 0,
+      "allocBudget": 124,
       "allocSpent": 0,
-      "allocDaily": 0
+      "allocDaily": 0,
+      "leadsMtd": 0
     },
     {
       "name": "ON LC",
@@ -290,7 +298,7 @@
       "budget": 124,
       "spent": 8,
       "rrBudget": 10,
-      "dailyBudget": 5,
+      "dailyBudget": 4,
       "impKpi": 2000,
       "impMtd": 1004,
       "impRr": 1255,
@@ -310,9 +318,10 @@
       "s2p": "0.0%",
       "revenue": 0,
       "roi": "-100.0%",
-      "allocBudget": 0,
+      "allocBudget": 124,
       "allocSpent": 0,
-      "allocDaily": 0
+      "allocDaily": 0,
+      "leadsMtd": 0
     }
   ]
 }
