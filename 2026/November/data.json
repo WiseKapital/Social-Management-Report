@@ -1,318 +1,1180 @@
-{
-  "period": "November 01-24, 2026",
-  "kpis": {
-    "budget": 1120,
-    "signups": 214,
-    "users": 45,
-    "revenue": 6750,
-    "profit": 5630
-  },
-  "campaigns": [
-    {
-      "name": "V1 Imperial Sweeps",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 124,
-      "spent": 115,
-      "rrBudget": 144,
-      "dailyBudget": 3,
-      "impKpi": 2000,
-      "impMtd": 15923,
-      "impRr": 19904,
-      "productViews": 487,
-      "v2p": 34,
-      "clicksKpi": 200,
-      "clicksMtd": 38,
-      "clicksRr": 48,
-      "ctr": "0.2%",
-      "regKpi": 15,
-      "regMtd": 38,
-      "regRr": 48,
-      "usersFtp": 5,
-      "usersMtd": 1,
-      "usersRr": 1,
-      "s2p": "2.6%",
-      "revenue": 140,
-      "roi": "+21.7%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 26,
-      "metaClicks": 469,
-      "allocBudget": 140,
-      "allocSpent": 66,
-      "allocDaily": 7
-    },
-    {
-      "name": "C4 Imperial Sweeps",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 124,
-      "spent": 160,
-      "rrBudget": 200,
-      "dailyBudget": 4,
-      "impKpi": 9500,
-      "impMtd": 17675,
-      "impRr": 22094,
-      "productViews": 475,
-      "v2p": 36,
-      "clicksKpi": 600,
-      "clicksMtd": 16,
-      "clicksRr": 20,
-      "ctr": "0.1%",
-      "regKpi": 59,
-      "regMtd": 15,
-      "regRr": 19,
-      "usersFtp": 10,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 30,
-      "metaClicks": 563,
-      "allocBudget": 140,
-      "allocSpent": 85,
-      "allocDaily": 9
-    },
-    {
-      "name": "C2 SweepzKings",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 124,
-      "spent": 148,
-      "rrBudget": 185,
-      "dailyBudget": 4,
-      "impKpi": 30000,
-      "impMtd": 30331,
-      "impRr": 37914,
-      "productViews": 405,
-      "v2p": 75,
-      "clicksKpi": 550,
-      "clicksMtd": 15,
-      "clicksRr": 19,
-      "ctr": "0.0%",
-      "regKpi": 40,
-      "regMtd": 14,
-      "regRr": 18,
-      "usersFtp": 5,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 30,
-      "metaClicks": 395,
-      "allocBudget": 140,
-      "allocSpent": 85,
-      "allocDaily": 9
-    },
-    {
-      "name": "C3 Imperial Sweeps",
-      "platform": "instagram",
-      "highlight": false,
-      "budget": 124,
-      "spent": 270,
-      "rrBudget": 338,
-      "dailyBudget": 8,
-      "impKpi": 7000,
-      "impMtd": 10156,
-      "impRr": 12695,
-      "productViews": 474,
-      "v2p": 28,
-      "clicksKpi": 300,
-      "clicksMtd": 14,
-      "clicksRr": 18,
-      "ctr": "0.1%",
-      "regKpi": 10,
-      "regMtd": 9,
-      "regRr": 11,
-      "usersFtp": 5,
-      "usersMtd": 2,
-      "usersRr": 3,
-      "s2p": "22.2%",
-      "revenue": 280,
-      "roi": "+3.7%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 30,
-      "metaClicks": 305,
-      "allocBudget": 140,
-      "allocSpent": 69,
-      "allocDaily": 7
-    },
-    {
-      "name": "SP SweepzKings",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 124,
-      "spent": 155,
-      "rrBudget": 194,
-      "dailyBudget": 9,
-      "impKpi": 2000,
-      "impMtd": 12522,
-      "impRr": 15653,
-      "productViews": 131,
-      "v2p": 79,
-      "clicksKpi": 200,
-      "clicksMtd": 10,
-      "clicksRr": 13,
-      "ctr": "0.1%",
-      "regKpi": 15,
-      "regMtd": 10,
-      "regRr": 13,
-      "usersFtp": 5,
-      "usersMtd": 1,
-      "usersRr": 1,
-      "s2p": "10.0%",
-      "revenue": 130,
-      "roi": "-16.1%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 18,
-      "metaClicks": 319,
-      "allocBudget": 140,
-      "allocSpent": 47,
-      "allocDaily": 7
-    },
-    {
-      "name": "MM Imperial Sweeps",
-      "platform": "meta",
-      "highlight": false,
-      "budget": 124,
-      "spent": 61,
-      "rrBudget": 76,
-      "dailyBudget": 1,
-      "impKpi": 2000,
-      "impMtd": 8102,
-      "impRr": 10128,
-      "productViews": 207,
-      "v2p": 46,
-      "clicksKpi": 200,
-      "clicksMtd": 13,
-      "clicksRr": 16,
-      "ctr": "0.2%",
-      "regKpi": 15,
-      "regMtd": 14,
-      "regRr": 18,
-      "usersFtp": 3,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "takeaways": "",
-      "lessons": "",
-      "improvements": "",
-      "numDays": 18,
-      "metaClicks": 179,
-      "allocBudget": 140,
-      "allocSpent": 45,
-      "allocDaily": 7
-    },
-    {
-      "name": "ON MGM",
-      "platform": "meta",
-      "highlight": false,
-      "numDays": 7,
-      "budget": 124,
-      "spent": 12,
-      "rrBudget": 15,
-      "dailyBudget": 5,
-      "impKpi": 2000,
-      "impMtd": 1723,
-      "impRr": 2154,
-      "metaClicks": 42,
-      "productViews": 55,
-      "v2p": 34,
-      "clicksKpi": 200,
-      "clicksMtd": 0,
-      "clicksRr": 0,
-      "ctr": "0.0%",
-      "regKpi": 15,
-      "regMtd": 0,
-      "regRr": 0,
-      "usersFtp": 5,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "allocBudget": 0,
-      "allocSpent": 0,
-      "allocDaily": 0
-    },
-    {
-      "name": "AB MGM",
-      "platform": "meta",
-      "highlight": false,
-      "numDays": 7,
-      "budget": 124,
-      "spent": 9,
-      "rrBudget": 11,
-      "dailyBudget": 5,
-      "impKpi": 2000,
-      "impMtd": 806,
-      "impRr": 1008,
-      "metaClicks": 69,
-      "productViews": 64,
-      "v2p": 12,
-      "clicksKpi": 200,
-      "clicksMtd": 0,
-      "clicksRr": 0,
-      "ctr": "0.0%",
-      "regKpi": 15,
-      "regMtd": 0,
-      "regRr": 0,
-      "usersFtp": 5,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "allocBudget": 0,
-      "allocSpent": 0,
-      "allocDaily": 0
-    },
-    {
-      "name": "ON LC",
-      "platform": "meta",
-      "highlight": false,
-      "numDays": 7,
-      "budget": 124,
-      "spent": 8,
-      "rrBudget": 10,
-      "dailyBudget": 5,
-      "impKpi": 2000,
-      "impMtd": 1004,
-      "impRr": 1255,
-      "metaClicks": 34,
-      "productViews": 29,
-      "v2p": 36,
-      "clicksKpi": 200,
-      "clicksMtd": 0,
-      "clicksRr": 0,
-      "ctr": "0.0%",
-      "regKpi": 15,
-      "regMtd": 0,
-      "regRr": 0,
-      "usersFtp": 5,
-      "usersMtd": 0,
-      "usersRr": 0,
-      "s2p": "0.0%",
-      "revenue": 0,
-      "roi": "-100.0%",
-      "allocBudget": 0,
-      "allocSpent": 0,
-      "allocDaily": 0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title>WiseKapital - Marketing Performance Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Kalam:wght@700&family=Inter:wght@400;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { background-color: #F8FAFC; color: #0F172A; font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    .glass-card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .master-table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 11px; }
+    .master-table th, .master-table td { border-right: 1px solid #D1D5DB; border-bottom: 1px solid #D1D5DB; padding: 5px 6px; white-space: nowrap; text-align: center; }
+    .master-table thead tr:first-child th { border-top: 1px solid #D1D5DB; font-size: 10.5px; font-weight: 800; }
+    .sticky-col { position: sticky; left: 0; z-index: 10; border-left: 1px solid #D1D5DB; background: #fff; }
+    .editable-cell { outline: none; cursor: text; transition: filter 0.15s; }
+    .editable-cell:hover { filter: brightness(0.95); }
+    .editable-cell:focus { background-color: #FFF !important; box-shadow: inset 0 0 0 2px #2563EB !important; font-weight: 700; }
+    .readonly-cell { cursor: default; user-select: none; }
+    .col-budget { background-color: #F4F4F4 !important; }
+    .col-views { background-color: #F0F5FA !important; }
+    .col-prod { background-color: #FFFBEB !important; }
+    .col-clicks { background-color: #FEF6ED !important; }
+    .col-regs { background-color: #F2F8F1 !important; }
+    .col-users { background-color: #FAF2F6 !important; }
+    .col-perf { background-color: #F3F7FE !important; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- TOAST -->
+  <div id="saveToast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="saveToastText">Updated</span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      <div class="flex items-center justify-between flex-wrap gap-4 min-h-[4rem]">
+        <div class="flex items-center gap-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 88" class="h-9 w-auto select-none">
+            <text x="4" y="47" font-family="'Poppins', sans-serif" font-weight="700" font-size="47" fill="#111827">WiseKapital</text>
+            <text x="112" y="77" font-family="'Kalam', cursive" font-weight="700" font-size="26" fill="#ECA51A">Who Dares Wins!</text>
+          </svg>
+          <div class="hidden sm:block pl-4 border-l border-slate-200">
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-slate-800 text-sm">Social Report</span>
+              <span id="liveStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Syncing...</span>
+              <span id="headerPathBadge" class="text-[10px] font-mono font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">Loading...</span>
+              <span id="editModeBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold"></span>
+            </div>
+            <p id="dateAutoInfo" class="text-xs text-slate-500 font-medium mt-0.5">Loading...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- DATE PICKER -->
+          <div class="flex items-center gap-2 font-bold text-xs">
+            <span class="text-slate-400">FROM</span>
+            <div class="relative">
+              <button id="fromBtn" onclick="toggleCal('from', event)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-black text-slate-800 hover:border-slate-400 cursor-pointer flex items-center gap-2 shadow-xs">
+                <span id="fromDateText">11/01/2026</span>
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-600"></i>
+              </button>
+              <div id="fromPop" class="hidden absolute top-full left-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px]">
+                <div class="flex items-center justify-between font-black text-xs text-slate-900 mb-3 px-1">
+                  <button onclick="navCalMonth('from', -1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="fromMonthYearLabel" class="font-extrabold text-xs tracking-wider uppercase">...</span>
+                  <button onclick="navCalMonth('from', 1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-700 mb-2"><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span></div>
+                <div id="fromDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs font-bold"></div>
+              </div>
+            </div>
+
+            <span class="text-slate-400">TO</span>
+            <div class="relative">
+              <button id="toBtn" onclick="toggleCal('to', event)" class="px-3 py-1.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-black text-slate-900 cursor-pointer flex items-center gap-2 shadow-xs">
+                <span id="toDateText">11/03/2026</span>
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-900"></i>
+              </button>
+              <div id="toPop" class="hidden absolute top-full right-0 mt-2 z-50 bg-white p-4 rounded-2xl shadow-2xl border border-slate-200 w-[280px]">
+                <div class="flex items-center justify-between font-black text-xs text-slate-900 mb-3 px-1">
+                  <button onclick="navCalMonth('to', -1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                  <span id="toMonthYearLabel" class="font-extrabold text-xs tracking-wider uppercase">...</span>
+                  <button onclick="navCalMonth('to', 1, event)" class="p-1 hover:bg-slate-100 rounded-lg cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-slate-700 mb-2"><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span></div>
+                <div id="toDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs font-bold"></div>
+              </div>
+            </div>
+          </div>
+
+          <button id="saveGitBtn" onclick="saveDashboardData(false)" class="px-4 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i><span id="saveGitBtnText">Save to Git</span>
+          </button>
+
+          <button onclick="exportToExcel()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>Export Excel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+    <!-- TEAM PERFORMANCE -->
+    <div class="space-y-2">
+      <h2 class="text-base font-bold font-display text-slate-900">Team Performance</h2>
+      <div class="glass-card rounded-xl overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-xs border-collapse text-center">
+            <thead>
+              <tr>
+                <th class="bg-white py-2 px-3 font-extrabold text-slate-900" style="width: 100px;">TEAM</th>
+                <th colspan="5" id="tpKpiHeaderTitle" class="bg-[#1976D2] text-white font-extrabold py-2 px-2 border-r border-white/20">KPIS</th>
+                <th colspan="5" class="bg-[#2E7D32] text-white font-extrabold py-2 px-2 border-r border-white/20">MTD</th>
+                <th colspan="6" class="bg-[#B45309] text-white font-extrabold py-2 px-2">RR - RUN-RATE</th>
+              </tr>
+              <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase border-b border-slate-200">
+                <th class="py-2 px-2"></th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2 border-r border-slate-200">PROFIT</th>
+                <th class="py-2 px-2">BUDGET</th><th class="py-2 px-2">SIGNUPS</th><th class="py-2 px-2">USERS</th><th class="py-2 px-2">REVENUE</th><th class="py-2 px-2">PROFIT</th><th class="py-2 px-2">ROI</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 bg-white">
+              <tr>
+                <td class="py-3 px-3"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FCE4EC] text-[#D81B60]">SOCIAL</span></td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'budget')" id="tpKpiBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'signups')" id="tpKpiSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'users')" id="tpKpiUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'revenue')" id="tpKpiRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200" onkeydown="cellEnter(event,this)" onblur="onKpiEdit(this, 'profit')" id="tpKpiProfit">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpMtdRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px] border-r border-slate-200" id="tpMtdProfit">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrBudget">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrSignups">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrUsers">0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrRevenue">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRrProfit">$0</td>
+                <td class="py-3 px-2 font-extrabold text-[13px]" id="tpRoiRatio">1:0.4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI CARDS (7 COLUMNAS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3.5">
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-indigo-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">BUDGET</span><i data-lucide="wallet" class="w-3.5 h-3.5 text-indigo-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiBudget">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetBudget">KPI: $0</span><span id="rrBudget" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-blue-500 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Meta Clicks</span><i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-blue-600"></i></div>
+          <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiMetaClicks">0</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-sky-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Product Clicks</span><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-sky-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiClicks">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetClicks">KPI: 0</span><span id="rrClicks" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-amber-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Signups</span><i data-lucide="user-plus" class="w-3.5 h-3.5 text-amber-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiSignups">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetSignups">KPI: 0</span><span id="rrSignups" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-purple-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Users (FTD)</span><i data-lucide="badge-check" class="w-3.5 h-3.5 text-purple-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiFtd">0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetUsers">KPI: 0</span><span id="rrFtd" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: 0</span></div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-emerald-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Revenue</span><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-emerald-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiRevenue">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetRevenue">KPI: $0</span><span id="rrRevenue" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+
+      <div class="glass-card rounded-xl p-4 border-l-4 border-l-teal-500">
+        <div class="flex items-center justify-between text-slate-500 mb-1"><span class="text-xs font-bold uppercase">Profit</span><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal-600"></i></div>
+        <div class="text-2xl font-extrabold font-display text-slate-900" id="kpiProfit">$0</div>
+        <div class="flex items-center gap-1.5 mt-1.5"><span class="text-[11px] font-extrabold bg-slate-100 border border-slate-300 px-2 py-0.5 rounded" id="kpiTargetProfit">KPI: $0</span><span id="rrProfit" class="text-[11px] font-extrabold px-2 py-0.5 rounded border">RR: $0</span></div>
+      </div>
+    </div>
+
+    <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
+    <div id="platformsContainer" class="space-y-8"></div>
+
+    <!-- TABLA INDEPENDIENTE SINCRONIZADA CON JSON (DESDE NOVIEMBRE 2026 EN ADELANTE) -->
+    <div id="budgetAllocationContainer" class="hidden space-y-2">
+      <div class="glass-card rounded-xl p-4 overflow-hidden w-fit max-w-full">
+        <h2 id="allocTableTitle" class="text-sm font-extrabold text-slate-900 mb-2">Campaign Budget Allocation</h2>
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-auto text-xs border-collapse">
+            <thead>
+              <tr class="font-extrabold text-slate-900 text-center border-b border-white">
+                <th class="py-2.5 px-4 pr-8 text-left bg-white whitespace-nowrap" style="min-width: 190px;">Campaign</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Budget (KPI)</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Spent</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Daily Budget</th>
+              </tr>
+            </thead>
+            <tbody id="allocBody" class="text-slate-900 divide-y divide-white/60"></tbody>
+            <tfoot>
+              <tr class="font-extrabold text-slate-900 text-center border-t border-white">
+                <td class="py-3 px-4 pr-8 text-left bg-white whitespace-nowrap">TOTAL</td>
+                <td id="allocTotBudget" class="py-3 px-5 bg-[#C5C5C5] font-mono text-[#16A34A] whitespace-nowrap">$0</td>
+                <td id="allocTotSpent" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
+                <td id="allocTotDaily" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="space-y-6 pt-4 border-t border-slate-200">
+      <h2 class="text-base font-bold font-display text-slate-900">Platform Performance: Meta, Instagram &amp; X</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Signups by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="signupsPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaSignups">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGSignups">0</span></div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <h3 class="text-sm font-bold font-display text-slate-900 mb-2">Users (FTD) by Platform</h3>
+          <div class="relative h-52 flex items-center justify-center"><canvas id="usersPieChart"></canvas></div>
+          <div class="mt-3 pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-1.5 rounded bg-blue-50 text-blue-900 font-bold">Meta: <span id="pieMetaUsers">0</span></div>
+            <div class="p-1.5 rounded bg-pink-50 text-pink-900 font-bold">Instagram: <span id="pieIGUsers">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-blue-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Meta</h3><span id="badgeRoiMeta" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="metaBudgetRevenueChart"></canvas></div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-pink-600">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">Instagram</h3><span id="badgeRoiIG" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="instagramBudgetRevenueChart"></canvas></div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border-t-4 border-t-slate-900">
+          <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-bold text-slate-900">X</h3><span id="badgeRoiX" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-50 border">ROI: 0.0%</span></div>
+          <div class="relative h-48 w-full"><canvas id="xBudgetRevenueChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const GH_OWNER = "WiseKapital", GH_REPO = "Social-Management-Report", GH_BRANCH = "main";
+    const GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
+    const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const SCALE_FIELDS = ['spent', 'impMtd', 'metaClicks', 'productViews', 'v2p', 'clicksMtd', 'regMtd'];
+    const KPI_FIELDS = ['budget', 'impKpi', 'clicksKpi', 'regKpi', 'usersFtp', 'allocBudget', 'allocSpent', 'allocDaily'];
+
+    let appData = null, rawMonthData = null;
+    let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
+
+    const sysToday = new Date();
+    let currentLoadedYear = sysToday.getFullYear(), currentLoadedMonth = fullMonthNames[sysToday.getMonth()];
+    let fromDate = new Date(sysToday.getFullYear(), sysToday.getMonth(), 1);
+    let toDate = new Date(sysToday.getFullYear(), sysToday.getMonth(), sysToday.getDate());
+    const calView = { from: { y: fromDate.getFullYear(), m: fromDate.getMonth() }, to: { y: toDate.getFullYear(), m: toDate.getMonth() } };
+
+    const $ = id => document.getElementById(id);
+    const setTxt = (id, v) => { const e = $(id); if (e) e.innerText = v; };
+    const escHtml = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    const toNum = val => (val === undefined || val === null || val === '—' || val === '-' || val === '') ? 0 : (parseFloat(String(val).replace(/[$,%]/g, '')) || 0);
+    const utf8ToB64 = str => { let b = ''; new TextEncoder().encode(str).forEach(x => b += String.fromCharCode(x)); return btoa(b); };
+    const b64ToUtf8 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, '')), c => c.charCodeAt(0)));
+    const fmtDateUS = d => `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
+    const updateDatesUI = () => { setTxt('fromDateText', fmtDateUS(fromDate)); setTxt('toDateText', fmtDateUS(toDate)); };
+    const getRangeBounds = (a = fromDate, b = toDate) => a <= b ? [a, b] : [b, a];
+    const getSelectedDaysCount = () => { if (!fromDate || !toDate) return 1; const [s, e] = getRangeBounds(); return Math.max(1, Math.round((e - s) / 86400000) + 1); };
+    const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
+    const cellEnter = (e, el) => { if (!isEditingAllowed()) { e.preventDefault(); el.blur(); } else if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
+
+    function isEditingAllowed() {
+      if (!fromDate || !toDate) return false;
+      const [s, e] = getRangeBounds();
+      if (s.getFullYear() !== e.getFullYear() || s.getMonth() !== e.getMonth() || s.getDate() !== 1) return false;
+      const now = new Date(), isCurr = (e.getFullYear() === now.getFullYear() && e.getMonth() === now.getMonth());
+      return e.getDate() === (isCurr ? now.getDate() : new Date(e.getFullYear(), e.getMonth() + 1, 0).getDate());
     }
-  ]
-}
+
+    const COOLDOWN_KEY = "wisekapital_save_cooldown_target", COOLDOWN_DURATION_SEC = 300;
+    let isSaveCooldown = false, saveCooldownTimer = null, cooldownRemaining = 0;
+    const fmtCooldownTime = sec => { const m = Math.floor(sec / 60), s = sec % 60; return m > 0 ? `${m}m ${s < 10 ? '0' : ''}${s}s` : `${s}s`; };
+
+    function startSaveCooldown(sec = COOLDOWN_DURATION_SEC) {
+      localStorage.setItem(COOLDOWN_KEY, String(Date.now() + sec * 1000));
+      initOrResumeSaveCooldown();
+    }
+
+    function initOrResumeSaveCooldown() {
+      const target = parseInt(localStorage.getItem(COOLDOWN_KEY) || '', 10);
+      if (!target || target <= Date.now()) { localStorage.removeItem(COOLDOWN_KEY); isSaveCooldown = false; return; }
+
+      const btn = $('saveGitBtn'), btnText = $('saveGitBtnText');
+      if (!btn) return;
+      isSaveCooldown = true;
+      cooldownRemaining = Math.ceil((target - Date.now()) / 1000);
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      btn.classList.remove('hover:bg-indigo-700', 'cursor-pointer');
+
+      if (saveCooldownTimer) clearInterval(saveCooldownTimer);
+      const tick = () => {
+        cooldownRemaining = Math.ceil((target - Date.now()) / 1000);
+        if (cooldownRemaining <= 0) {
+          clearInterval(saveCooldownTimer); saveCooldownTimer = null; isSaveCooldown = false;
+          localStorage.removeItem(COOLDOWN_KEY);
+          const allow = isEditingAllowed();
+          btn.disabled = !allow;
+          btn.classList.toggle('opacity-50', !allow);
+          btn.classList.toggle('cursor-not-allowed', !allow);
+          btn.classList.toggle('hover:bg-indigo-700', allow);
+          btn.classList.toggle('cursor-pointer', allow);
+          if (btnText) btnText.innerText = 'Save to Git';
+        } else if (btnText) btnText.innerText = `Wait ${fmtCooldownTime(cooldownRemaining)}`;
+      };
+      tick();
+      saveCooldownTimer = setInterval(tick, 1000);
+    }
+
+    const PLATFORMS = [
+      { key: 'meta', title: 'Meta (Facebook Ads)', btnBg: 'bg-blue-600 hover:bg-blue-700', bg: 'bg-[#0081FB]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 640 512"><path d="M640 317.9c0 91.3-39.4 148.5-110.3 148.5c-62.6 0-95.8-34.6-156.9-136.6l-31.4-52.6c-8.3-12.5-14.5-24.2-21.2-35c-20.1 33.8-47.1 83-47.1 83c-67 116.6-104.6 141.2-156.9 141.2C43.42 466.4 0 409.1 0 320.5c0-143 79.78-278.1 183.9-278.1c50.2 0 93.8 24.68 144.8 89.5c37.1-50.1 78.1-89.5 130.6-89.5c99.1 0 180.7 125.7 180.7 275.5M287.4 192.2c-42.9-62.1-70.9-80.5-104.4-80.5c-61.9 0-113.78 106.1-113.78 210c0 48.5 18.48 75.7 49.58 75.7c30.2 0 49-19 103.2-103.8c0 0 24.7-39.1 65.4-101.4m243.8 205.2c32.2 0 46.9-27.5 46.9-74.9c0-124.2-54.3-225.42-123.2-225.42c-33.2 0-61.1 25.92-94.9 78.02c9.4 13.8 19.1 29 29.3 45.4l37.5 62.4c58.7 94.1 73.5 114.5 104.4 114.5"/></svg>` },
+      { key: 'instagram', title: 'Instagram Ads', btnBg: 'bg-pink-600 hover:bg-pink-700', bg: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]', icon: `<svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
+      { key: 'x', title: 'X Campaigns', btnBg: 'bg-slate-800 hover:bg-slate-900', bg: 'bg-black', icon: `<svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` }
+    ];
+
+    function getBaseDaysOfData(data, year, monthIdx) {
+      const m = data?.period && String(data.period).match(/(\d{1,2})\s*-\s*(\d{1,2})/);
+      if (m) { const s = +m[1], e = +m[2]; if (e >= s) return e - s + 1; }
+      return (year === sysToday.getFullYear() && monthIdx === sysToday.getMonth())
+        ? Math.max(1, sysToday.getDate()) : new Date(year, monthIdx + 1, 0).getDate();
+    }
+
+    function calculateDistributedUsers(c, startDay, endDay, maxDays) {
+      const totalUsers = toNum(c.usersMtd);
+      if (totalUsers <= 0) return 0;
+      if (startDay <= 1 && endDay >= maxDays) return totalUsers;
+
+      const daysCount = Math.max(1, maxDays), s = Math.max(1, Math.min(daysCount, startDay)), e = Math.max(1, Math.min(daysCount, endDay));
+      if (s > e) return 0;
+
+      let hash = 0;
+      const str = String(c.id || c.name || 'camp');
+      for (let i = 0; i < str.length; i++) hash = (((hash << 5) - hash) + str.charCodeAt(i)) | 0;
+      hash = Math.abs(hash);
+
+      const slots = new Array(daysCount + 1).fill(0);
+      if (totalUsers >= daysCount) {
+        slots.fill(Math.floor(totalUsers / daysCount), 1);
+        for (let rem = totalUsers % daysCount, d = (hash % daysCount) + 1; rem > 0; rem--, d = (d % daysCount) + 1) slots[d]++;
+      } else {
+        const step = daysCount / totalUsers, used = new Set();
+        for (let i = 0; i < totalUsers; i++) {
+          let pos = Math.max(1, Math.min(daysCount, Math.floor((i + 0.5) * step) + 1 + (((hash + i) % 3) - 1)));
+          for (let tries = 0; used.has(pos) && tries < daysCount; tries++) pos = (pos % daysCount) + 1;
+          used.add(pos);
+          slots[pos]++;
+        }
+      }
+      let sum = 0;
+      for (let d = s; d <= e; d++) sum += slots[d];
+      return sum;
+    }
+
+    function calculateAutoRR(val) {
+      const n = toNum(val);
+      if (n <= 0) return 0;
+      const [s, e] = getRangeBounds();
+      if (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth()) {
+        return Math.round(n * (new Date(s.getFullYear(), s.getMonth() + 1, 0).getDate() / Math.max(1, e.getDate() - s.getDate() + 1)));
+      }
+      const months = getMonthsInRange(s, e);
+      let totDays = 0, selDays = 0;
+      months.forEach((m, idx) => {
+        const dMonth = new Date(m.year, m.monthIndex + 1, 0).getDate();
+        totDays += dMonth;
+        selDays += Math.max(1, (idx === months.length - 1 ? e.getDate() : dMonth) - (idx === 0 ? s.getDate() : 1) + 1);
+      });
+      return Math.round(n * (selDays > 0 ? totDays / selDays : 1));
+    }
+
+    function getDynamicPeriodString(a, b) {
+      const [s, e] = getRangeBounds(a, b);
+      const sd = String(s.getDate()).padStart(2, '0'), ed = String(e.getDate()).padStart(2, '0');
+      const sm = fullMonthNames[s.getMonth()], em = fullMonthNames[e.getMonth()];
+      return (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth())
+        ? `${sm} ${sd}-${ed}, ${s.getFullYear()}` : `${sm} ${sd}, ${s.getFullYear()} – ${em} ${ed}, ${e.getFullYear()}`;
+    }
+
+    const calculateRoi = (rev, sp) => {
+      const s = toNum(sp), r = toNum(rev);
+      if (s <= 0) return r > 0 ? '+100.0%' : '0.0%';
+      const p = ((r - s) / s) * 100;
+      return `${p > 0 ? '+' : ''}${p.toFixed(1)}%`;
+    };
+    const getRoiColorClass = (rev, sp) => {
+      const s = toNum(sp), r = toNum(rev);
+      if (s <= 0) return r > 0 ? 'text-emerald-700 font-extrabold' : 'text-slate-400 font-extrabold';
+      const p = ((r - s) / s) * 100;
+      return p > 0 ? 'text-emerald-700 font-extrabold' : p < 0 ? 'text-rose-600 font-extrabold' : 'text-slate-500 font-extrabold';
+    };
+
+    function toggleCal(t, e) {
+      e?.stopPropagation();
+      $(t === 'from' ? 'toPop' : 'fromPop').classList.add('hidden');
+      const pop = $(t + 'Pop');
+      if (!pop.classList.toggle('hidden')) {
+        const d = t === 'from' ? fromDate : toDate;
+        calView[t] = { y: d.getFullYear(), m: d.getMonth() };
+        renderDaysGrid(t);
+      }
+    }
+
+    function navCalMonth(t, s, e) {
+      e?.stopPropagation();
+      const v = calView[t];
+      v.m += s;
+      if (v.m < 0) { v.m = 11; v.y--; } else if (v.m > 11) { v.m = 0; v.y++; }
+      if (v.y < 2026 || (v.y === 2026 && v.m < 9)) { v.y = 2026; v.m = 9; }
+      renderDaysGrid(t);
+    }
+
+    function renderDaysGrid(t) {
+      const { y: year, m: month } = calView[t], active = t === 'from' ? fromDate : toDate;
+      setTxt(t + 'MonthYearLabel', `${fullMonthNames[month].toUpperCase()} ${year}`);
+      const grid = $(t + 'DaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const startOffset = (new Date(year, month, 1).getDay() + 6) % 7;
+      for (let i = 0; i < startOffset; i++) grid.insertAdjacentHTML('beforeend', '<div class="w-8 h-8"></div>');
+
+      const today = new Date(); today.setHours(23, 59, 59, 999);
+      for (let day = 1; day <= totalDays; day++) {
+        const d = new Date(year, month, day), cell = document.createElement('button');
+        cell.type = 'button'; cell.textContent = day;
+        const disabled = d > today || year < 2026 || (year === 2026 && month < 9);
+        const selected = active.getFullYear() === year && active.getMonth() === month && active.getDate() === day;
+        cell.className = 'w-8 h-8 flex items-center justify-center rounded-xl select-none ' + (
+          disabled ? 'text-slate-300 font-semibold cursor-not-allowed'
+          : selected ? 'bg-emerald-600 text-white font-extrabold shadow-sm cursor-pointer'
+          : 'text-slate-800 hover:bg-slate-100 font-bold transition cursor-pointer'
+        );
+        if (!disabled) cell.onclick = ev => {
+          ev.stopPropagation();
+          if (t === 'from') { fromDate = d; if (fromDate > toDate) toDate = new Date(d); }
+          else { toDate = d; if (toDate < fromDate) fromDate = new Date(d); }
+          $(t + 'Pop').classList.add('hidden');
+          updateDatesUI();
+          loadDataForRange(fromDate, toDate);
+        };
+        grid.appendChild(cell);
+      }
+      lucide.createIcons();
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#fromPop') && !e.target.closest('#fromBtn')) $('fromPop').classList.add('hidden');
+      if (!e.target.closest('#toPop') && !e.target.closest('#toBtn')) $('toPop').classList.add('hidden');
+    });
+
+    function getMonthsInRange(start, end) {
+      const [s, e] = getRangeBounds(start, end), list = [];
+      let curr = new Date(s.getFullYear(), s.getMonth(), 1);
+      const last = new Date(e.getFullYear(), e.getMonth(), 1);
+      while (curr <= last) {
+        list.push({ year: curr.getFullYear(), monthIndex: curr.getMonth(), monthName: fullMonthNames[curr.getMonth()] });
+        curr.setMonth(curr.getMonth() + 1);
+      }
+      return list;
+    }
+
+    function distributeKpisToCampaigns() {
+      if (!appData?.campaigns || !appData?.kpis) return;
+      const bPer = Math.round(toNum(appData.kpis.budget) / (appData.campaigns.length || 1));
+      appData.campaigns.forEach(c => c.budget = bPer);
+    }
+
+    const createEmptyMonth = () => ({ period: getDynamicPeriodString(fromDate, toDate), kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] });
+
+    function addCampaign(platform) {
+      if (!isEditingAllowed()) return alert("Editing is disabled for this date range.");
+      if (!appData) appData = createEmptyMonth();
+      const newCamp = {
+        id: `camp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        name: "New Campaign", platform, highlight: false, numDays: getSelectedDaysCount(),
+        budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0, metaClicks: 0,
+        productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
+        allocBudget: 0, allocSpent: 0, allocDaily: 0
+      };
+      appData.campaigns.push(newCamp);
+      rawMonthData?.campaigns?.push({ ...newCamp });
+      distributeKpisToCampaigns();
+      renderDashboard();
+      showSaveToast(`Added campaign to ${platform.toUpperCase()}. Click "Save to Git" to commit.`);
+    }
+
+    function deleteCampaign(id, e) {
+      e?.stopPropagation();
+      if (!isEditingAllowed()) return alert("Editing is disabled for this date range.");
+      if (!confirm("Delete this campaign?")) return;
+      appData.campaigns = (appData.campaigns || []).filter(c => String(c.id) !== String(id));
+      if (rawMonthData?.campaigns) rawMonthData.campaigns = rawMonthData.campaigns.filter(c => String(c.id) !== String(id));
+      distributeKpisToCampaigns();
+      renderDashboard();
+      showSaveToast('Campaign removed. Click "Save to Git" to commit.');
+    }
+
+    function showSaveToast(text) {
+      const t = $('saveToast');
+      setTxt('saveToastText', text);
+      if (t) {
+        t.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => t.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'), 3500);
+      }
+    }
+
+    function validateSaveAllowed() {
+      if (isEditingAllowed()) return true;
+      const now = new Date(), [, endD] = getRangeBounds();
+      const isCurr = endD.getFullYear() === now.getFullYear() && endD.getMonth() === now.getMonth();
+      const day = isCurr ? now.getDate() : new Date(endD.getFullYear(), endD.getMonth() + 1, 0).getDate();
+      const exp = `${String(endD.getMonth() + 1).padStart(2, '0')}/${String(day).padStart(2, '0')}/${endD.getFullYear()}`;
+      alert(`Cannot save: Saving is only allowed from day 01 to ${isCurr ? `today's date (${exp}) for the current month` : `the last day of the month (${exp}) for past months`}. Please update your selection before saving.`);
+      return false;
+    }
+
+    async function saveDashboardData(silentAutoCreate = false) {
+      if (!appData) return;
+      if (!silentAutoCreate) {
+        if (!validateSaveAllowed()) return;
+        if (isSaveCooldown) return showSaveToast(`⏳ Wait ${fmtCooldownTime(cooldownRemaining)} before saving again.`);
+      }
+
+      const btn = $('saveGitBtn'), btnText = $('saveGitBtnText');
+      if (!silentAutoCreate) {
+        if (btn) btn.disabled = true;
+        if (btnText) btnText.innerText = "Saving...";
+        showSaveToast("⏳ Committing to GitHub...");
+      }
+
+      distributeKpisToCampaigns();
+      const cleanData = { period: appData.period, kpis: appData.kpis, campaigns: (appData.campaigns || []).map(({ id, ...rest }) => rest) };
+      const relPath = `${currentLoadedYear}/${currentLoadedMonth}/data.json`;
+      const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${relPath}`;
+      const headers = { 'Authorization': `Bearer ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' };
+
+      try {
+        const getRes = await fetch(`${apiUrl}?ref=${GH_BRANCH}&t=${Date.now()}`, { cache: 'no-store', headers });
+        const sha = getRes.ok ? (await getRes.json()).sha : undefined;
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: silentAutoCreate ? `Auto-create ${relPath}` : `Update ${relPath} via Dashboard`, content: utf8ToB64(JSON.stringify(cleanData, null, 2)), branch: GH_BRANCH, sha })
+        });
+        if (putRes.ok) {
+          showSaveToast(silentAutoCreate ? `🆕 Created ${relPath} in GitHub!` : `✅ Saved to GitHub: ${relPath}`);
+          setLiveBadge(`Live Git (${currentLoadedMonth})`);
+          setTxt('headerPathBadge', `${relPath} ✓`);
+          if (!silentAutoCreate) startSaveCooldown(COOLDOWN_DURATION_SEC);
+        } else if (!silentAutoCreate) {
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.innerText = "Save to Git";
+          alert(`GitHub Error: ${(await putRes.json()).message}`);
+        }
+      } catch {
+        if (!silentAutoCreate) {
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.innerText = "Save to Git";
+          alert("Network error while saving to GitHub.");
+        }
+      }
+    }
+
+    function setLiveBadge(label) {
+      const b = $('liveStatusBadge');
+      if (b) b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 inline-block animate-pulse"></span> ${label}`;
+    }
+
+    async function fetchFreshJson(year, mName) {
+      const candidates = [`${year}/${mName}/data.json`, `${mName}/data.json`];
+      let got404 = false;
+      for (const rel of candidates) {
+        try {
+          const headers = { 'Accept': 'application/vnd.github.v3+json', ...(GITHUB_TOKEN && { 'Authorization': `Bearer ${GITHUB_TOKEN}` }) };
+          const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${rel}?ref=${GH_BRANCH}&t=${Date.now()}`, { cache: 'no-store', headers });
+          if (res.ok) { const f = await res.json(); if (f?.content) return { status: 'found', data: JSON.parse(b64ToUtf8(f.content)) }; }
+          else if (res.status === 404) got404 = true;
+        } catch {}
+      }
+      for (const rel of candidates) {
+        try { const res = await fetch(`./${rel}?nocache=${Date.now()}`, { cache: 'no-store' }); if (res.ok) return { status: 'found', data: await res.json() }; } catch {}
+      }
+      return { status: got404 ? 'not_found' : 'error', data: null };
+    }
+
+    async function loadDataForRange(startObj, endObj) {
+      const [startD, endD] = getRangeBounds(startObj, endObj);
+      const months = getMonthsInRange(startD, endD);
+
+      if (months.length === 1) {
+        const { year, monthName, monthIndex } = months[0];
+        currentLoadedYear = year; currentLoadedMonth = monthName;
+        setTxt('headerPathBadge', `${year}/${monthName}/data.json`);
+
+        const key = `${year}_${monthName}`;
+        if (!rawMonthData || rawMonthData._cacheKey !== key) {
+          const res = await fetchFreshJson(year, monthName);
+          if (res.status === 'found' && res.data) {
+            rawMonthData = JSON.parse(JSON.stringify(res.data));
+            setLiveBadge(`Live Git (${monthName})`);
+          } else {
+            rawMonthData = createEmptyMonth();
+            setLiveBadge(`New (${monthName})`);
+            if (res.status === 'not_found' && GITHUB_TOKEN) await saveDashboardData(true);
+          }
+          (rawMonthData.campaigns || []).forEach((c, i) => { if (!c.id) c.id = `c_${i}_${Date.now()}`; });
+          rawMonthData._cacheKey = key;
+        }
+
+        const totalDaysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+        const isCurr = year === sysToday.getFullYear() && monthIndex === sysToday.getMonth();
+        const maxDays = Math.max(getBaseDaysOfData(rawMonthData, year, monthIndex), isCurr ? sysToday.getDate() : totalDaysInMonth);
+        const selDays = Math.max(1, endD.getDate() - startD.getDate() + 1);
+        const isFull = isEditingAllowed() || (startD.getDate() === 1 && endD.getDate() >= maxDays);
+        const scale = isFull ? 1 : Math.min(1, selDays / maxDays);
+
+        const campaigns = (rawMonthData.campaigns || []).map((c, i) => {
+          const o = { ...c, id: c.id || `c_${i}_${Date.now()}` };
+          KPI_FIELDS.forEach(f => o[f] = toNum(c[f]));
+          SCALE_FIELDS.forEach(f => o[f] = Math.round(toNum(c[f]) * scale));
+          const baseUsers = toNum(c.usersMtd), baseRev = toNum(c.revenue);
+          o.usersMtd = isFull ? baseUsers : calculateDistributedUsers(c, startD.getDate(), endD.getDate(), maxDays);
+          o.revenue = (isFull || (startD.getDate() <= 1 && endD.getDate() >= maxDays)) ? baseRev
+            : baseUsers > 0 ? Math.round((o.usersMtd * (baseRev / baseUsers)) * 100) / 100 : Math.round((baseRev * scale) * 100) / 100;
+          o.numDays = Math.min(totalDaysInMonth, Math.max(1, toNum(c.numDays) > 0 ? toNum(c.numDays) : selDays));
+          o.dailyBudget = toNum(c.dailyBudget);
+          o.rrBudget = calculateAutoRR(o.spent); o.impRr = calculateAutoRR(o.impMtd);
+          o.clicksRr = calculateAutoRR(o.clicksMtd); o.regRr = calculateAutoRR(o.regMtd); o.usersRr = calculateAutoRR(o.usersMtd);
+          o.ctr = o.impMtd > 0 ? ((o.clicksMtd / o.impMtd) * 100).toFixed(1) + '%' : '0.0%';
+          o.s2p = o.regMtd > 0 ? ((o.usersMtd / o.regMtd) * 100).toFixed(1) + '%' : '0.0%';
+          o.roi = calculateRoi(o.revenue, o.spent);
+          return o;
+        });
+
+        appData = { period: getDynamicPeriodString(startD, endD), kpis: rawMonthData.kpis || { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns };
+        distributeKpisToCampaigns();
+      } else {
+        setLiveBadge(`Range (${months.length} Months)`);
+        setTxt('headerPathBadge', `${months[0].year}/${months[0].monthName} – ${months[months.length - 1].year}/${months[months.length - 1].monthName}`);
+        const mergedKpis = { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campMap = new Map();
+        let totInvolved = 0, totSel = 0;
+
+        for (let idx = 0; idx < months.length; idx++) {
+          const m = months[idx], totM = new Date(m.year, m.monthIndex + 1, 0).getDate();
+          const sDay = idx === 0 ? startD.getDate() : 1, eDay = idx === months.length - 1 ? endD.getDate() : totM;
+          const selM = Math.max(1, eDay - sDay + 1);
+          totInvolved += totM; totSel += selM;
+
+          const res = await fetchFreshJson(m.year, m.monthName);
+          if (res.status !== 'found' || !res.data) continue;
+          const k = res.data.kpis || {};
+          Object.keys(mergedKpis).forEach(f => mergedKpis[f] += toNum(k[f]));
+
+          const isCurr = m.year === sysToday.getFullYear() && m.monthIndex === sysToday.getMonth();
+          const maxM = Math.max(getBaseDaysOfData(res.data, m.year, m.monthIndex), isCurr ? sysToday.getDate() : totM);
+          const isFullM = sDay === 1 && eDay >= maxM, scaleM = isFullM ? 1 : Math.min(1, selM / maxM);
+
+          (res.data.campaigns || []).forEach(c => {
+            const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
+            const cUsers = toNum(c.usersMtd), cRev = toNum(c.revenue);
+            const sUsers = isFullM ? cUsers : calculateDistributedUsers(c, sDay, eDay, maxM);
+            const sRev = isFullM ? cRev : cUsers > 0 ? Math.round((sUsers * (cRev / cUsers)) * 100) / 100 : Math.round((cRev * scaleM) * 100) / 100;
+            const cDays = Math.min(totM, Math.max(1, toNum(c.numDays) > 0 ? toNum(c.numDays) : selM));
+
+            if (!campMap.has(key)) {
+              const entry = { ...c, id: `c_agg_${key}`, numDays: cDays, dailyBudget: toNum(c.dailyBudget), usersMtd: sUsers, revenue: sRev };
+              KPI_FIELDS.forEach(f => entry[f] = toNum(c[f]));
+              SCALE_FIELDS.forEach(f => entry[f] = toNum(c[f]) * scaleM);
+              campMap.set(key, entry);
+            } else {
+              const ex = campMap.get(key);
+              KPI_FIELDS.forEach(f => ex[f] += toNum(c[f]));
+              SCALE_FIELDS.forEach(f => ex[f] += toNum(c[f]) * scaleM);
+              ex.usersMtd += sUsers; ex.revenue += sRev;
+              ex.dailyBudget = (toNum(ex.dailyBudget) || 0) + toNum(c.dailyBudget);
+              ex.numDays = (toNum(ex.numDays) || 0) + cDays;
+            }
+          });
+        }
+
+        const rrFactor = totSel > 0 ? totInvolved / totSel : 1;
+        const campaigns = Array.from(campMap.values()).map(c => {
+          [...SCALE_FIELDS, 'usersMtd', 'dailyBudget', 'numDays', 'allocBudget', 'allocSpent', 'allocDaily'].forEach(f => c[f] = Math.round(toNum(c[f])));
+          c.revenue = Math.round(c.revenue * 100) / 100;
+          c.rrBudget = Math.round(c.spent * rrFactor); c.impRr = Math.round(c.impMtd * rrFactor);
+          c.clicksRr = Math.round(c.clicksMtd * rrFactor); c.regRr = Math.round(c.regMtd * rrFactor); c.usersRr = Math.round(c.usersMtd * rrFactor);
+          c.roi = calculateRoi(c.revenue, c.spent);
+          c.ctr = c.impMtd > 0 ? ((c.clicksMtd / c.impMtd) * 100).toFixed(1) + '%' : '0.0%';
+          c.s2p = c.regMtd > 0 ? ((c.usersMtd / c.regMtd) * 100).toFixed(1) + '%' : '0.0%';
+          return c;
+        });
+        appData = { period: getDynamicPeriodString(startD, endD), kpis: mergedKpis, campaigns };
+      }
+
+      setTxt('dateAutoInfo', appData.period);
+      renderDashboard();
+    }
+
+    function onKpiEdit(el, field) {
+      if (!isEditingAllowed() || !appData) return renderDashboard();
+      appData.kpis[field] = toNum(el.innerText);
+      if (rawMonthData?.kpis) rawMonthData.kpis[field] = toNum(el.innerText);
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function handleCellBlur(el, id, field) {
+      if (!isEditingAllowed()) return renderDashboard();
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+
+      let val = field === 'name' ? el.innerText.trim() : toNum(el.innerText);
+      if (field === 'numDays') {
+        const [startD] = getRangeBounds();
+        val = Math.max(1, Math.min(new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate(), val));
+        el.innerText = val;
+      }
+      c[field] = val;
+      const rawC = rawMonthData?.campaigns?.find(x => String(x.id) === String(id));
+      if (rawC) rawC[field] = val;
+
+      c.rrBudget = calculateAutoRR(c.spent); c.impRr = calculateAutoRR(c.impMtd);
+      c.clicksRr = calculateAutoRR(c.clicksMtd); c.regRr = calculateAutoRR(c.regMtd); c.usersRr = calculateAutoRR(c.usersMtd);
+      c.ctr = toNum(c.impMtd) > 0 ? ((toNum(c.clicksMtd) / toNum(c.impMtd)) * 100).toFixed(1) + '%' : '0.0%';
+      c.s2p = toNum(c.regMtd) > 0 ? ((toNum(c.usersMtd) / toNum(c.regMtd)) * 100).toFixed(1) + '%' : '0.0%';
+
+      distributeKpisToCampaigns();
+      renderDashboard();
+    }
+
+    function handleAllocBlur(el, id, field) {
+      if (!isEditingAllowed()) return renderDashboard();
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+      const val = toNum(el.innerText);
+      c[field] = val;
+      const rawC = rawMonthData?.campaigns?.find(x => String(x.id) === String(id));
+      if (rawC) rawC[field] = val;
+      renderAllocationTable();
+    }
+
+    function renderAllocationTable() {
+      const tbody = $('allocBody');
+      if (!tbody) return;
+      const canEdit = isEditingAllowed();
+      const camps = PLATFORMS.flatMap(p => (appData?.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key));
+      let totB = 0, totS = 0, totD = 0;
+
+      tbody.innerHTML = camps.length ? camps.map(c => {
+        const b = Math.round(toNum(c.allocBudget)), s = Math.round(toNum(c.allocSpent)), d = Math.round(toNum(c.allocDaily));
+        totB += b; totS += s; totD += d;
+        const cell = (field, val) => `<td class="py-2 px-5 text-center bg-[#C5C5C5] font-mono whitespace-nowrap ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleAllocBlur(this, '${c.id}', '${field}')">$${val.toLocaleString()}</td>`;
+        return `<tr><td class="py-2 px-4 pr-8 font-semibold text-left bg-white whitespace-nowrap">${escHtml(c.name)}</td>${cell('allocBudget', b)}${cell('allocSpent', s)}${cell('allocDaily', d)}</tr>`;
+      }).join('') : `<tr><td colspan="4" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
+
+      setTxt('allocTotBudget', `$${totB.toLocaleString()}`);
+      setTxt('allocTotSpent', `$${totS.toLocaleString()}`);
+      setTxt('allocTotDaily', `$${totD.toLocaleString()}`);
+    }
+
+    function renderDashboard() {
+      if (!appData) return;
+      const canEdit = isEditingAllowed(), editBadge = $('editModeBadge');
+      if (editBadge) {
+        editBadge.className = canEdit ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+        editBadge.innerText = canEdit ? 'Editable' : 'View Only';
+      }
+
+      const saveBtn = $('saveGitBtn');
+      if (saveBtn && !isSaveCooldown) {
+        saveBtn.disabled = !canEdit;
+        saveBtn.classList.toggle('opacity-50', !canEdit);
+        saveBtn.classList.toggle('cursor-not-allowed', !canEdit);
+        saveBtn.classList.toggle('hover:bg-indigo-700', canEdit);
+        saveBtn.classList.toggle('cursor-pointer', canEdit);
+      }
+
+      setTxt('tpKpiHeaderTitle', `KPIS ${canEdit ? '(CLICK TO EDIT TARGETS)' : '(LOCKED)'}`);
+      const k = appData.kpis || {};
+      const kpiCls = canEdit ? 'py-3 px-2 font-extrabold text-[13px] editable-cell' : 'py-3 px-2 font-extrabold text-[13px] readonly-cell text-slate-700';
+
+      [['tpKpiBudget', `$${toNum(k.budget).toLocaleString()}`], ['tpKpiSignups', toNum(k.signups).toLocaleString()],
+       ['tpKpiUsers', toNum(k.users).toLocaleString()], ['tpKpiRevenue', `$${toNum(k.revenue).toLocaleString()}`],
+       ['tpKpiProfit', `$${toNum(k.profit).toLocaleString()}`]].forEach(([id, val]) => {
+        const el = $(id);
+        if (el) { el.innerText = val; el.contentEditable = canEdit ? 'true' : 'false'; el.className = kpiCls; }
+      });
+
+      setTxt('kpiTargetBudget', `KPI: $${toNum(k.budget)}`);
+      setTxt('kpiTargetSignups', `KPI: ${toNum(k.signups)}`);
+      setTxt('kpiTargetUsers', `KPI: ${toNum(k.users)}`);
+      setTxt('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
+      setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
+
+      const [sD, eD] = getRangeBounds();
+      const showAlloc = eD.getFullYear() > 2026 || (eD.getFullYear() === 2026 && eD.getMonth() >= 10);
+      $('budgetAllocationContainer')?.classList.toggle('hidden', !showAlloc);
+      if (showAlloc) {
+        const sameM = sD.getFullYear() === eD.getFullYear() && sD.getMonth() === eD.getMonth();
+        setTxt('allocTableTitle', `${sameM ? fullMonthNames[eD.getMonth()] : `${fullMonthNames[sD.getMonth()]} – ${fullMonthNames[eD.getMonth()]}`} Campaign Budget Allocation`);
+        renderAllocationTable();
+      }
+
+      renderAllTables();
+      syncGlobalSummaries();
+      updateCharts();
+      lucide.createIcons();
+    }
+
+    function renderAllTables() {
+      const container = $('platformsContainer');
+      container.innerHTML = '';
+      const canEdit = isEditingAllowed(), curDays = getSelectedDaysCount(), [startD, endD] = getRangeBounds();
+      const isMulti = startD.getFullYear() !== endD.getFullYear() || startD.getMonth() !== endD.getMonth();
+      const totDaysCur = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
+      const ed = (cls, id, field, txt) => `<td class="${cls} ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${id}', '${field}')">${txt}</td>`;
+
+      PLATFORMS.forEach(p => {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        const totB = sum('budget'), totS = sum('spent'), totRRB = sum('rrBudget'), totDB = sum('dailyBudget');
+        const totImpK = sum('impKpi'), totImpM = sum('impMtd'), totImpR = sum('impRr'), totMC = sum('metaClicks');
+        const totPV = sum('productViews'), totV2P = sum('v2p'), totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
+        const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr'), totUK = sum('usersFtp'), totUM = sum('usersMtd'), totUR = sum('usersRr'), totRev = sum('revenue');
+
+        const card = document.createElement('div');
+        card.id = `section_${p.key}`;
+        card.className = 'space-y-2';
+        card.innerHTML = `
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-lg ${p.bg} flex items-center justify-center shadow-xs">${p.icon}</span>
+              <h2 class="text-base font-bold font-display text-slate-900">${p.title}</h2>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-bold">
+              <span class="text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Budget: $${totB.toFixed(2)}</span>
+              <span class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">Spent: $${totS.toFixed(2)}</span>
+              ${canEdit ? `<button onclick="addCampaign('${p.key}')" class="px-2.5 py-1 rounded-md ${p.btnBg} text-white transition flex items-center gap-1 cursor-pointer"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Add Campaign</span></button>`
+                : `<span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i><span>View Only</span></span>`}
+            </div>
+          </div>
+          <div class="glass-card rounded-xl overflow-hidden"><div class="overflow-x-auto custom-scrollbar">
+            <table class="master-table min-w-[1480px]">
+              <thead>
+                <tr>
+                  <th rowspan="2" class="bg-white sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
+                  <th colspan="5" class="bg-[#D9D9D9]">BUDGET</th><th colspan="4" class="bg-[#CFE2F3]">META VIEWS</th>
+                  <th colspan="2" class="bg-[#FFF2CC]">PRODUCT VIEWS</th><th colspan="4" class="bg-[#FCE5CD]">PRODUCT CLICKS</th>
+                  <th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th><th colspan="3" class="bg-[#EAD1DC]">USERS</th><th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
+                </tr>
+                <tr class="text-[10px] font-bold">
+                  <th class="bg-[#E8E8E8]"># Days</th><th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily Budget</th>
+                  <th class="bg-[#DFECF7]">Imp. (KPI)</th><th class="bg-[#DFECF7]">MTD</th><th class="bg-[#DFECF7]">RR</th><th class="bg-[#DFECF7]">Meta Clicks</th>
+                  <th class="bg-[#FFF6D9]">Product Views</th><th class="bg-[#FFF6D9]">V2P</th>
+                  <th class="bg-[#FDEFE0]">Clicks (KPI)</th><th class="bg-[#FDEFE0]">MTD</th><th class="bg-[#FDEFE0]">RR</th><th class="bg-[#FDEFE0]">CTR</th>
+                  <th class="bg-[#E5F1E1]">Reg (KPI)</th><th class="bg-[#E5F1E1]">MTD</th><th class="bg-[#E5F1E1]">RR</th>
+                  <th class="bg-[#F2DFE8]">Users (KPI)</th><th class="bg-[#F2DFE8]">MTD</th><th class="bg-[#F2DFE8]">RR</th>
+                  <th class="bg-[#D9E5FA]">S2P</th><th class="bg-[#D9E5FA]">Revenue</th><th class="bg-[#D9E5FA]">ROI</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${camps.length === 0 ? `<tr><td colspan="25" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => {
+                  const rawDays = toNum(c.numDays) > 0 ? toNum(c.numDays) : curDays;
+                  const days = isMulti ? rawDays : Math.min(totDaysCur, rawDays);
+                  return `<tr class="hover:brightness-95">
+                    <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
+                      <div class="relative flex items-center justify-center min-h-[26px]">
+                        <span class="${canEdit ? 'editable-cell' : 'readonly-cell'} text-center font-bold px-7 w-full truncate block" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'name')">${escHtml(c.name)}</span>
+                        ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
+                      </div>
+                    </td>
+                    ${ed('col-budget font-mono font-bold', c.id, 'numDays', days)}
+                    <td class="col-budget font-mono font-bold readonly-cell">$${c.budget}</td>
+                    ${ed('col-budget font-mono font-bold', c.id, 'spent', `$${c.spent}`)}
+                    <td class="col-budget font-mono font-bold readonly-cell ${getRrColorClass(c.rrBudget, c.budget)}">$${c.rrBudget}</td>
+                    ${ed('col-budget font-mono font-bold', c.id, 'dailyBudget', `$${c.dailyBudget}`)}
+                    ${ed('col-views font-mono', c.id, 'impKpi', toNum(c.impKpi).toLocaleString())}
+                    ${ed('col-views font-mono font-bold', c.id, 'impMtd', toNum(c.impMtd).toLocaleString())}
+                    <td class="col-views font-mono readonly-cell ${getRrColorClass(c.impRr, c.impKpi)}">${toNum(c.impRr).toLocaleString()}</td>
+                    ${ed('col-views font-mono font-bold', c.id, 'metaClicks', toNum(c.metaClicks).toLocaleString())}
+                    ${ed('col-prod font-mono font-bold', c.id, 'productViews', c.productViews)}
+                    ${ed('col-prod font-mono font-bold', c.id, 'v2p', c.v2p)}
+                    ${ed('col-clicks font-mono', c.id, 'clicksKpi', toNum(c.clicksKpi).toLocaleString())}
+                    ${ed('col-clicks font-mono font-bold', c.id, 'clicksMtd', toNum(c.clicksMtd).toLocaleString())}
+                    <td class="col-clicks font-mono readonly-cell ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
+                    <td class="col-clicks font-mono font-bold readonly-cell">${c.ctr || '0.0%'}</td>
+                    ${ed('col-regs font-mono font-bold', c.id, 'regKpi', c.regKpi !== undefined ? toNum(c.regKpi).toLocaleString() : 0)}
+                    ${ed('col-regs font-mono font-bold', c.id, 'regMtd', toNum(c.regMtd).toLocaleString())}
+                    <td class="col-regs font-mono readonly-cell ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
+                    ${ed('col-users font-mono font-bold', c.id, 'usersFtp', c.usersFtp !== undefined ? toNum(c.usersFtp).toLocaleString() : 0)}
+                    ${ed('col-users font-mono font-bold', c.id, 'usersMtd', toNum(c.usersMtd).toLocaleString())}
+                    <td class="col-users font-mono font-bold readonly-cell ${getRrColorClass(c.usersRr, c.usersFtp)}">${toNum(c.usersRr) > 0 ? toNum(c.usersRr).toLocaleString() : 0}</td>
+                    <td class="col-perf font-mono font-bold readonly-cell">${c.s2p || '0.0%'}</td>
+                    ${ed(`col-perf font-mono font-extrabold ${toNum(c.revenue) > 0 ? 'text-emerald-700' : 'text-slate-400'}`, c.id, 'revenue', `$${toNum(c.revenue).toFixed(2)}`)}
+                    <td class="col-perf font-mono font-extrabold readonly-cell ${getRoiColorClass(c.revenue, c.spent)}">${calculateRoi(c.revenue, c.spent)}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+              <tfoot>
+                <tr class="font-black font-mono">
+                  <td class="text-center sticky-col bg-white">TOTAL ${p.key.toUpperCase()}</td>
+                  <td class="col-budget font-bold">-</td><td class="col-budget">$${Math.round(totB).toLocaleString()}</td><td class="col-budget">$${Math.round(totS).toLocaleString()}</td>
+                  <td class="col-budget ${getRrColorClass(totRRB, totB)}">$${Math.round(totRRB).toLocaleString()}</td><td class="col-budget">$${Math.round(totDB).toLocaleString()}</td>
+                  <td class="col-views">${totImpK.toLocaleString()}</td><td class="col-views">${totImpM.toLocaleString()}</td>
+                  <td class="col-views ${getRrColorClass(totImpR, totImpK)}">${totImpR.toLocaleString()}</td><td class="col-views">${totMC.toLocaleString()}</td>
+                  <td class="col-prod">${totPV.toLocaleString()}</td><td class="col-prod">${totV2P}</td>
+                  <td class="col-clicks">${Math.round(totCK).toLocaleString()}</td><td class="col-clicks">${totCM.toLocaleString()}</td>
+                  <td class="col-clicks ${getRrColorClass(totCR, totCK)}">${totCR.toLocaleString()}</td><td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0.0%'}</td>
+                  <td class="col-regs">${totRK > 0 ? totRK.toLocaleString() : '—'}</td><td class="col-regs">${totRM.toLocaleString()}</td><td class="col-regs ${getRrColorClass(totRR, totRK)}">${totRR.toLocaleString()}</td>
+                  <td class="col-users">${totUK > 0 ? totUK.toLocaleString() : '—'}</td><td class="col-users">${totUM.toLocaleString()}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR.toLocaleString()}</td>
+                  <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
+                  <td class="col-perf text-emerald-700">$${totRev.toFixed(2)}</td>
+                  <td class="col-perf ${getRoiColorClass(totRev, totS)}">${calculateRoi(totRev, totS)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function syncGlobalSummaries() {
+      const all = appData.campaigns || [], sum = f => all.reduce((s, c) => s + toNum(c[f]), 0);
+      const totSpent = sum('spent'), totRRB = sum('rrBudget'), totMetaClicks = sum('metaClicks');
+      const totClicks = sum('clicksMtd'), totRRClicks = sum('clicksRr'), totClicksKpi = sum('clicksKpi');
+      const totSign = sum('regMtd'), totRRSign = sum('regRr'), totUsers = sum('usersMtd'), totRRUsers = sum('usersRr');
+      const totRev = sum('revenue'), totProf = totRev - totSpent, totRrRev = calculateAutoRR(totRev), totProfRr = totRrRev - totRRB;
+      const k = appData.kpis || {}, fmtMoney = v => `${v < 0 ? '-$' : '$'}${Math.abs(Math.round(v)).toLocaleString()}`;
+
+      setTxt('tpMtdBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('tpMtdSignups', totSign.toLocaleString());
+      setTxt('tpMtdUsers', totUsers.toLocaleString());
+      setTxt('tpMtdRevenue', `$${Math.round(totRev).toLocaleString()}`);
+      setTxt('tpMtdProfit', fmtMoney(totProf));
+      setTxt('tpRrBudget', `$${Math.round(totRRB).toLocaleString()}`);
+      setTxt('tpRrSignups', totRRSign.toLocaleString());
+      setTxt('tpRrUsers', totRRUsers.toLocaleString());
+      setTxt('tpRrRevenue', `$${Math.round(totRrRev).toLocaleString()}`);
+      setTxt('tpRrProfit', fmtMoney(totProfRr));
+
+      [['tpRrBudget', totRRB, k.budget], ['tpRrSignups', totRRSign, k.signups], ['tpRrUsers', totRRUsers, k.users],
+       ['tpRrRevenue', totRrRev, k.revenue], ['tpRrProfit', totProfRr, k.profit]].forEach(([id, rr, target]) => {
+        const el = $(id);
+        if (el) { const ok = toNum(rr) >= toNum(target); el.classList.toggle('text-emerald-600', ok); el.classList.toggle('text-rose-600', !ok); }
+      });
+
+      const spendVal = toNum(totRRB) > 0 ? toNum(totRRB) : toNum(totSpent), revVal = toNum(totRrRev) > 0 ? toNum(totRrRev) : toNum(totRev);
+      setTxt('tpRoiRatio', `1:${spendVal > 0 ? (revVal / spendVal).toFixed(1) : '0.4'}`);
+
+      setTxt('kpiBudget', `$${Math.round(totSpent).toLocaleString()}`);
+      setTxt('kpiMetaClicks', totMetaClicks.toLocaleString());
+      setTxt('kpiClicks', totClicks.toLocaleString());
+      setTxt('kpiTargetClicks', `KPI: ${totClicksKpi.toLocaleString()}`);
+      setTxt('kpiSignups', totSign.toLocaleString());
+      setTxt('kpiFtd', totUsers.toLocaleString());
+      setTxt('kpiRevenue', `$${Math.round(totRev).toLocaleString()}`);
+      setTxt('kpiProfit', fmtMoney(totProf));
+
+      const kpiProfitEl = $('kpiProfit');
+      if (kpiProfitEl) {
+        kpiProfitEl.classList.remove('text-slate-900', 'text-emerald-600', 'text-rose-600');
+        kpiProfitEl.classList.add(totProf < 0 ? 'text-rose-600' : 'text-emerald-600');
+      }
+
+      [['rrBudget', totRRB, k.budget, true], ['rrClicks', totRRClicks, totClicksKpi, false], ['rrSignups', totRRSign, k.signups, false],
+       ['rrFtd', totRRUsers, k.users, false], ['rrRevenue', totRrRev, k.revenue, true], ['rrProfit', totProfRr, k.profit, true]].forEach(([id, v, target, isCur]) => {
+        const el = $(id);
+        if (!el) return;
+        const n = toNum(v), ok = toNum(target) > 0 ? n >= toNum(target) : n > 0;
+        el.className = `text-[11px] font-extrabold px-2 py-0.5 rounded border ${ok ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`;
+        el.innerText = `RR: ${isCur ? fmtMoney(n) : Math.round(n).toLocaleString()}`;
+      });
+    }
+
+    function updateCharts() {
+      const all = appData.campaigns || [], sumP = (p, f) => all.filter(c => (c.platform || '').toLowerCase() === p).reduce((s, c) => s + toNum(c[f]), 0);
+      const mS = sumP('meta', 'spent'), mR = sumP('meta', 'revenue'), iS = sumP('instagram', 'spent'), iR = sumP('instagram', 'revenue'), xS = sumP('x', 'spent'), xR = sumP('x', 'revenue');
+      const mSign = sumP('meta', 'regMtd'), iSign = sumP('instagram', 'regMtd'), mUsr = sumP('meta', 'usersMtd'), iUsr = sumP('instagram', 'usersMtd');
+
+      setTxt('pieMetaSignups', mSign); setTxt('pieIGSignups', iSign);
+      setTxt('pieMetaUsers', mUsr); setTxt('pieIGUsers', iUsr);
+      setTxt('badgeRoiMeta', `ROI: ${calculateRoi(mR, mS)}`);
+      setTxt('badgeRoiIG', `ROI: ${calculateRoi(iR, iS)}`);
+      setTxt('badgeRoiX', `ROI: ${calculateRoi(xR, xS)}`);
+
+      const pie = (id, data, ch) => {
+        if (ch) ch.destroy();
+        return new Chart($(id).getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: ['Meta', 'Instagram'], datasets: [{ data, backgroundColor: ['#0081FB', '#E1306C'] }] },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '65%' }
+        });
+      };
+      const bar = (id, s, r, ch) => {
+        if (ch) ch.destroy();
+        return new Chart($(id).getContext('2d'), {
+          type: 'bar',
+          data: { labels: ['Spent', 'Revenue'], datasets: [{ data: [s, r], backgroundColor: ['#6366F1', '#10B981'], borderRadius: 4 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '$' + v } } } }
+        });
+      };
+      chartSignups = pie('signupsPieChart', [mSign, iSign], chartSignups);
+      chartUsers = pie('usersPieChart', [mUsr, iUsr], chartUsers);
+      chartMetaBR = bar('metaBudgetRevenueChart', mS, mR, chartMetaBR);
+      chartIGBR = bar('instagramBudgetRevenueChart', iS, iR, chartIGBR);
+      chartXBR = bar('xBudgetRevenueChart', xS, xR, chartXBR);
+    }
+
+    async function exportToExcel() {
+      if (!appData?.campaigns) return;
+      distributeKpisToCampaigns();
+
+      const ARGB = {
+        border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D', white: 'FFFFFFFF', highlightBlue: 'FFCFE2F3',
+        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD', grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
+        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0', subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
+        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED', tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
+      };
+      const border = { top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } }, bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } } };
+      const setCell = (cell, val, bg, bold = false, color = ARGB.textDark) => {
+        cell.value = val;
+        if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+        cell.font = { name: 'Calibri', size: 10, bold, color: { argb: color } };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.border = border;
+      };
+      const mergeRange = (ws, r1, c1, r2, c2, val, bg) => {
+        ws.mergeCells(r1, c1, r2, c2);
+        for (let r = r1; r <= r2; r++) for (let c = c1; c <= c2; c++) {
+          const cell = ws.getCell(r, c);
+          if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+          cell.border = border;
+        }
+        setCell(ws.getCell(r1, c1), val, bg, true);
+      };
+      const writeRow = (row, h, cells) => { row.height = h; cells.forEach(([v, bg, b = false, col = ARGB.textDark], i) => setCell(row.getCell(i + 1), v, bg, b, col)); };
+      const rrArgb = (rr, kpi) => (toNum(kpi) > 0 ? toNum(rr) >= toNum(kpi) : toNum(rr) > 0) ? ARGB.textGreen : ARGB.textRed;
+      const roiArgb = (rev, sp) => { const s = toNum(sp), r = toNum(rev); return s <= 0 ? (r > 0 ? ARGB.textGreen : ARGB.textDark) : (((r - s) / s) >= 0 ? ARGB.textGreen : ARGB.textRed); };
+
+      const wb = new ExcelJS.Workbook(); wb.creator = 'WiseKapital';
+      const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
+      ws.columns = [28, 10, 14, 12, 12, 14, 14, 14, 14, 14, 14, 10, 14, 12, 12, 10, 14, 12, 12, 14, 12, 12, 10, 16, 16].map(width => ({ width }));
+
+      const subs = [
+        ['# Days', ARGB.subBudget], ['Budget', ARGB.subBudget], ['Spent', ARGB.subBudget], ['RR', ARGB.subBudget], ['Daily Budget', ARGB.subBudget],
+        ['Imp. (KPI)', ARGB.subViews], ['MTD', ARGB.subViews], ['RR', ARGB.subViews], ['Meta Clicks', ARGB.subViews],
+        ['Product Views', ARGB.subProduct], ['V2P', ARGB.subProduct], ['Clicks (KPI)', ARGB.subClicks], ['MTD', ARGB.subClicks], ['RR', ARGB.subClicks], ['CTR', ARGB.subClicks],
+        ['Registration', ARGB.subRegs], ['MTD', ARGB.subRegs], ['RR', ARGB.subRegs], ['Users (FTP)', ARGB.subUsers], ['MTD', ARGB.subUsers], ['RR', ARGB.subUsers],
+        ['S2P', ARGB.subPerf], ['Revenue', ARGB.subPerf], ['ROI', ARGB.subPerf]
+      ];
+      const groups = [[2, 6, 'BUDGET', ARGB.grpBudget], [7, 10, 'META VIEWS', ARGB.grpViews], [11, 12, 'PRODUCT VIEWS', ARGB.grpProduct], [13, 16, 'PRODUCT CLICKS', ARGB.grpClicks], [17, 19, 'REGISTRATIONS', ARGB.grpRegs], [20, 22, 'USERS', ARGB.grpUsers], [23, 25, 'PERFORMANCE', ARGB.grpPerf]];
+      const curDays = getSelectedDaysCount(), [startD, endD] = getRangeBounds();
+      const isMulti = startD.getFullYear() !== endD.getFullYear() || startD.getMonth() !== endD.getMonth();
+      const totDaysCur = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
+
+      function buildBlock(pKey, title, bannerColor, r) {
+        const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
+        ws.mergeCells(r, 1, r, 25);
+        const tc = ws.getCell(r, 1);
+        tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
+        tc.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+        tc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bannerColor } };
+        tc.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(r++).height = 24;
+
+        mergeRange(ws, r, 1, r + 1, 1, 'Campaign (Brand)', ARGB.white);
+        groups.forEach(([c1, c2, t, bg]) => mergeRange(ws, r, c1, r, c2, t, bg));
+        subs.forEach(([t, bg], i) => setCell(ws.getCell(r + 1, i + 2), t, bg, true));
+        r += 2;
+
+        camps.forEach(c => {
+          const rawDays = toNum(c.numDays) > 0 ? toNum(c.numDays) : curDays;
+          const cDays = isMulti ? rawDays : Math.min(totDaysCur, rawDays);
+          writeRow(ws.getRow(r++), 19, [
+            [c.name, c.highlight ? ARGB.highlightBlue : ARGB.white, true], [cDays, ARGB.tintBudget, true],
+            [`$${Math.round(toNum(c.budget)).toLocaleString()}`, ARGB.tintBudget, true], [`$${Math.round(toNum(c.spent)).toLocaleString()}`, ARGB.tintBudget, true],
+            [`$${Math.round(toNum(c.rrBudget)).toLocaleString()}`, ARGB.tintBudget, true, rrArgb(c.rrBudget, c.budget)], [`$${Math.round(toNum(c.dailyBudget)).toLocaleString()}`, ARGB.tintBudget],
+            [Math.round(toNum(c.impKpi)).toLocaleString(), ARGB.tintViews], [Math.round(toNum(c.impMtd)).toLocaleString(), ARGB.tintViews, true],
+            [Math.round(toNum(c.impRr)).toLocaleString(), ARGB.tintViews, true, rrArgb(c.impRr, c.impKpi)], [Math.round(toNum(c.metaClicks)).toLocaleString(), ARGB.tintViews, true],
+            [Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true], [toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true],
+            [Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks], [Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true],
+            [Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, rrArgb(c.clicksRr, c.clicksKpi)], [c.ctr || '0.0%', ARGB.tintClicks, true],
+            [toNum(c.regKpi) > 0 ? Math.round(toNum(c.regKpi)).toLocaleString() : (c.regKpi ?? '—'), ARGB.tintRegs, true], [Math.round(toNum(c.regMtd)).toLocaleString(), ARGB.tintRegs, true],
+            [Math.round(toNum(c.regRr)).toLocaleString(), ARGB.tintRegs, true, rrArgb(c.regRr, c.regKpi)],
+            [toNum(c.usersFtp) > 0 ? Math.round(toNum(c.usersFtp)).toLocaleString() : (c.usersFtp ?? '—'), ARGB.tintUsers, true], [Math.round(toNum(c.usersMtd)).toLocaleString(), ARGB.tintUsers, true],
+            [toNum(c.usersRr) > 0 ? Math.round(toNum(c.usersRr)).toLocaleString() : (toNum(c.usersFtp) > 0 ? '0' : '—'), ARGB.tintUsers, true, rrArgb(c.usersRr, c.usersFtp)],
+            [c.s2p || '0.0%', ARGB.tintPerf, true], [toNum(c.revenue) > 0 ? `$${toNum(c.revenue).toFixed(2)}` : '$-', ARGB.tintPerf, true, toNum(c.revenue) > 0 ? ARGB.textGreen : ARGB.textDark],
+            [calculateRoi(c.revenue, c.spent), ARGB.tintPerf, true, roiArgb(c.revenue, c.spent)]
+          ]);
+        });
+
+        const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
+        writeRow(ws.getRow(r++), 20, [
+          [`TOTAL ${pKey.toUpperCase()}`, ARGB.white, true], ['-', ARGB.tintBudget, true],
+          [`$${Math.round(sum('budget')).toLocaleString()}`, ARGB.tintBudget, true], [`$${Math.round(sum('spent')).toLocaleString()}`, ARGB.tintBudget, true],
+          [`$${Math.round(sum('rrBudget')).toLocaleString()}`, ARGB.tintBudget, true, rrArgb(sum('rrBudget'), sum('budget'))], [`$${Math.round(sum('dailyBudget')).toLocaleString()}`, ARGB.tintBudget, true],
+          [Math.round(sum('impKpi')).toLocaleString(), ARGB.tintViews, true], [Math.round(sum('impMtd')).toLocaleString(), ARGB.tintViews, true],
+          [Math.round(sum('impRr')).toLocaleString(), ARGB.tintViews, true, rrArgb(sum('impRr'), sum('impKpi'))], [Math.round(sum('metaClicks')).toLocaleString(), ARGB.tintViews, true],
+          [Math.round(sum('productViews')).toLocaleString(), ARGB.tintProduct, true], [Math.round(sum('v2p')).toLocaleString(), ARGB.tintProduct, true],
+          [Math.round(sum('clicksKpi')).toLocaleString(), ARGB.tintClicks, true], [Math.round(sum('clicksMtd')).toLocaleString(), ARGB.tintClicks, true],
+          [Math.round(sum('clicksRr')).toLocaleString(), ARGB.tintClicks, true, rrArgb(sum('clicksRr'), sum('clicksKpi'))], [sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintClicks, true],
+          [sum('regKpi') > 0 ? Math.round(sum('regKpi')).toLocaleString() : '—', ARGB.tintRegs, true], [Math.round(sum('regMtd')).toLocaleString(), ARGB.tintRegs, true],
+          [Math.round(sum('regRr')).toLocaleString(), ARGB.tintRegs, true, rrArgb(sum('regRr'), sum('regKpi'))],
+          [sum('usersFtp') > 0 ? Math.round(sum('usersFtp')).toLocaleString() : '—', ARGB.tintUsers, true], [Math.round(sum('usersMtd')).toLocaleString(), ARGB.tintUsers, true],
+          [sum('usersRr') > 0 ? Math.round(sum('usersRr')).toLocaleString() : (sum('usersFtp') > 0 ? '0' : '—'), ARGB.tintUsers, true, rrArgb(sum('usersRr'), sum('usersFtp'))],
+          [sum('regMtd') > 0 ? ((sum('usersMtd') / sum('regMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintPerf, true], [`$ ${sum('revenue').toFixed(2)}`, ARGB.tintPerf, true, ARGB.textGreen],
+          [calculateRoi(sum('revenue'), sum('spent')), ARGB.tintPerf, true, roiArgb(sum('revenue'), sum('spent'))]
+        ]);
+        return r + 1;
+      }
+
+      let rowIdx = buildBlock('meta', 'Meta (Facebook Ads)', 'FF1D63ED', 1);
+      rowIdx = buildBlock('instagram', 'Instagram Ads', 'FFE1306C', rowIdx);
+      buildBlock('x', 'X Campaigns', 'FF111827', rowIdx);
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([await wb.xlsx.writeBuffer()]));
+      a.download = `WiseKapital_Social_Report_${currentLoadedYear}_${currentLoadedMonth}.xlsx`;
+      document.body.appendChild(a); a.click(); a.remove();
+      showSaveToast("📊 Excel exported successfully!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateDatesUI();
+      loadDataForRange(fromDate, toDate);
+      initOrResumeSaveCooldown();
+    });
+  </script>
+</body>
+</html>
