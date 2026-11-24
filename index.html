@@ -211,27 +211,27 @@
     <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
     <div id="platformsContainer" class="space-y-8"></div>
 
-    <!-- TABLA INDEPENDIENTE SINCRONIZADA CON JSON (SOLO VISIBLE EN NOVIEMBRE) -->
-    <div id="novemberAllocationContainer" class="hidden space-y-2">
-      <div class="glass-card rounded-xl p-4 overflow-hidden">
-        <h2 class="text-sm font-extrabold text-slate-900 mb-2">November Campaign Budget Allocation</h2>
+    <!-- TABLA INDEPENDIENTE SINCRONIZADA CON JSON (DESDE NOVIEMBRE 2026 EN ADELANTE) -->
+    <div id="budgetAllocationContainer" class="hidden space-y-2">
+      <div class="glass-card rounded-xl p-4 overflow-hidden w-fit max-w-full">
+        <h2 class="text-sm font-extrabold text-slate-900 mb-2">Budget Management</h2>
         <div class="overflow-x-auto custom-scrollbar">
-          <table class="w-full text-xs border-collapse" style="min-width: 520px;">
+          <table class="w-auto text-xs border-collapse">
             <thead>
               <tr class="font-extrabold text-slate-900 text-center border-b border-white">
-                <th class="py-2.5 px-4 pr-8 text-left bg-white whitespace-nowrap" style="width: 1%;">Campaign</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Budget (KPI)</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Spent</th>
-                <th class="py-2.5 px-3 bg-[#C5C5C5]" style="width: 33%;">Daily Budget</th>
+                <th class="py-2.5 px-4 pr-8 text-left bg-white whitespace-nowrap" style="min-width: 190px;">Campaign</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Budget (KPI)</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Spent</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Daily Budget</th>
               </tr>
             </thead>
-            <tbody id="novAllocBody" class="text-slate-900 divide-y divide-white/60"></tbody>
+            <tbody id="allocBody" class="text-slate-900 divide-y divide-white/60"></tbody>
             <tfoot>
               <tr class="font-extrabold text-slate-900 text-center border-t border-white">
                 <td class="py-3 px-4 pr-8 text-left bg-white whitespace-nowrap">TOTAL</td>
-                <td id="novTotBudget" class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#16A34A]">$0</td>
-                <td id="novTotSpent" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
-                <td id="novTotDaily" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
+                <td id="allocTotBudget" class="py-3 px-5 bg-[#C5C5C5] font-mono text-[#16A34A] whitespace-nowrap">$0</td>
+                <td id="allocTotSpent" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
+                <td id="allocTotDaily" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
               </tr>
             </tfoot>
           </table>
@@ -790,7 +790,7 @@
     }
 
     function renderAllocationTable() {
-      const tbody = $('novAllocBody');
+      const tbody = $('allocBody');
       if (!tbody) return;
       const canEdit = isEditingAllowed();
       const camps = PLATFORMS.flatMap(p => (appData?.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key));
@@ -799,13 +799,13 @@
       tbody.innerHTML = camps.length ? camps.map(c => {
         const b = Math.round(toNum(c.allocBudget)), s = Math.round(toNum(c.allocSpent)), d = Math.round(toNum(c.allocDaily));
         totB += b; totS += s; totD += d;
-        const cell = (field, val) => `<td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleAllocBlur(this, '${c.id}', '${field}')">$${val.toLocaleString()}</td>`;
+        const cell = (field, val) => `<td class="py-2 px-5 text-center bg-[#C5C5C5] font-mono whitespace-nowrap ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleAllocBlur(this, '${c.id}', '${field}')">$${val.toLocaleString()}</td>`;
         return `<tr><td class="py-2 px-4 pr-8 font-semibold text-left bg-white whitespace-nowrap">${escHtml(c.name)}</td>${cell('allocBudget', b)}${cell('allocSpent', s)}${cell('allocDaily', d)}</tr>`;
       }).join('') : `<tr><td colspan="4" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
 
-      setTxt('novTotBudget', `$${totB.toLocaleString()}`);
-      setTxt('novTotSpent', `$${totS.toLocaleString()}`);
-      setTxt('novTotDaily', `$${totD.toLocaleString()}`);
+      setTxt('allocTotBudget', `$${totB.toLocaleString()}`);
+      setTxt('allocTotSpent', `$${totS.toLocaleString()}`);
+      setTxt('allocTotDaily', `$${totD.toLocaleString()}`);
     }
 
     function renderDashboard() {
@@ -842,9 +842,10 @@
       setTxt('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
       setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
 
-      const isNov = String(currentLoadedMonth).toLowerCase() === 'november';
-      $('novemberAllocationContainer')?.classList.toggle('hidden', !isNov);
-      if (isNov) renderAllocationTable();
+      const [, eD] = getRangeBounds();
+      const showAlloc = eD.getFullYear() > 2026 || (eD.getFullYear() === 2026 && eD.getMonth() >= 10);
+      $('budgetAllocationContainer')?.classList.toggle('hidden', !showAlloc);
+      if (showAlloc) renderAllocationTable();
 
       renderAllTables();
       syncGlobalSummaries();
