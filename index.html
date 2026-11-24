@@ -30,6 +30,7 @@
     .col-views { background-color: #F0F5FA !important; }
     .col-prod { background-color: #FFFBEB !important; }
     .col-clicks { background-color: #FEF6ED !important; }
+    .col-leads { background-color: #F2F7F8 !important; }
     .col-regs { background-color: #F2F8F1 !important; }
     .col-users { background-color: #FAF2F6 !important; }
     .col-perf { background-color: #F3F7FE !important; }
@@ -282,7 +283,7 @@
     const GH_OWNER = "WiseKapital", GH_REPO = "Social-Management-Report", GH_BRANCH = "main";
     const GITHUB_TOKEN = ["ghp", "VfiGT1ji2NQLpV2Id5mnGLtRUI8F912uRwni"].join("_");
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const SCALE_FIELDS = ['spent', 'impMtd', 'metaClicks', 'productViews', 'v2p', 'clicksMtd', 'regMtd'];
+    const SCALE_FIELDS = ['spent', 'impMtd', 'metaClicks', 'productViews', 'v2p', 'clicksMtd', 'leadsMtd', 'regMtd'];
     const KPI_FIELDS = ['budget', 'impKpi', 'clicksKpi', 'regKpi', 'usersFtp', 'allocBudget', 'allocSpent', 'allocDaily'];
 
     let appData = null, rawMonthData = null;
@@ -305,7 +306,14 @@
     const getRangeBounds = (a = fromDate, b = toDate) => a <= b ? [a, b] : [b, a];
     const getSelectedDaysCount = () => { if (!fromDate || !toDate) return 1; const [s, e] = getRangeBounds(); return Math.max(1, Math.round((e - s) / 86400000) + 1); };
     const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
-    const cellEnter = (e, el) => { if (!isEditingAllowed()) { e.preventDefault(); el.blur(); } else if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
+    const cellEnter = (e, el, nat = false) => {
+      if (!isEditingAllowed()) { e.preventDefault(); el.blur(); return; }
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); return; }
+      if (nat && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const nav = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+        if (!nav.includes(e.key) && !/^[0-9]$/.test(e.key)) e.preventDefault();
+      }
+    };
 
     function isEditingAllowed() {
       if (!fromDate || !toDate) return false;
@@ -523,7 +531,7 @@
         id: `camp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
         name: "New Campaign", platform, highlight: false, numDays: getSelectedDaysCount(),
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0, metaClicks: 0,
-        productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
+        productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%", leadsMtd: 0,
         regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
         allocBudget: 0, allocSpent: 0, allocDaily: 0
       };
@@ -760,7 +768,12 @@
       if (!c) return;
 
       let val = field === 'name' ? el.innerText.trim() : toNum(el.innerText);
-      if (field === 'numDays') {
+      if (field === 'leadsMtd') {
+        const txt = el.innerText.trim();
+        const clean = /^\d{1,3}(,\d{3})+$/.test(txt) ? txt.replace(/,/g, '') : txt.replace(',', '.');
+        val = Math.max(0, Math.floor(parseFloat(clean.replace(/[^0-9.-]/g, '')) || 0));
+        el.innerText = val;
+      } else if (field === 'numDays') {
         const [startD] = getRangeBounds();
         val = Math.max(1, Math.min(new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate(), val));
         el.innerText = val;
@@ -859,14 +872,14 @@
       const canEdit = isEditingAllowed(), curDays = getSelectedDaysCount(), [startD, endD] = getRangeBounds();
       const isMulti = startD.getFullYear() !== endD.getFullYear() || startD.getMonth() !== endD.getMonth();
       const totDaysCur = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
-      const ed = (cls, id, field, txt) => `<td class="${cls} ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${id}', '${field}')">${txt}</td>`;
+      const ed = (cls, id, field, txt, nat = false) => `<td class="${cls} ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this,${nat})" onblur="handleCellBlur(this, '${id}', '${field}')">${txt}</td>`;
 
       PLATFORMS.forEach(p => {
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key);
         const sum = f => camps.reduce((s, c) => s + toNum(c[f]), 0);
         const totB = sum('budget'), totS = sum('spent'), totRRB = sum('rrBudget'), totDB = sum('dailyBudget');
         const totImpK = sum('impKpi'), totImpM = sum('impMtd'), totImpR = sum('impRr'), totMC = sum('metaClicks');
-        const totPV = sum('productViews'), totV2P = sum('v2p'), totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr');
+        const totPV = sum('productViews'), totV2P = sum('v2p'), totCK = sum('clicksKpi'), totCM = sum('clicksMtd'), totCR = sum('clicksRr'), totLM = sum('leadsMtd');
         const totRK = sum('regKpi'), totRM = sum('regMtd'), totRR = sum('regRr'), totUK = sum('usersFtp'), totUM = sum('usersMtd'), totUR = sum('usersRr'), totRev = sum('revenue');
 
         const card = document.createElement('div');
@@ -886,26 +899,27 @@
             </div>
           </div>
           <div class="glass-card rounded-xl overflow-hidden"><div class="overflow-x-auto custom-scrollbar">
-            <table class="master-table min-w-[1480px]">
+            <table class="master-table min-w-[1540px]">
               <thead>
                 <tr>
                   <th rowspan="2" class="bg-white sticky-col" style="min-width: 210px;">Campaign (Brand)</th>
                   <th colspan="5" class="bg-[#D9D9D9]">BUDGET</th><th colspan="4" class="bg-[#CFE2F3]">META VIEWS</th>
                   <th colspan="2" class="bg-[#FFF2CC]">PRODUCT VIEWS</th><th colspan="4" class="bg-[#FCE5CD]">PRODUCT CLICKS</th>
-                  <th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th><th colspan="3" class="bg-[#EAD1DC]">USERS</th><th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
+                  <th colspan="1" class="bg-[#D0E0E3]">LEADS</th><th colspan="3" class="bg-[#D9EAD3]">REGISTRATIONS</th><th colspan="3" class="bg-[#EAD1DC]">USERS</th><th colspan="3" class="bg-[#C9DAF8]">PERFORMANCE</th>
                 </tr>
                 <tr class="text-[10px] font-bold">
                   <th class="bg-[#E8E8E8]"># Days</th><th class="bg-[#E8E8E8]">Budget (KPI)</th><th class="bg-[#E8E8E8]">Spent</th><th class="bg-[#E8E8E8]">RR</th><th class="bg-[#E8E8E8]">Daily Budget</th>
                   <th class="bg-[#DFECF7]">Imp. (KPI)</th><th class="bg-[#DFECF7]">MTD</th><th class="bg-[#DFECF7]">RR</th><th class="bg-[#DFECF7]">Meta Clicks</th>
                   <th class="bg-[#FFF6D9]">Product Views</th><th class="bg-[#FFF6D9]">V2P</th>
                   <th class="bg-[#FDEFE0]">Clicks (KPI)</th><th class="bg-[#FDEFE0]">MTD</th><th class="bg-[#FDEFE0]">RR</th><th class="bg-[#FDEFE0]">CTR</th>
+                  <th class="bg-[#E2ECEE]">MTD</th>
                   <th class="bg-[#E5F1E1]">Reg (KPI)</th><th class="bg-[#E5F1E1]">MTD</th><th class="bg-[#E5F1E1]">RR</th>
                   <th class="bg-[#F2DFE8]">Users (KPI)</th><th class="bg-[#F2DFE8]">MTD</th><th class="bg-[#F2DFE8]">RR</th>
                   <th class="bg-[#D9E5FA]">S2P</th><th class="bg-[#D9E5FA]">Revenue</th><th class="bg-[#D9E5FA]">ROI</th>
                 </tr>
               </thead>
               <tbody>
-                ${camps.length === 0 ? `<tr><td colspan="25" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => {
+                ${camps.length === 0 ? `<tr><td colspan="26" class="text-center py-4 text-slate-400">No campaigns for this platform</td></tr>` : camps.map(c => {
                   const rawDays = toNum(c.numDays) > 0 ? toNum(c.numDays) : curDays;
                   const days = isMulti ? rawDays : Math.min(totDaysCur, rawDays);
                   return `<tr class="hover:brightness-95">
@@ -930,6 +944,7 @@
                     ${ed('col-clicks font-mono font-bold', c.id, 'clicksMtd', toNum(c.clicksMtd).toLocaleString())}
                     <td class="col-clicks font-mono readonly-cell ${getRrColorClass(c.clicksRr, c.clicksKpi)}">${toNum(c.clicksRr).toLocaleString()}</td>
                     <td class="col-clicks font-mono font-bold readonly-cell">${c.ctr || '0.0%'}</td>
+                    ${ed('col-leads font-mono font-bold', c.id, 'leadsMtd', Math.max(0, Math.floor(toNum(c.leadsMtd))), true)}
                     ${ed('col-regs font-mono font-bold', c.id, 'regKpi', c.regKpi !== undefined ? toNum(c.regKpi).toLocaleString() : 0)}
                     ${ed('col-regs font-mono font-bold', c.id, 'regMtd', toNum(c.regMtd).toLocaleString())}
                     <td class="col-regs font-mono readonly-cell ${getRrColorClass(c.regRr, c.regKpi)}">${toNum(c.regRr).toLocaleString()}</td>
@@ -952,6 +967,7 @@
                   <td class="col-prod">${totPV.toLocaleString()}</td><td class="col-prod">${totV2P}</td>
                   <td class="col-clicks">${Math.round(totCK).toLocaleString()}</td><td class="col-clicks">${totCM.toLocaleString()}</td>
                   <td class="col-clicks ${getRrColorClass(totCR, totCK)}">${totCR.toLocaleString()}</td><td class="col-clicks">${totImpM > 0 ? ((totCM / totImpM) * 100).toFixed(1) + '%' : '0.0%'}</td>
+                  <td class="col-leads">${Math.round(totLM).toLocaleString()}</td>
                   <td class="col-regs">${totRK > 0 ? totRK.toLocaleString() : '—'}</td><td class="col-regs">${totRM.toLocaleString()}</td><td class="col-regs ${getRrColorClass(totRR, totRK)}">${totRR.toLocaleString()}</td>
                   <td class="col-users">${totUK > 0 ? totUK.toLocaleString() : '—'}</td><td class="col-users">${totUM.toLocaleString()}</td><td class="col-users ${getRrColorClass(totUR, totUK)}">${totUR.toLocaleString()}</td>
                   <td class="col-perf">${totRM > 0 ? ((totUM / totRM) * 100).toFixed(1) + '%' : '0.0%'}</td>
@@ -1058,9 +1074,9 @@
 
       const ARGB = {
         border: 'FFD1D5DB', textDark: 'FF0F172A', textRed: 'FFDC2626', textGreen: 'FF15803D', white: 'FFFFFFFF', highlightBlue: 'FFCFE2F3',
-        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD', grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
-        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0', subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
-        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED', tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
+        grpBudget: 'FFD9D9D9', grpViews: 'FFCFE2F3', grpProduct: 'FFFFF2CC', grpClicks: 'FFFCE5CD', grpLeads: 'FFD0E0E3', grpRegs: 'FFD9EAD3', grpUsers: 'FFEAD1DC', grpPerf: 'FFC9DAF8',
+        subBudget: 'FFE8E8E8', subViews: 'FFDFECF7', subProduct: 'FFFFF6D9', subClicks: 'FFFDEFE0', subLeads: 'FFE2ECEE', subRegs: 'FFE5F1E1', subUsers: 'FFF2DFE8', subPerf: 'FFD9E5FA',
+        tintBudget: 'FFF4F4F4', tintViews: 'FFF0F5FA', tintProduct: 'FFFFFBEB', tintClicks: 'FFFEF6ED', tintLeads: 'FFF2F7F8', tintRegs: 'FFF2F8F1', tintUsers: 'FFFAF2F6', tintPerf: 'FFF3F7FE'
       };
       const border = { top: { style: 'thin', color: { argb: ARGB.border } }, left: { style: 'thin', color: { argb: ARGB.border } }, bottom: { style: 'thin', color: { argb: ARGB.border } }, right: { style: 'thin', color: { argb: ARGB.border } } };
       const setCell = (cell, val, bg, bold = false, color = ARGB.textDark) => {
@@ -1071,7 +1087,7 @@
         cell.border = border;
       };
       const mergeRange = (ws, r1, c1, r2, c2, val, bg) => {
-        ws.mergeCells(r1, c1, r2, c2);
+        if (r1 !== r2 || c1 !== c2) ws.mergeCells(r1, c1, r2, c2);
         for (let r = r1; r <= r2; r++) for (let c = c1; c <= c2; c++) {
           const cell = ws.getCell(r, c);
           if (bg) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
@@ -1085,23 +1101,23 @@
 
       const wb = new ExcelJS.Workbook(); wb.creator = 'WiseKapital';
       const ws = wb.addWorksheet('Social Report', { views: [{ showGridLines: true }] });
-      ws.columns = [28, 10, 14, 12, 12, 14, 14, 14, 14, 14, 14, 10, 14, 12, 12, 10, 14, 12, 12, 14, 12, 12, 10, 16, 16].map(width => ({ width }));
+      ws.columns = [28, 10, 14, 12, 12, 14, 14, 14, 14, 14, 14, 10, 14, 12, 12, 10, 12, 14, 12, 12, 14, 12, 12, 10, 16, 16].map(width => ({ width }));
 
       const subs = [
         ['# Days', ARGB.subBudget], ['Budget', ARGB.subBudget], ['Spent', ARGB.subBudget], ['RR', ARGB.subBudget], ['Daily Budget', ARGB.subBudget],
         ['Imp. (KPI)', ARGB.subViews], ['MTD', ARGB.subViews], ['RR', ARGB.subViews], ['Meta Clicks', ARGB.subViews],
         ['Product Views', ARGB.subProduct], ['V2P', ARGB.subProduct], ['Clicks (KPI)', ARGB.subClicks], ['MTD', ARGB.subClicks], ['RR', ARGB.subClicks], ['CTR', ARGB.subClicks],
-        ['Registration', ARGB.subRegs], ['MTD', ARGB.subRegs], ['RR', ARGB.subRegs], ['Users (FTP)', ARGB.subUsers], ['MTD', ARGB.subUsers], ['RR', ARGB.subUsers],
+        ['MTD', ARGB.subLeads], ['Registration', ARGB.subRegs], ['MTD', ARGB.subRegs], ['RR', ARGB.subRegs], ['Users (FTP)', ARGB.subUsers], ['MTD', ARGB.subUsers], ['RR', ARGB.subUsers],
         ['S2P', ARGB.subPerf], ['Revenue', ARGB.subPerf], ['ROI', ARGB.subPerf]
       ];
-      const groups = [[2, 6, 'BUDGET', ARGB.grpBudget], [7, 10, 'META VIEWS', ARGB.grpViews], [11, 12, 'PRODUCT VIEWS', ARGB.grpProduct], [13, 16, 'PRODUCT CLICKS', ARGB.grpClicks], [17, 19, 'REGISTRATIONS', ARGB.grpRegs], [20, 22, 'USERS', ARGB.grpUsers], [23, 25, 'PERFORMANCE', ARGB.grpPerf]];
+      const groups = [[2, 6, 'BUDGET', ARGB.grpBudget], [7, 10, 'META VIEWS', ARGB.grpViews], [11, 12, 'PRODUCT VIEWS', ARGB.grpProduct], [13, 16, 'PRODUCT CLICKS', ARGB.grpClicks], [17, 17, 'LEADS', ARGB.grpLeads], [18, 20, 'REGISTRATIONS', ARGB.grpRegs], [21, 23, 'USERS', ARGB.grpUsers], [24, 26, 'PERFORMANCE', ARGB.grpPerf]];
       const curDays = getSelectedDaysCount(), [startD, endD] = getRangeBounds();
       const isMulti = startD.getFullYear() !== endD.getFullYear() || startD.getMonth() !== endD.getMonth();
       const totDaysCur = new Date(startD.getFullYear(), startD.getMonth() + 1, 0).getDate();
 
       function buildBlock(pKey, title, bannerColor, r) {
         const camps = (appData.campaigns || []).filter(c => (c.platform || '').toLowerCase() === pKey);
-        ws.mergeCells(r, 1, r, 25);
+        ws.mergeCells(r, 1, r, 26);
         const tc = ws.getCell(r, 1);
         tc.value = `${title} (${camps.length} Campaigns) — ${appData.period}`;
         tc.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
@@ -1126,6 +1142,7 @@
             [Math.round(toNum(c.productViews)).toLocaleString(), ARGB.tintProduct, true], [toNum(c.v2p).toLocaleString(), ARGB.tintProduct, true],
             [Math.round(toNum(c.clicksKpi)).toLocaleString(), ARGB.tintClicks], [Math.round(toNum(c.clicksMtd)).toLocaleString(), ARGB.tintClicks, true],
             [Math.round(toNum(c.clicksRr)).toLocaleString(), ARGB.tintClicks, true, rrArgb(c.clicksRr, c.clicksKpi)], [c.ctr || '0.0%', ARGB.tintClicks, true],
+            [Math.max(0, Math.floor(toNum(c.leadsMtd))).toLocaleString(), ARGB.tintLeads, true],
             [toNum(c.regKpi) > 0 ? Math.round(toNum(c.regKpi)).toLocaleString() : (c.regKpi ?? '—'), ARGB.tintRegs, true], [Math.round(toNum(c.regMtd)).toLocaleString(), ARGB.tintRegs, true],
             [Math.round(toNum(c.regRr)).toLocaleString(), ARGB.tintRegs, true, rrArgb(c.regRr, c.regKpi)],
             [toNum(c.usersFtp) > 0 ? Math.round(toNum(c.usersFtp)).toLocaleString() : (c.usersFtp ?? '—'), ARGB.tintUsers, true], [Math.round(toNum(c.usersMtd)).toLocaleString(), ARGB.tintUsers, true],
@@ -1145,6 +1162,7 @@
           [Math.round(sum('productViews')).toLocaleString(), ARGB.tintProduct, true], [Math.round(sum('v2p')).toLocaleString(), ARGB.tintProduct, true],
           [Math.round(sum('clicksKpi')).toLocaleString(), ARGB.tintClicks, true], [Math.round(sum('clicksMtd')).toLocaleString(), ARGB.tintClicks, true],
           [Math.round(sum('clicksRr')).toLocaleString(), ARGB.tintClicks, true, rrArgb(sum('clicksRr'), sum('clicksKpi'))], [sum('impMtd') > 0 ? ((sum('clicksMtd') / sum('impMtd')) * 100).toFixed(1) + '%' : '0.0%', ARGB.tintClicks, true],
+          [Math.round(sum('leadsMtd')).toLocaleString(), ARGB.tintLeads, true],
           [sum('regKpi') > 0 ? Math.round(sum('regKpi')).toLocaleString() : '—', ARGB.tintRegs, true], [Math.round(sum('regMtd')).toLocaleString(), ARGB.tintRegs, true],
           [Math.round(sum('regRr')).toLocaleString(), ARGB.tintRegs, true, rrArgb(sum('regRr'), sum('regKpi'))],
           [sum('usersFtp') > 0 ? Math.round(sum('usersFtp')).toLocaleString() : '—', ARGB.tintUsers, true], [Math.round(sum('usersMtd')).toLocaleString(), ARGB.tintUsers, true],
