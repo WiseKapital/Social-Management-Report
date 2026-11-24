@@ -211,7 +211,7 @@
     <!-- PLATFORM TABLES (META, INSTAGRAM, X) -->
     <div id="platformsContainer" class="space-y-8"></div>
 
-    <!-- TABLA ESTÁTICA: NOVIEMBRE BUDGET ALLOCATION (SOLO VISIBLE EN NOVIEMBRE) -->
+    <!-- TABLA INDEPENDIENTE SINCRONIZADA CON JSON (SOLO VISIBLE EN NOVIEMBRE) -->
     <div id="novemberAllocationContainer" class="hidden space-y-2">
       <div class="glass-card rounded-xl p-4 overflow-hidden">
         <h2 class="text-sm font-extrabold text-slate-900 mb-2">November Campaign Budget Allocation</h2>
@@ -225,22 +225,13 @@
                 <th class="py-2.5 px-3 bg-[#C5C5C5]">Daily Budget</th>
               </tr>
             </thead>
-            <tbody class="text-slate-900 divide-y divide-white/60">
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">V1 Imperial Sweeps – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$66</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">C4 Imperial Sweeps – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$85</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$9</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">C3 Imperial Sweeps – IG</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$69</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">V2 SweepzKings – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$48</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">C2 SweepzKings – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$85</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$9</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">C1 SweepzKings – IG</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$65</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">SP SweepzKings – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$47</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-              <tr><td class="py-2 px-4 font-semibold text-left bg-white">MM Imperial Sweeps – FB</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$140</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$45</td><td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono">$7</td></tr>
-            </tbody>
+            <tbody id="novAllocBody" class="text-slate-900 divide-y divide-white/60"></tbody>
             <tfoot>
               <tr class="font-extrabold text-slate-900 text-center border-t border-white">
                 <td class="py-3 px-4 text-left bg-white">TOTAL</td>
-                <td class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#16A34A]">$1,120</td>
-                <td class="py-3 px-3 bg-[#C5C5C5] font-mono">$510</td>
-                <td class="py-3 px-3 bg-[#C5C5C5] font-mono">$60</td>
+                <td id="novTotBudget" class="py-3 px-3 bg-[#C5C5C5] font-mono text-[#16A34A]">$0</td>
+                <td id="novTotSpent" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
+                <td id="novTotDaily" class="py-3 px-3 bg-[#C5C5C5] font-mono">$0</td>
               </tr>
             </tfoot>
           </table>
@@ -293,6 +284,12 @@
     const fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const SCALE_FIELDS = ['spent', 'impMtd', 'metaClicks', 'productViews', 'v2p', 'clicksMtd', 'regMtd'];
     const KPI_FIELDS = ['budget', 'impKpi', 'clicksKpi', 'regKpi', 'usersFtp'];
+    const NOV_ALLOC_DEFAULTS = {
+      'v1 imperial sweeps': [140, 66, 7], 'c4 imperial sweeps': [140, 85, 9],
+      'c3 imperial sweeps': [140, 69, 7], 'v2 sweepzkings': [140, 48, 7],
+      'c2 sweepzkings': [140, 85, 9], 'c1 sweepzkings': [140, 65, 7],
+      'sp sweepzkings': [140, 47, 7], 'mm imperial sweeps': [140, 45, 7]
+    };
 
     let appData = null, rawMonthData = null;
     let chartSignups = null, chartUsers = null, chartMetaBR = null, chartIGBR = null, chartXBR = null;
@@ -305,6 +302,7 @@
 
     const $ = id => document.getElementById(id);
     const setTxt = (id, v) => { const e = $(id); if (e) e.innerText = v; };
+    const escHtml = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     const toNum = val => (val === undefined || val === null || val === '—' || val === '-' || val === '') ? 0 : (parseFloat(String(val).replace(/[$,%]/g, '')) || 0);
     const utf8ToB64 = str => { let b = ''; new TextEncoder().encode(str).forEach(x => b += String.fromCharCode(x)); return btoa(b); };
     const b64ToUtf8 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, '')), c => c.charCodeAt(0)));
@@ -315,13 +313,22 @@
     const getRrColorClass = (rr, kpi) => { const r = toNum(rr), k = toNum(kpi); return (k > 0 ? r >= k : r > 0) ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'; };
     const cellEnter = (e, el) => { if (!isEditingAllowed()) { e.preventDefault(); el.blur(); } else if (e.key === 'Enter') { e.preventDefault(); el.blur(); } };
 
+    function getAllocVals(c, monthName) {
+      const key = String(c.name || '').toLowerCase().replace(/\s*[–-]\s*(fb|ig|x)\s*$/i, '').trim();
+      const def = (String(monthName).toLowerCase() === 'november' && NOV_ALLOC_DEFAULTS[key]) || [0, 0, 0];
+      return {
+        allocBudget: c.allocBudget !== undefined ? toNum(c.allocBudget) : def[0],
+        allocSpent: c.allocSpent !== undefined ? toNum(c.allocSpent) : def[1],
+        allocDaily: c.allocDaily !== undefined ? toNum(c.allocDaily) : def[2]
+      };
+    }
+
     function isEditingAllowed() {
       if (!fromDate || !toDate) return false;
       const [s, e] = getRangeBounds();
       if (s.getFullYear() !== e.getFullYear() || s.getMonth() !== e.getMonth() || s.getDate() !== 1) return false;
       const now = new Date(), isCurr = (e.getFullYear() === now.getFullYear() && e.getMonth() === now.getMonth());
-      const totDays = new Date(e.getFullYear(), e.getMonth() + 1, 0).getDate();
-      return e.getDate() === (isCurr ? now.getDate() : totDays);
+      return e.getDate() === (isCurr ? now.getDate() : new Date(e.getFullYear(), e.getMonth() + 1, 0).getDate());
     }
 
     const COOLDOWN_KEY = "wisekapital_save_cooldown_target", COOLDOWN_DURATION_SEC = 300;
@@ -533,7 +540,8 @@
         name: "New Campaign", platform, highlight: false, numDays: getSelectedDaysCount(),
         budget: 0, spent: 0, rrBudget: 0, dailyBudget: 0, impKpi: 0, impMtd: 0, impRr: 0, metaClicks: 0,
         productViews: 0, v2p: 0, clicksKpi: 0, clicksMtd: 0, clicksRr: 0, ctr: "0.0%",
-        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%"
+        regKpi: 0, regMtd: 0, regRr: 0, usersFtp: 0, usersMtd: 0, usersRr: 0, s2p: "0.0%", revenue: 0, roi: "0.0%",
+        allocBudget: 0, allocSpent: 0, allocDaily: 0
       };
       appData.campaigns.push(newCamp);
       rawMonthData?.campaigns?.push({ ...newCamp });
@@ -661,6 +669,7 @@
             setLiveBadge(`New (${monthName})`);
             if (res.status === 'not_found' && GITHUB_TOKEN) await saveDashboardData(true);
           }
+          (rawMonthData.campaigns || []).forEach((c, i) => { if (!c.id) c.id = `c_${i}_${Date.now()}`; });
           rawMonthData._cacheKey = key;
         }
 
@@ -672,7 +681,7 @@
         const scale = isFull ? 1 : Math.min(1, selDays / maxDays);
 
         const campaigns = (rawMonthData.campaigns || []).map((c, i) => {
-          const o = { ...c, id: c.id || `c_${i}_${Date.now()}` };
+          const o = { ...c, id: c.id || `c_${i}_${Date.now()}`, ...getAllocVals(c, monthName) };
           KPI_FIELDS.forEach(f => o[f] = toNum(c[f]));
           SCALE_FIELDS.forEach(f => o[f] = Math.round(toNum(c[f]) * scale));
           const baseUsers = toNum(c.usersMtd), baseRev = toNum(c.revenue);
@@ -714,13 +723,13 @@
 
           (res.data.campaigns || []).forEach(c => {
             const key = `${(c.platform || '').toLowerCase()}__${(c.name || '').trim()}`;
-            const cUsers = toNum(c.usersMtd), cRev = toNum(c.revenue);
+            const cUsers = toNum(c.usersMtd), cRev = toNum(c.revenue), alloc = getAllocVals(c, m.monthName);
             const sUsers = isFullM ? cUsers : calculateDistributedUsers(c, sDay, eDay, maxM);
             const sRev = isFullM ? cRev : cUsers > 0 ? Math.round((sUsers * (cRev / cUsers)) * 100) / 100 : Math.round((cRev * scaleM) * 100) / 100;
             const cDays = Math.min(totM, Math.max(1, toNum(c.numDays) > 0 ? toNum(c.numDays) : selM));
 
             if (!campMap.has(key)) {
-              const entry = { ...c, id: `c_agg_${key}`, numDays: cDays, dailyBudget: toNum(c.dailyBudget), usersMtd: sUsers, revenue: sRev };
+              const entry = { ...c, id: `c_agg_${key}`, numDays: cDays, dailyBudget: toNum(c.dailyBudget), usersMtd: sUsers, revenue: sRev, ...alloc };
               KPI_FIELDS.forEach(f => entry[f] = toNum(c[f]));
               SCALE_FIELDS.forEach(f => entry[f] = toNum(c[f]) * scaleM);
               campMap.set(key, entry);
@@ -731,13 +740,14 @@
               ex.usersMtd += sUsers; ex.revenue += sRev;
               ex.dailyBudget = (toNum(ex.dailyBudget) || 0) + toNum(c.dailyBudget);
               ex.numDays = (toNum(ex.numDays) || 0) + cDays;
+              ['allocBudget', 'allocSpent', 'allocDaily'].forEach(f => ex[f] += alloc[f]);
             }
           });
         }
 
         const rrFactor = totSel > 0 ? totInvolved / totSel : 1;
         const campaigns = Array.from(campMap.values()).map(c => {
-          [...SCALE_FIELDS, 'usersMtd', 'dailyBudget', 'numDays'].forEach(f => c[f] = Math.round(toNum(c[f])));
+          [...SCALE_FIELDS, 'usersMtd', 'dailyBudget', 'numDays', 'allocBudget', 'allocSpent', 'allocDaily'].forEach(f => c[f] = Math.round(toNum(c[f])));
           c.revenue = Math.round(c.revenue * 100) / 100;
           c.rrBudget = Math.round(c.spent * rrFactor); c.impRr = Math.round(c.impMtd * rrFactor);
           c.clicksRr = Math.round(c.clicksMtd * rrFactor); c.regRr = Math.round(c.regMtd * rrFactor); c.usersRr = Math.round(c.usersMtd * rrFactor);
@@ -773,7 +783,7 @@
         el.innerText = val;
       }
       c[field] = val;
-      const rawC = rawMonthData?.campaigns?.find(x => (x.name || '').trim() === (c.name || '').trim());
+      const rawC = rawMonthData?.campaigns?.find(x => String(x.id) === String(id));
       if (rawC) rawC[field] = val;
 
       c.rrBudget = calculateAutoRR(c.spent); c.impRr = calculateAutoRR(c.impMtd);
@@ -785,10 +795,39 @@
       renderDashboard();
     }
 
+    function handleAllocBlur(el, id, field) {
+      if (!isEditingAllowed()) return renderDashboard();
+      const c = (appData.campaigns || []).find(x => String(x.id) === String(id));
+      if (!c) return;
+      const val = toNum(el.innerText);
+      c[field] = val;
+      const rawC = rawMonthData?.campaigns?.find(x => String(x.id) === String(id));
+      if (rawC) rawC[field] = val;
+      renderAllocationTable();
+    }
+
+    function renderAllocationTable() {
+      const tbody = $('novAllocBody');
+      if (!tbody) return;
+      const canEdit = isEditingAllowed();
+      const camps = PLATFORMS.flatMap(p => (appData?.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key));
+      let totB = 0, totS = 0, totD = 0;
+
+      tbody.innerHTML = camps.length ? camps.map(c => {
+        const b = Math.round(toNum(c.allocBudget)), s = Math.round(toNum(c.allocSpent)), d = Math.round(toNum(c.allocDaily));
+        totB += b; totS += s; totD += d;
+        const cell = (field, val) => `<td class="py-2 px-3 text-center bg-[#C5C5C5] font-mono ${canEdit ? 'editable-cell' : 'readonly-cell'}" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleAllocBlur(this, '${c.id}', '${field}')">$${val.toLocaleString()}</td>`;
+        return `<tr><td class="py-2 px-4 font-semibold text-left bg-white">${escHtml(c.name)}</td>${cell('allocBudget', b)}${cell('allocSpent', s)}${cell('allocDaily', d)}</tr>`;
+      }).join('') : `<tr><td colspan="4" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
+
+      setTxt('novTotBudget', `$${totB.toLocaleString()}`);
+      setTxt('novTotSpent', `$${totS.toLocaleString()}`);
+      setTxt('novTotDaily', `$${totD.toLocaleString()}`);
+    }
+
     function renderDashboard() {
       if (!appData) return;
-      const canEdit = isEditingAllowed();
-      const editBadge = $('editModeBadge');
+      const canEdit = isEditingAllowed(), editBadge = $('editModeBadge');
       if (editBadge) {
         editBadge.className = canEdit ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
         editBadge.innerText = canEdit ? 'Editable' : 'View Only';
@@ -820,7 +859,9 @@
       setTxt('kpiTargetRevenue', `KPI: $${toNum(k.revenue).toLocaleString()}`);
       setTxt('kpiTargetProfit', `KPI: $${toNum(k.profit).toLocaleString()}`);
 
-      $('novemberAllocationContainer')?.classList.toggle('hidden', String(currentLoadedMonth).toLowerCase() !== 'november');
+      const isNov = String(currentLoadedMonth).toLowerCase() === 'november';
+      $('novemberAllocationContainer')?.classList.toggle('hidden', !isNov);
+      if (isNov) renderAllocationTable();
 
       renderAllTables();
       syncGlobalSummaries();
@@ -886,7 +927,7 @@
                   return `<tr class="hover:brightness-95">
                     <td class="font-bold sticky-col ${c.highlight ? 'bg-[#CFE2F3]' : 'bg-white'} p-1">
                       <div class="relative flex items-center justify-center min-h-[26px]">
-                        <span class="${canEdit ? 'editable-cell' : 'readonly-cell'} text-center font-bold px-7 w-full truncate block" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'name')">${c.name}</span>
+                        <span class="${canEdit ? 'editable-cell' : 'readonly-cell'} text-center font-bold px-7 w-full truncate block" contenteditable="${canEdit}" onkeydown="cellEnter(event,this)" onblur="handleCellBlur(this, '${c.id}', 'name')">${escHtml(c.name)}</span>
                         ${canEdit ? `<button onclick="deleteCampaign('${c.id}', event)" title="Delete campaign" class="absolute right-1 text-rose-500 hover:text-rose-700 p-0.5 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                       </div>
                     </td>
