@@ -222,7 +222,8 @@
               <tr class="font-extrabold text-slate-900 text-center border-b border-white">
                 <th class="py-2.5 px-4 pr-8 text-left bg-white whitespace-nowrap" style="min-width: 190px;">Campaign</th>
                 <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Budget (KPI)</th>
-                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Spent</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">MTD</th>
+                <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">RR</th>
                 <th class="py-2.5 px-5 bg-[#C5C5C5] whitespace-nowrap" style="min-width: 115px;">Daily Budget</th>
               </tr>
             </thead>
@@ -232,6 +233,7 @@
                 <td class="py-3 px-4 pr-8 text-left bg-white whitespace-nowrap">TOTAL</td>
                 <td id="allocTotBudget" class="py-3 px-5 bg-[#C5C5C5] font-mono text-[#16A34A] whitespace-nowrap">$0</td>
                 <td id="allocTotSpent" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
+                <td id="allocTotRr" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
                 <td id="allocTotDaily" class="py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap">$0</td>
               </tr>
             </tfoot>
@@ -794,17 +796,22 @@
       const tbody = $('allocBody');
       if (!tbody) return;
       const camps = PLATFORMS.flatMap(p => (appData?.campaigns || []).filter(c => (c.platform || '').toLowerCase() === p.key));
-      let totB = 0, totS = 0, totD = 0;
+      let totB = 0, totS = 0, totRR = 0, totD = 0;
 
       tbody.innerHTML = camps.length ? camps.map(c => {
-        const b = Math.round(toNum(c.budget)), s = Math.round(toNum(c.spent)), d = Math.round(toNum(c.dailyBudget));
-        totB += b; totS += s; totD += d;
-        const ro = val => `<td class="py-2 px-5 text-center bg-[#C5C5C5] font-mono whitespace-nowrap readonly-cell">$${val.toLocaleString()}</td>`;
-        return `<tr><td class="py-2 px-4 pr-8 font-semibold text-left bg-white whitespace-nowrap">${escHtml(c.name)}</td>${ro(b)}${ro(s)}${ro(d)}</tr>`;
-      }).join('') : `<tr><td colspan="4" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
+        const b = Math.round(toNum(c.budget)), s = Math.round(toNum(c.spent)), rr = Math.round(toNum(c.rrBudget)), d = Math.round(toNum(c.dailyBudget));
+        totB += b; totS += s; totRR += rr; totD += d;
+        const ro = (val, cls = '') => `<td class="py-2 px-5 text-center bg-[#C5C5C5] font-mono whitespace-nowrap readonly-cell ${cls}">$${val.toLocaleString()}</td>`;
+        return `<tr><td class="py-2 px-4 pr-8 font-semibold text-left bg-white whitespace-nowrap">${escHtml(c.name)}</td>${ro(b)}${ro(s)}${ro(rr, getRrColorClass(rr, b))}${ro(d)}</tr>`;
+      }).join('') : `<tr><td colspan="5" class="py-4 text-center text-slate-400">No campaigns available</td></tr>`;
 
       setTxt('allocTotBudget', `$${totB.toLocaleString()}`);
       setTxt('allocTotSpent', `$${totS.toLocaleString()}`);
+      const totRrEl = $('allocTotRr');
+      if (totRrEl) {
+        totRrEl.innerText = `$${totRR.toLocaleString()}`;
+        totRrEl.className = `py-3 px-5 bg-[#C5C5C5] font-mono whitespace-nowrap ${getRrColorClass(totRR, totB)}`;
+      }
       setTxt('allocTotDaily', `$${totD.toLocaleString()}`);
     }
 
