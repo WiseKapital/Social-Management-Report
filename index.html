@@ -519,9 +519,12 @@
     }
 
     function distributeKpisToCampaigns() {
-      if (!appData?.campaigns || !appData?.kpis) return;
-      const bPer = Math.round(toNum(appData.kpis.budget) / (appData.campaigns.length || 1));
-      appData.campaigns.forEach(c => c.budget = bPer);
+      if (!appData?.campaigns?.length || !appData?.kpis) return;
+      const total = Math.round(toNum(appData.kpis.budget));
+      const ordered = PLATFORMS.flatMap(p => appData.campaigns.filter(c => (c.platform || '').toLowerCase() === p.key));
+      const all = [...ordered, ...appData.campaigns.filter(c => !ordered.includes(c))];
+      const n = all.length, base = Math.floor(total / n), rem = total - base * n;
+      all.forEach((c, i) => c.budget = base + (i < rem ? 1 : 0));
     }
 
     const createEmptyMonth = () => ({ period: getDynamicPeriodString(fromDate, toDate), kpis: { budget: 0, signups: 0, users: 0, revenue: 0, profit: 0 }, campaigns: [] });
